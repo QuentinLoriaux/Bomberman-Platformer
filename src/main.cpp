@@ -1,16 +1,12 @@
 #include "../include/global.hpp"
-
-
-
-
-
-
+#include "window.cpp"
 
 
 int main()
 {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+    refreshWindowSize();
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "SFML window");
     
     // Load a sprite to display
     sf::Texture texture;
@@ -39,6 +35,7 @@ int main()
     // Start the game loop
     while (window.isOpen())
     {
+        refreshWindowSize();
         // Process events
         sf::Event event;
         while (window.pollEvent(event))

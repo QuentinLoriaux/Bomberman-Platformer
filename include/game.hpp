@@ -24,6 +24,7 @@ class Bloc{
         bool crossDown;
         bool damaging;
         bool breakable;
+        bool bumpable; // a implementer
 
 
 
@@ -118,7 +119,7 @@ class Entity{
 class Player: public Entity{
     private:
         int playerId;
-
+        int controllerId;
         int maxBomb;
         int activeBomb;// à l'écran
 
