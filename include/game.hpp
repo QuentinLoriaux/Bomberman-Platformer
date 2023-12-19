@@ -8,16 +8,16 @@
 #define NB_EFFECTS 10
 
 
-class board{
+class Board{
     private:
         const int width;
         const int height;
-        std::vector<bloc> cases;
+        std::vector<Bloc> cases;
 
     public:
 };
 
-class bloc{
+class Bloc{
     protected:
         bool crossable;
         bool crossUp;
@@ -28,30 +28,30 @@ class bloc{
 
 
     public:
-        bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable): 
+        Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable): 
             crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable){}
         
 };
 
 //--------------------------------- TYPES OF BLOCS ---------------------------------
 
-class Wall: public bloc{
+class Wall: public Bloc{
     private:
     public:
-        Wall(): bloc(false, false, false, true, false){}
+        Wall(): Bloc(false, false, false, true, false){}
 };
 
-class Air: public bloc{
+class Air: public Bloc{
     private:
     public:
-        Air(): bloc(true, true, true, false, false){}
+        Air(): Bloc(true, true, true, false, false){}
 };
 
-class BreakableWall: public bloc{
+class BreakableWall: public Bloc{
     private:
         //bool bonus;
     public:
-        BreakableWall():  bloc(false, false, false, true, true){}
+        BreakableWall():  Bloc(false, false, false, true, true){}
 
         BonusBloc generateBonus(){
             Effect item = Effect(rand()%NB_EFFECTS);
@@ -59,29 +59,29 @@ class BreakableWall: public bloc{
         }
 };
 
-class BonusBloc: public bloc{
+class BonusBloc: public Bloc{
     private:
         Effect c_effect;
     public:
-        BonusBloc(Effect b_effet): c_effect(b_effet), bloc(true, true, true, false, true){}
+        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true){}
 };
 
-class ThinPlatform: public bloc{
+class ThinPlatform: public Bloc{
     private:
     public:
-        ThinPlatform(): bloc(false, true, false, false, false){}
+        ThinPlatform(): Bloc(false, true, false, false, false){}
 };
 
-class BombBloc: public bloc{
+class BombBloc: public Bloc{
     private:
     public:
-        BombBloc(): bloc(false, false, false,  false, false){}
+        BombBloc(): Bloc(false, false, false,  false, false){}
 };
 
-class BombFlare: public bloc{
+class BombFlare: public Bloc{
     private:
     public:
-        BombFlare(): bloc(true, true, true, true, false){}
+        BombFlare(): Bloc(true, true, true, true, false){}
 };
 
 //--------------------------------- bonus/malus effects ---------------------------------
@@ -99,7 +99,7 @@ class Effect{
 //--------------------------------- Entities ---------------------------------
 
 
-// Contrairement aux blocs, les entités peuvent se déplacer 
+// Contrairement aux Blocs, les entités peuvent se déplacer 
 class Entity{
     protected:
         int wCoord;// index tableau
