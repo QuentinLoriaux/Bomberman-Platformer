@@ -30,7 +30,7 @@ class Bloc{
 
     public:
         Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable): 
-            crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable){}
+            crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable), bumpable(b_bumpable){}
         
 };
 
@@ -39,20 +39,20 @@ class Bloc{
 class Wall: public Bloc{
     private:
     public:
-        Wall(): Bloc(false, false, false, true, false){}
+        Wall(): Bloc(false, false, false, true, false, false){}
 };
 
 class Air: public Bloc{
     private:
     public:
-        Air(): Bloc(true, true, true, false, false){}
+        Air(): Bloc(true, true, true, false, false, false){}
 };
 
 class BreakableWall: public Bloc{
     private:
         //bool bonus;
     public:
-        BreakableWall():  Bloc(false, false, false, true, true){}
+        BreakableWall():  Bloc(false, false, false, true, true, false){}
 
         BonusBloc generateBonus(){
             Effect item = Effect(rand()%NB_EFFECTS);
@@ -64,25 +64,25 @@ class BonusBloc: public Bloc{
     private:
         Effect c_effect;
     public:
-        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true){}
+        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, true){}
 };
 
 class ThinPlatform: public Bloc{
     private:
     public:
-        ThinPlatform(): Bloc(false, true, false, false, false){}
+        ThinPlatform(): Bloc(false, true, false, false, false, false){}
 };
 
 class BombBloc: public Bloc{
     private:
     public:
-        BombBloc(): Bloc(false, false, false,  false, false){}
+        BombBloc(): Bloc(false, false, false,  false, false, false){}
 };
 
 class BombFlare: public Bloc{
     private:
     public:
-        BombFlare(): Bloc(true, true, true, true, false){}
+        BombFlare(): Bloc(true, true, true, true, false, false){}
 };
 
 //--------------------------------- bonus/malus effects ---------------------------------
