@@ -3,6 +3,10 @@
 #include <string>
 #include <iostream>
 
+int padding;
+int menuHeight;
+int menuWidth;
+
 class MenuEntry {
     private:
         string name;

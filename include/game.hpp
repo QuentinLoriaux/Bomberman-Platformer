@@ -24,7 +24,7 @@ class Bloc{
         bool crossDown;
         bool damaging;
         bool breakable;
-        bool bumpable; // a implementer
+        bool bumpable;
 
 
 
