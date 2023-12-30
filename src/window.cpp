@@ -2,7 +2,8 @@
 #include <vector>
 #include "../include/global.hpp"
 
-#define ratioWidth 0.8;
+#define RATIOWIDTH 0.8;
+
 void refreshWindowSize(){
     //modify the global variables
     windowHeight = sf::RenderWindow::getSize().y;
@@ -18,10 +19,10 @@ void createMenu(int nbEntries){
 }
 
 void displayMenu(int nbEntries){
-    // float ratioWidth = 0.8;
-    padding = static_cast<int>(windowHeight/nbEntries * ratioWidth * 0.1);
-    menuHeight = static_cast<int>(windowHeight/nbEntries * ratioWidth * 0.9);
-    menuWidth = static_cast<int>(windowWidth * ratioWidth);
+    // float RATIOWIDTH = 0.8;
+    padding = static_cast<int>(windowHeight/nbEntries * RATIOWIDTH * 0.1);
+    menuHeight = static_cast<int>(windowHeight/nbEntries * RATIOWIDTH * 0.9);
+    menuWidth = static_cast<int>(windowWidth * RATIOWIDTH);
 }
 
 
@@ -31,8 +32,8 @@ void displayMenuEntry(MenuEntry entry, int nbEntries){
     int entryHeight = static_cast<int>(menuHeight/nbEntries * 0.9);
     int entryWidth = static_cast<int>(menuWidth * 0.9);
     int entryPadding = static_cast<int>(menuHeight/nbEntries * 0.1);
-    int entryX = static_cast<int>(windowWidth * (1-ratioWidth)/2 + menuWidth * 0.05);
-    int entryY = static_cast<int>(windowHeight * (1-ratioWidth)/2 + menuHeight * 0.05 + nbEntries * (entryHeight + entryPadding));
+    int entryX = static_cast<int>(windowWidth * (1-RATIOWIDTH)/2 + menuWidth * 0.05);
+    int entryY = static_cast<int>(windowHeight * (1-RATIOWIDTH)/2 + menuHeight * 0.05 + nbEntries * (entryHeight + entryPadding));
     sf::RectangleShape entryShape(sf::Vector2f(entryWidth, entryHeight));
     entryShape.setPosition(entryX, entryY);
     entryShape.setFillColor(sf::Color::White);
