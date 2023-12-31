@@ -27,7 +27,7 @@ class Bloc{
 
 
     public:
-        Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable): 
+        Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, bool b_bumpable): 
             crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable), bumpable(b_bumpable){}
         
 };
@@ -62,7 +62,7 @@ class BonusBloc: public Bloc{
     private:
         Effect c_effect;
     public:
-        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, true){}
+        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, false){}
 };
 
 class ThinPlatform: public Bloc{
