@@ -47,7 +47,7 @@ int main()
         // Clear screen
         window.clear();
         // Draw the sprite
-        window.draw(sprite);
+        //window.draw((sf::Sprite) sprite);
         // Draw the string
         // window.draw(text);
         // Update the window

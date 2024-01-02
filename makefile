@@ -1,10 +1,19 @@
 CXX=clang++
 
 LIBSFML = /home/quentin/_dev/clones/SFML_build/lib
+INCSFML = /home/quentin/_dev/clones/SFML-2.6.0/include
 
-MFLAGS = -std=c++20 -fmodules -fbuiltin-module-map -fprebuilt-module-path=build # for modules
-CFLAGS =  -Wall -Wextra -I include
-LDFLAGS = -Wl,-rpath=$(LIBSFML) -L $(LIBSFML) -l:libsfml-system.so.2.6.0 -l:libsfml-window.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0 #-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio 
+
+MFLAGS = -std=c++20  -fprebuilt-module-path=build # for modules
+CFLAGS =  -Wall -Wextra -I $(INCSFML) -I include
+LDFLAGS = -Wl,-rpath=$(LIBSFML)  -L $(LIBSFML)
+LDFLAGS += -l:libsfml-window.so.2.6  -l:libsfml-system.so.2.6 -l:libsfml-graphics.so.2.6 -l:libsfml-audio.so.2.6
+# # Static attempt
+# LDFLAGS +=  -D SFML_STATIC -l GL  -l X11 -l freetype -l Xrandr -l Xcursor -l udev  
+# LDFLAGS +=  -l openal -l vorbisenc -l vorbisfile -l vorbis -l ogg -l FLAC -l pthread
+# LDFLAGS += -l:libsfml-system.so.2.6
+# LDFLAGS += -l:libsfml-window-s.a  -l:libsfml-system-s.a -l:libsfml-graphics-s.a -l:libsfml-audio-s.a
+
 
 M = src/model
 V = src/view

@@ -25,7 +25,7 @@ class RenderWindow : public sf::RenderWindow {
         RenderWindow(unsigned int width, unsigned int height, const std::string& title):
             sf::RenderWindow(sf::VideoMode(width, height), title){}
 
-        void draw(Sprite sp){this->draw((sf::Sprite) sp);}
+        //void draw(sf::Sprite sp){this->draw(sp);}
 };
 
 
