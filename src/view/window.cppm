@@ -1,12 +1,11 @@
 module;
 
-#include "../global.hpp"
+#include <vector>
+#include <string>
+#include <iostream>
+#include "global.hpp"
 
 export module window;
-
-import <vector>;
-import <string>;
-import <iostream>;
 
 
 #define RATIOWIDTH 0.8

@@ -1,7 +1,9 @@
-export module game;
+module;
 
-import <vector>;
-import <cstdlib>;
+#include <vector>
+#include <cstdlib>
+
+export module game;
 
 #define NB_EFFECTS 10
 

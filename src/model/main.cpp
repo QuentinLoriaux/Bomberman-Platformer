@@ -1,33 +1,30 @@
-#include "../global.hpp"
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 
-import global;
-import window;
+
+import display;
+
+#define W_WIDTH 1200
+#define W_HEIGHT 600
 
 
 int main()
 {
     // Create the main window
-    refreshWindowSize();
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "SFML window");
-    
+    RenderWindow window(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
+
+
     // Load a sprite to display
-    sf::Texture texture;
-    if (!texture.loadFromFile("assets/img/cute_image.png"))
-        return EXIT_FAILURE;
-    sf::Sprite sprite(texture);
+    Texture tex("assets/img/cute_image.png");
+    Sprite sprite(tex);
 
     // Create a graphical text to display
-    sf::Font font;
-    if (!font.loadFromFile("assets/font/arial.ttf"))
-        return EXIT_FAILURE;
-    sf::Text text("Hello SFML", font, 50);
+    // Font font("assets/font/arial.ttf");
+    // Text text("Hello SFML", font, 50);
 
 
     // Load a music to play
-    sf::Music music;
-    if (!music.openFromFile("assets/music/Dire_Dire_Docks.ogg"))
-        return EXIT_FAILURE;
-
+    Music music("assets/music/Dire_Dire_Docks.ogg");
 
     // Play the music
     music.play();
@@ -37,7 +34,8 @@ int main()
     // Start the game loop
     while (window.isOpen())
     {
-        refreshWindowSize();
+        //refreshWindowSize();
+        
         // Process events
         sf::Event event;
         while (window.pollEvent(event))
@@ -51,7 +49,7 @@ int main()
         // Draw the sprite
         window.draw(sprite);
         // Draw the string
-        window.draw(text);
+        // window.draw(text);
         // Update the window
         window.display();
     }
