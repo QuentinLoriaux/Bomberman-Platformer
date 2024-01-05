@@ -2,3 +2,4 @@ _DOCUMENTS
 .git
 .vscode
 build/*
+assets

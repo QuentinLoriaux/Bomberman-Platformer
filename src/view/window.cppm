@@ -16,24 +16,6 @@ int menuWidth;
 
 using namespace std;
 
-class MenuEntry {
-    private:
-        string name;
-        void* function;
-    public:
-        MenuEntry(): name(""), function(&doNothing) {}
-        MenuEntry(string m_name): name(m_name), function(&doNothing) {}
-        void loadFunction() {}
-        void doNothing() {
-            std::cout < "Nothing to do here" << std::endl;
-        }
-        void setName(string n_name){
-            name = n_name;
-        }
-        string getName(){
-            return name;
-        }
-};
 
 
 
@@ -44,12 +26,6 @@ export void refreshWindowSize(){
 }
 
 
-void createMenu(int nbEntries){
-    std::vector<MenuEntry> menuEntries;
-    for (int i = 0; i < nbEntries; i++){
-        menuEntries.push_back(MenuEntry("entry" + std::to_string(i)));
-    }
-}
 
 void displayMenu(int nbEntries){
     // float RATIOWIDTH = 0.8;

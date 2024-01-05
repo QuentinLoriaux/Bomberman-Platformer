@@ -11,68 +11,52 @@ export module display;
 
 
 //Il faut se débrouiller pour que de l'extérieur, on n'appelle jamais directement SFML
-export class RenderWindow;
-export class Texture;
-export class Sprite;
-export class Font;
-export class Text;
-export class Music;
+
+
 
 //========================= WINDOW =========================
 
-class RenderWindow : public sf::RenderWindow {
-    public :
-        RenderWindow(unsigned int width, unsigned int height, const std::string& title):
-            sf::RenderWindow(sf::VideoMode(width, height), title){}
+export typedef sf::RenderWindow RenderWindow;
 
-        //void draw(sf::Sprite sp){this->draw(sp);}
-};
+RenderWindow::RenderWindow(unsigned int width, unsigned int height, const std::string& title):
+    RenderWindow(sf::VideoMode(width, height), title){}
 
 
 
 //========================= TEXTURES and SPRITES =========================
 
-class Texture : public sf::Texture{
-    public:
-        Texture(const std::string &nameTex): sf::Texture(){
-            if (!this->loadFromFile(nameTex)){
-                std::cout << "Error :" << nameTex << " texture not found" << std::endl;
-            }    
-        }
-};
+export typedef sf::Texture Texture;
 
-class Sprite : public sf::Sprite{
-    public :
-        Sprite(Texture tex): sf::Sprite((sf::Texture) tex){}
-};
+//Créer une texture et l'attribuer directement
+Texture::Texture(const std::string &nameTex): Texture(){
+    if (!this->loadFromFile(nameTex)){
+        std::cout << "Error :" << nameTex << " texture not found" << std::endl;
+    }   
+}
 
+export typedef sf::Sprite Sprite;
 
+void loadSprite(const std::string& name){
+    
+}
 
 //========================= OTHERS =========================
 
-class Font : public sf::Font{
-    public:
-        Font(const std::string &nameFont): sf::Font() {
-            if (!this->loadFromFile(nameFont)){
-                std::cout << "Error :" << nameFont << " font not found" << std::endl;
-            }
-        }
-};
+export typedef sf::Font Font;
 
-class Text : public sf::Text{
-    public:
-        Text(const std::string &content,Font font, int size):
-            sf::Text(content, (sf::Font) font, size){}
-};
+//Créer une font et l'attribuer directement
+Font::Font(const std::string &nameFont): Font() {
+    if (!this->loadFromFile(nameFont)){
+        std::cout << "Error :" << nameFont << " font not found" << std::endl;
+    }
+}
 
-class Music : public sf::Music{
-    public:
-        Music(const std::string &nameMusic): sf::Music(){
-            if (!this->openFromFile(nameMusic)){
-                std::cout << "Error :" << nameMusic << " music not found" << std::endl;
-            }
-        }
-};
+export typedef sf::Text Text;
 
+export typedef sf::Music Music;
 
-
+Music::Music(const std::string &nameMusic): Music(){
+    if (!this->openFromFile(nameMusic)){
+        std::cout << "Error :" << nameMusic << " music not found" << std::endl;
+    }
+}

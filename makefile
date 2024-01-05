@@ -1,13 +1,14 @@
 CXX=clang++
 
-LIBSFML = /home/quentin/_dev/clones/SFML_build/lib
-INCSFML = /home/quentin/_dev/clones/SFML-2.6.0/include
+LIB = /usr/local/lib
+INC = /usr/local/include
 
 
 MFLAGS = -std=c++20  -fprebuilt-module-path=build # for modules
-CFLAGS =  -Wall -Wextra -I $(INCSFML) -I include
-LDFLAGS = -Wl,-rpath=$(LIBSFML)  -L $(LIBSFML)
-LDFLAGS += -l:libsfml-window.so.2.6  -l:libsfml-system.so.2.6 -l:libsfml-graphics.so.2.6 -l:libsfml-audio.so.2.6
+CFLAGS =  -Wall -Wextra -I $(INC) -I include
+LDFLAGS =  -L $(LIB)/SFML #-Wl,--disable-new-dtags,--rpath=$(LIBSFML) 
+LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
+
 # # Static attempt
 # LDFLAGS +=  -D SFML_STATIC -l GL  -l X11 -l freetype -l Xrandr -l Xcursor -l udev  
 # LDFLAGS +=  -l openal -l vorbisenc -l vorbisfile -l vorbis -l ogg -l FLAC -l pthread
