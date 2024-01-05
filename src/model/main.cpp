@@ -63,6 +63,9 @@ Mode mainLoop(Mode mode){
            
         // Update variables ---> SPECIFIC TO EACH MODE
             /*
+                Se fait conjointement aux events
+                (y a des trucs qui ne dépendent pas d'events et qui sont soumis à un TIMER comme l'animation d'une bombe)
+
                 Menu : cursor position 
                 Editor : FavMenu, current cursor item, state of the map...
 

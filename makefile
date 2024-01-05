@@ -5,7 +5,7 @@ INC = /usr/local/include
 
 
 MFLAGS = -std=c++20  -fprebuilt-module-path=build # for modules
-CFLAGS =  -Wall -Wextra -I $(INC) -I include
+CFLAGS =  -Wall -Wextra -I $(INC)
 LDFLAGS =  -L $(LIB)/SFML #-Wl,--disable-new-dtags,--rpath=$(LIBSFML) 
 LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
 
