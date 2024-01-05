@@ -20,7 +20,8 @@ M = src/model
 V = src/view
 C = src/controller
 
-MODULES = display
+MODULES = tMode viewAPI tTextType loader 
+TEST_MODULES = cDrawable cMenuEntry tmenuType tmode tTextType
 
 all : Bomberman_Plat
 
@@ -28,21 +29,26 @@ Bomberman_Plat : $(M)/main.cpp  $(addsuffix .o, $(addprefix build/,$(MODULES)))
 # Linkage
 	$(CXX)  $(MFLAGS)  $(CFLAGS) $^ -o $@.x $(LDFLAGS)
 
+create_modules : $(addsuffix .o, $(addprefix build/,$(TEST_MODULES))) 
+	echo "pls work"
 
-
-build/%.o : $(M)/%.cppm
+build/%.o : $(M)/%.cppm # model
 # précompilation des modules
 	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(M)/%.cppm, build/%.pcm, $<)
 # génération des fichiers objets
 	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(M)/%.cppm, build/%.pcm, $<) -o $@
 
-build/%.o : $(V)/%.cppm
+build/%.o : $(V)/%.cppm # view
 	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(V)/%.cppm, build/%.pcm, $<)
 	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(V)/%.cppm, build/%.pcm, $<) -o $@
 
-build/%.o : $(C)/%.cppm
+build/%.o : $(C)/%.cppm # controller
 	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(C)/%.cppm, build/%.pcm, $<)
 	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(C)/%.cppm, build/%.pcm, $<) -o $@
+
+build/%.o : src/%.cppm # classes et types
+	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst src/%.cppm, build/%.pcm, $<)
+	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst src/%.cppm, build/%.pcm, $<) -o $@
 
 
 run:

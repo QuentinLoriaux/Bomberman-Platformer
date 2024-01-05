@@ -1,39 +1,47 @@
 #include <vector>
 #include <iostream>
-import loader;
+#include <any>
+import tMode;
 
+import viewAPI;
+import loader;
 
 #define W_WIDTH 1920
 #define W_HEIGHT 1080
-typedef enum _Mode{
-    MAIN_TITLE,
-    EDITOR,
-    GAME,
-    WIN_SCREEN,
-    END
-} Mode;
+#define FPS 60
+
 
 //Drawable contains the SPRITES and also the POSITION of each sprite 
 
 
 
-Mode mainLoop(Mode mode){
+mode mainLoop(mode gameMode){
     //Initialize local variables
-    std::vector<Drawable> drawTable;
-    std::vector<Sound> soundEffects;
+    
+    std::vector<Sprite> spriteList;
+    std::vector<Font> fontList;
+        fontList.push_back(Font("arial.ttf"));
+    std::vector<Text> textList;
+    std::vector<std::any*> drawOrder;//Contiendra des pointeurs sur chaque élément à dessiner dans l'ordre
+    
+    //std::vector<Sound> soundEffects;
     Music playingMusic;
-
-    std::vector<Events> eventsMonitored;
-    //add the QUIT event (always present)
+    
+    //std::vector<Events> eventsMonitored;
+    //addEvent(&quitGame, CROSS, ESC);
 
     void (*stateUpdate)();
     
-    switch (mode){
-        case MAIN_TITLE:
-            std::vector<MenuEntry> menu;
-            stateUpdate = &updateMenu;
-            loadMainTitle(drawTable, soundEffects, playingMusic, eventsMonitored);
-            break;
+    switch (gameMode){
+        
+        case MAIN_TITLE:{
+            //std::vector<MenuEntry> menu;
+            int cursor = 0;
+            //stateUpdate = &updateMenu;
+            loadMainTitle(spriteList, fontList, textList,
+                /*soundEffects,*/ playingMusic/*, eventsMonitored*/);
+            break;}
+
         case EDITOR:
             // Tableau de blocs etc...
             break;
@@ -49,8 +57,9 @@ Mode mainLoop(Mode mode){
     }
 
     //Play Music
+    playingMusic.play();
 
-    while (mode != END){
+    while (gameMode != END){
          // Process events + play sounds
             /*
                 close window?
@@ -60,6 +69,8 @@ Mode mainLoop(Mode mode){
 
             */
         
+
+
            
         // Update variables ---> SPECIFIC TO EACH MODE
             /*
@@ -75,8 +86,16 @@ Mode mainLoop(Mode mode){
                 (à chaque frame)
             */
 
+
+
+
         // Display (tous les 1/60s)
         //BESOIN D'UN TIMER
+        
+        // for (auto it = drawOrder.begin(); it != drawOrder.end() ; it++ ){
+        //     rWindow.draw(*it);
+        // }
+        std::cout << "toto" << std::endl;
     }
     return END;
 }
@@ -84,13 +103,13 @@ Mode mainLoop(Mode mode){
 int main()
 {
     //Game Context
-    Mode mode = MAIN_TITLE;
+    mode gameMode = MAIN_TITLE;
 
     // Create the main window
-    createWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
+    RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
 
     // game loop
-    while (mode != END){mode = mainLoop(mode);}
+    while (gameMode != END){gameMode = mainLoop(gameMode);}
 
     std::cout << "/nGoodBye!/n";
 
