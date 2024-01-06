@@ -18,7 +18,7 @@ export module viewAPI;
 
 
 
-//========================= DRAWABLE =========================
+//========================= GRAPHICS =========================
 
 //-------------------- Sprite --------------------
 
@@ -35,7 +35,7 @@ export class Sprite{
             sp = sf::Sprite(tex);
         }//Directement assigner une image au sprite
 
-        sf:: Sprite getSp(){return sp;}
+        sf::Sprite getSp(){return sp;}
         sf::Texture getTex(){return tex;}
 };
 
@@ -53,7 +53,7 @@ export class Font{
             }   
         }
 
-        sf::Font getFt(){return ft;;}
+        sf::Font getFt() const {return ft;} 
 };
 
 
@@ -63,7 +63,7 @@ export class Text{
         sf::Text text;
     
     public :
-        Text(const std::string& content, Font& ft, int size): text(sf::Text(content, ft.getFt(), size)){}
+        Text(const std::string& content, const Font& ft, int size): text(sf::Text(content, ft.getFt(), size)){}
 
         sf::Text getText(){return text;}
 };
@@ -84,7 +84,27 @@ export class RenderWindow {
 };
 
 
-//========================= OTHERS =========================
+//========================= AUDIO =========================
+
+export class Sound{
+    private :
+        sf::SoundBuffer sfxBuf;
+        sf::Sound sfx;
+    
+    public :
+        Sound(const std::string& nameSfx): sfxBuf(sf::SoundBuffer()) {
+            if (!sfxBuf.loadFromFile("./assets/sound/" + nameSfx)){
+                std::cout << "Error : texture '" << nameSfx << "' not found" << std::endl;
+            }
+            sfx = sf::Sound(sfxBuf);
+        }//Directement assigner un son à Sound
+
+        sf::Sound getSfx(){return sfx;}
+        sf::SoundBuffer getSfxBuf(){return sfxBuf;}    
+
+        void play(){sfx.play();}
+
+};
 
 export class Music{
     private :

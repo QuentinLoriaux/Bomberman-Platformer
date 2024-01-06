@@ -2,6 +2,7 @@
 #include <iostream>
 #include <any>
 import tMode;
+import cEvent;
 
 import viewAPI;
 import loader;
@@ -15,16 +16,15 @@ import loader;
 
 
 
-mode mainLoop(mode gameMode){
-    //Initialize local variables
+mode mainLoop(mode gameMode, const std::vector<Font> &fontList){
     
+    //Initialize common variables
     std::vector<Sprite> spriteList;
-    std::vector<Font> fontList;
-        fontList.push_back(Font("arial.ttf"));
     std::vector<Text> textList;
-    std::vector<std::any*> drawOrder;//Contiendra des pointeurs sur chaque élément à dessiner dans l'ordre
+
+    std::vector<std::any*> drawOrder;//Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre
     
-    //std::vector<Sound> soundEffects;
+    std::vector<Sound> soundEffects;
     Music playingMusic;
     
     //std::vector<Events> eventsMonitored;
@@ -39,7 +39,7 @@ mode mainLoop(mode gameMode){
             int cursor = 0;
             //stateUpdate = &updateMenu;
             loadMainTitle(spriteList, fontList, textList,
-                /*soundEffects,*/ playingMusic/*, eventsMonitored*/);
+                soundEffects, playingMusic/*, eventsMonitored*/);
             break;}
 
         case EDITOR:
@@ -102,14 +102,20 @@ mode mainLoop(mode gameMode){
 
 int main()
 {
-    //Game Context
-    mode gameMode = MAIN_TITLE;
-
+    
     // Create the main window
     RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
 
+    // load fonts
+    std::vector<Font> fontList;
+    fontList.push_back(Font("arial.ttf"));
+
+
+    //Game Context
+    mode gameMode = MAIN_TITLE;
+
     // game loop
-    while (gameMode != END){gameMode = mainLoop(gameMode);}
+    while (gameMode != END){gameMode = mainLoop(gameMode, fontList);}
 
     std::cout << "/nGoodBye!/n";
 

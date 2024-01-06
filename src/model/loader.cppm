@@ -17,9 +17,9 @@ export mode quitGame(){ return END; }
 
 
 export void loadMainTitle(std::vector<Sprite> &spriteList,
-                          std::vector<Font> &fontList,
+                          const std::vector<Font> &fontList,
                           std::vector<Text> &textList,
-                          //std::vector<Sound> &soundEffects,
+                          std::vector<Sound> &soundEffects,
                           Music &playingMusic
                           //std::vector<Events> &eventsMonitored
                           ){
@@ -29,7 +29,8 @@ export void loadMainTitle(std::vector<Sprite> &spriteList,
     textList.push_back(Text("Bomberman Plateformer!", fontList[0], 50));
 
     playingMusic.openFromFile("Dire_Dire_Docks.ogg");   
-    //son du curseur + validation menu/retour menu à mettre
+    soundEffects.push_back(Sound("cursorMove.mp3"));
+    soundEffects.push_back(Sound("validateMenu.mp3"));
 
     //évènements à gérer
     //addEvent(&loadMenu, ENTER, CLICK, MJOY_START);
