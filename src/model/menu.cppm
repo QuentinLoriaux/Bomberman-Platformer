@@ -39,3 +39,5 @@ void createMenu(std::vector<MenuEntry> &menu, menuType mType){
             break;
     }
 }
+//En fait c'est nul. Ce serait mieux de tout loader et ensuite, de n'afficher que les entrées correspondantes au mType
+//On peut remplacer BACK par un évènement sur le bouton ESC ou le bouton B.

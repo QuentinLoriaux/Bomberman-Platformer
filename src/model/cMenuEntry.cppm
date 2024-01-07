@@ -6,6 +6,7 @@ module;
 
 export module cMenuEntry;
 
+//Faudra faire pareil que pour les EventBindings
 export class MenuEntry {
     private:
         std::string name;

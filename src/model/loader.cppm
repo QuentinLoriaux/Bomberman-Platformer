@@ -1,13 +1,8 @@
 module;
 
-
-#include <iostream>
 #include <vector>
-
 import viewAPI;
-import tTextType;
 import tMode;
-//import cMenuEntry;
 
 export module loader;
 
@@ -16,44 +11,51 @@ export module loader;
 export mode quitGame(){ return END; }
 
 
-export void loadMainTitle(std::vector<Sprite> &spriteList,
-                          const std::vector<Font> &fontList,
-                          std::vector<Text> &textList,
-                          std::vector<Sound> &soundEffects,
-                          Music &playingMusic
-                          //std::vector<Events> &eventsMonitored
-                          ){
 
-    //Chargement des assets et du texte
+void loadMainTitleAssets(std::vector<Sprite> &spriteList,
+                          std::vector<Sound> &soundList,
+                          std::vector<Music> &musicList){
+
     spriteList.push_back(Sprite("mainTitle.jpg"));
-    textList.push_back(Text("Bomberman Plateformer!", fontList[0], 50));
+    spriteList.push_back(Sprite("menuBackground.png"));//To ADD
+    spriteList.push_back(Sprite("menuEntryBackground.png"));//To ADD
+    spriteList.push_back(Sprite("menuCursor.png"));//To ADD
+    
 
-    playingMusic.openFromFile("Dire_Dire_Docks.ogg");   
+    //textList.push_back(Text("Bomberman Plateformer!", fontList[0], 50));
+
     soundEffects.push_back(Sound("cursorMove.mp3"));
     soundEffects.push_back(Sound("validateMenu.mp3"));
+    musicList.push_back(Music("Dire_Dire_Docks.ogg"));
+    
 
-    //évènements à gérer
     //addEvent(&loadMenu, ENTER, CLICK, MJOY_START);
     //MJOY: Main Joycontroller
 
 }
 
-// export void loadMenu(std::vector<MenuEntry> &menu,
-//                      std::vector<Sprite> &spriteList,
-//                      std::vector<Text> &textList){
-   
-//     //La gestion des events se fait en partie à l'intérieur (boutons...)
-//     createMainMenu(menu);
 
-//     spriteList.push_back(Sprite("entryBox"));// On pourrait le faire dès le loading de main title, c'est vrai et je m'en tape
-//     spriteList.push_back(Sprite("cursor.png"));    
-//     for (auto it = menu.begin(); it != menu.end; it++){
-//         textList.push_back(Text(it.getName()));
-//     }
+export void loadAssets(mode gameMode,
+                       std::vector<Sprite> &spriteList,
+                       std::vector<Sound> &soundList,
+                       std::vector<Music> &musicList){
+    
+    switch (gameMode){
+        case MAIN_TITLE : loadMainTitleAssets(std::vector<Sprite> &spriteList,
+                                              std::vector<Sound> &soundList,
+                                              std::vector<Music> &musicList); break;
+        case EDITOR : loadMainTitleAssets(std::vector<Sprite> &spriteList,
+                                              std::vector<Sound> &soundList,
+                                              std::vector<Music> &musicList); break;
+        case GAME : loadMainTitleAssets(std::vector<Sprite> &spriteList,
+                                              std::vector<Sound> &soundList,
+                                              std::vector<Music> &musicList); break;
+        case WIN_SCREEN : loadMainTitleAssets(std::vector<Sprite> &spriteList,
+                                              std::vector<Sound> &soundList,
+                                              std::vector<Music> &musicList); break;
+    }
 
-// }
-
-// export void loadEditor(){
+}
 
 
-// }
+
