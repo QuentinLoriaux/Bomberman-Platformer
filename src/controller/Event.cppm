@@ -1,6 +1,9 @@
 module;
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+import viewAPI;
+import tMode;
 #include <any>
 #include <functional>
 #include <vector>
@@ -30,12 +33,12 @@ export typedef enum _evType{
 export class Event{
     private :
         sf::Event ev;
-        sf::RenderWindow rWindow;
+        RenderWindow* window;
     public :
         //On passe la fenêtre en référence
-        Event(RenderWindow &_rWindow) : ev(sf::Event), rWindow(_rWindow) {}
+        Event(RenderWindow &_rWindow) : ev(sf::Event()), window(&_rWindow) {}
 
-        bool poll(){return rWindow.pollEvent(ev);}
+        bool poll(){return window->rWindow.pollEvent(ev);}
 
         evType getType(){//Merci ChatGPT
             switch (ev.type) {
@@ -108,9 +111,11 @@ export class EventBinding{//Toujours initialiser avec le constructeur(fonction) 
         using type_func = std::function<void(Args...)>;
         
         type_func<> func;
-        std::vector<evType> types;
+        
         
     public :
+        std::vector<evType> types;
+
         //****************************************************************************************************************
         //ATTENTION il faut absolument noter les éléments passés en référence de la sorte : std::ref<arg> sinon ça marche pas
         //****************************************************************************************************************
@@ -120,11 +125,16 @@ export class EventBinding{//Toujours initialiser avec le constructeur(fonction) 
 
 
 
-        void addTypes(evType... _types){types.insert(types.end(), {_types...});}
-        std::vector<evType> getTypes(){return types;}
+        template<typename... Args>
+        void addTypes(evType type, Args... args) {
+            types.push_back(type);
+            addTypes(args...);
+        }
+        void addTypes(evType type) {types.push_back(type);}
+
         
         void execute(){func();}
-}
+};
 
 
 

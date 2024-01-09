@@ -7,7 +7,7 @@ import Event;
 import viewAPI;
 
 import loader;
-import initializer;
+//import initializer;
 
 #define W_WIDTH 1920
 #define W_HEIGHT 1080
@@ -35,16 +35,22 @@ int main()
         //===== General variables =====
         //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
         Event event(rWindow);
-        std::vector<EventBinding> &eventsMonitored;
+        std::vector<EventBinding> eventsMonitored;
             
 
-        //assets
+        //assets & texts
+        std::vector<Texture> textureList;
         std::vector<Sprite> spriteList;
+            textureList.push_back(Texture("notFound.png"));
+            spriteList.push_back(Sprite(textureList[0]));
+
         std::vector<Text> textList;
+            textList.push_back(Text("Not Found", fontList[0], 50));
         
         std::vector<Sound> soundList;
-        std::vector<Music> musicList;
+            soundList.push_back(Sound("notFound.mp3"));
 
+        Music musique("notFound.ogg");
 
 
         //===== Menu Variables ===== 
@@ -55,17 +61,17 @@ int main()
         // Tableau de blocs etc...
 
         //=========================== LOAD & INIT ===========================
-
-        loadAssets(gameMode, spriteList, soundList, musicList);
+  
+        loadAssets(gameMode, textureList, spriteList, soundList, musique);
 
         // initialisation de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
         // Ex : menu...
-
-        EventBinding evQuit(quitGame);
+  
+        EventBinding evQuit(quitGame, std::ref(gameMode));
         evQuit.addTypes(CROSS, ESC);//ESC for testing
-        eventsMonitored.push_back(evQuitGame);
+        eventsMonitored.push_back(evQuit);
 
-        initialize(gameMode, eventsMonitored, ...)//TODO
+        //initialize(gameMode, eventsMonitored, ...)//TODO
 
         
 
@@ -78,18 +84,17 @@ int main()
         //=========================== MAIN LOOP ===========================
         
         //Play Music
-        musicList[0].play();
+        musique.play();
 
         while (gameMode != END){
-            
+   
             // Process events + play sounds
                 //close window, button pressed (Menu, Movement), Request to load a game mode...
             while (event.poll()){
                 for (auto it = eventsMonitored.begin(); it != eventsMonitored.end() ; it++){
-                    if (event.isMonitored(it->getTypes())){ it-> execute();}
+                    if (event.isMonitored(it->types)){ it-> execute();}
                 }
             }
-            
             
 
 
@@ -117,11 +122,14 @@ int main()
             // for (auto it = drawOrder.begin(); it != drawOrder.end() ; it++ ){
             //     rWindow.draw(*it);
             // }
-            std::cout << "toto" << std::endl;
+            rWindow.clear();
+            rWindow.draw(spriteList[1]);
+            rWindow.draw(textList[0]);
+            rWindow.display();
         }
     }//End of App loop
 
-    std::cout << "/nGoodBye!/n";
+    std::cout << "\nGoodBye!\n";
 
     return EXIT_SUCCESS;
 }

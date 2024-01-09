@@ -20,12 +20,21 @@ M = src/model
 V = src/view
 C = src/controller
 
-MODULES = tMode viewAPI tTextType loader 
-TEST_MODULES = cDrawable cMenuEntry tmenuType tmode tTextType
+SRC_M = $(wildcard $(M)/*.cppm)
+OBJ_M = $(patsubst $(M)/%.cppm,build/%.o,$(SRC_M))
 
-all : Bomberman_Plat
+SRC_V = $(wildcard $(V)/*.cppm)
+OBJ_V = $(patsubst $(V)/%.cppm,build/%.o,$(SRC_V))
 
-Bomberman_Plat : $(M)/main.cpp  $(addsuffix .o, $(addprefix build/,$(MODULES))) 
+SRC_C = $(wildcard $(C)/*.cppm)
+OBJ_C = $(patsubst $(C)/%.cppm,build/%.o,$(SRC_C))
+
+
+TEST_MODULES = tMode tMenuType viewAPI #initializer
+
+all : create_modules Bomberman_Plat
+
+Bomberman_Plat : $(M)/main.cpp  $(OBJ_M) $(OBJ_V) $(OBJ_C)
 # Linkage
 	$(CXX)  $(MFLAGS)  $(CFLAGS) $^ -o $@.x $(LDFLAGS)
 
@@ -54,5 +63,5 @@ build/%.o : src/%.cppm # classes et types
 run:
 	./Bomberman_Plat.x
 
-clean:
+cleanAll:
 	rm  build/*

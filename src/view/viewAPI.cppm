@@ -22,70 +22,78 @@ export module viewAPI;
 
 //-------------------- Sprite --------------------
 
-export class Sprite{
-    private :
-        sf::Texture tex;
-        sf::Sprite sp;
-    
+export class Texture{
     public :
-        Sprite(const std::string& nameTex): tex(sf::Texture()) {
+        sf:: Texture tex;
+
+        Texture(const std::string& nameTex) : tex(sf::Texture()){
             if (!tex.loadFromFile("./assets/img/" + nameTex)){
                 std::cout << "Error : texture '" << nameTex << "' not found" << std::endl;
             }
-            sp = sf::Sprite(tex);
-        }//Directement assigner une image au sprite
+        }
 
-        sf::Sprite getSp(){return sp;}
-        sf::Texture getTex(){return tex;}
+};
+
+export class Sprite{
+
+    public :
+        sf::Sprite sp;
+
+        Sprite(Texture& _tex): sp(sf::Sprite(_tex.tex)) {}//Directement assigner une image au sprite
+
 };
 
 
 //-------------------- Text --------------------
 
 export class Font{
-    private :
-        sf::Font ft;
-    
+
     public :
+        sf::Font ft;
+        
         Font(const std::string &nameFont): ft(sf::Font()){//Créer une font et l'attribuer directement
             if (!ft.loadFromFile("./assets/font/" + nameFont)){
                 std::cout << "Error : Font '" << nameFont << "' not found" << std::endl;
             }   
         }
 
-        sf::Font getFt() const {return ft;} 
 };
 
 
 
 export class Text{
-    private :
-        sf::Text text;
+
     
     public :
-        Text(const std::string& content, const Font& ft, int size): text(sf::Text(content, ft.getFt(), size)){}
+        sf::Text text;
 
-        sf::Text getText(){return text;}
+        Text(const std::string& content, const Font& _ft, int size):
+            text(sf::Text(content, _ft.ft, size)){}
+
+        
 };
 
 
 
 //========================= WINDOW =========================
 export class RenderWindow {
-    private :
+
+    public :
         sf::RenderWindow rWindow;
-    
-    public : 
+
         RenderWindow(unsigned int width, unsigned int height, const std::string& title):
             rWindow(sf::VideoMode(width, height), title){}
 
-        void draw(Sprite sp){rWindow.draw(sp.getSp());}
-        void draw(Text txt){rWindow.draw(txt.getText());}
+        void draw(Sprite &_sp){rWindow.draw(_sp.sp);}
+        void draw(Text &_txt){rWindow.draw(_txt.text);}
+        void clear(){rWindow.clear();}
+        void display(){rWindow.display();}
 };
 
 
 //========================= AUDIO =========================
 
+//Il faudra séparer le soundBuffer de sound afin de pouvoir gérer les sons simultanés identiques
 export class Sound{
     private :
         sf::SoundBuffer sfxBuf;
@@ -109,7 +117,6 @@ export class Sound{
 export class Music{
     private :
         sf::Music mus;
-
     public : 
         Music(): mus(sf::Music()){}
         Music(const std::string &nameMusic): mus(sf::Music()){//Créer une Musique et l'attribuer directement
@@ -118,7 +125,6 @@ export class Music{
             }
         }
         
-
         bool openFromFile(const std::string &nameMusic){return mus.openFromFile("./assets/music/" + nameMusic);}
         void play(){mus.play();}
 };
