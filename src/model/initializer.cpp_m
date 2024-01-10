@@ -1,18 +1,74 @@
 module;
 
 #include <vector>
-import viewAPI;
+#include <any>
 import tMode;
+import viewAPI;
+import Event;
+
+import Menu;
 
 export module initializer;
 
-void initMainMenu(std::vector<MenuEntry> &menu,
-                     std::vector<Text> &textList){
-   
-    //La gestion des events se fait en partie à l'intérieur (boutons...)
-    createMainMenu(menu);
 
-        textList.push_back(Text(it.getName()));
+
+export void quitGame(mode &gameMode){gameMode = END;}
+
+void initMainTitle(std::vector<eventBinding> &eventsMonitored,
+                   std::vector<fontList> &fontList,
+                   std::vector<Text> &textList,
+
+                   mode &gameMode,
+                   std::vector<MenuEntry> &menu,
+                   int &menuCursor,
+                   menuState &menuState){
+   
+    menuCursor = 0;
+    menuState = MAIN_TITLE;
+
+    menu.push_back(MenuEntry(loadSoloMenu, std::ref(menuState))); //0
+    menu.push_back(MenuEntry(loadMultiMenu, std::ref(menuState))); //1
+    menu.push_back(MenuEntry(loadEditorFromMenu, std::ref(gameMode))); //2
+    menu.push_back(MenuEntry(quitGame, std::ref(gameMode))); //3
+
+    //Il faudra adapter la taille du texte à la fenêtre
+    textList.push_back(Text("SOLO", fontList[0], 50)); //1
+    textList.push_back(Text("MULTIPLAYER", fontList[0], 50)); //2
+    textList.push_back(Text("EDITOR", fontList[0], 50)); //3
+    textList.push_back(Text("QUIT", fontList[0], 50)); //4
+
+
+    EventBinding evProceed(proceedMenu, std::ref(menu), std::ref(menuCursor));
+        evProceed.addTypes(ENTER);
+        eventsMonitored.push_back(evProceed); //1
+
+    EventBinding evBack(backMenu, std::ref(menuState));
+        evBack.addTypes(BACKSPACE);
+        eventsMonitored.push_back(evBack); //2
+    
+
+}
+
+
+
+
+export void initialize(mode &gameMode,
+                       std::vector<EventBinding> &eventsMonitored,
+                       std::vector<Font> &fontList,
+                       std::vector<Text> &textList,
+
+                       std::vector<MenuEntry> &menu,
+                       int &menuCursor,
+                       menuState &menuState
+                       
+                       ){
+    
+    switch (gameMode){
+        case MAIN_TITLE : initMainTitle(eventsMonitored, fontList, textList,
+            gameMode, menu, menuCursor, menuState); break;
+        case EDITOR : initMainTitle(textureList, spriteList, soundList, musique); break;
+        case GAME : initMainTitle(textureList, spriteList, soundList, musique); break;
+        case WIN_SCREEN : initMainTitle(textureList, spriteList, soundList, musique); break;
     }
 
 }

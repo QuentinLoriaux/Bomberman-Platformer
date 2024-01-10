@@ -2,12 +2,13 @@
 #include <iostream>
 #include <any>
 import tMode;
+import Menu;
 
-import Event;
 import viewAPI;
+import Event;
 
 import loader;
-//import initializer;
+import initializer;
 
 #define W_WIDTH 1920
 #define W_HEIGHT 1080
@@ -34,6 +35,7 @@ int main()
 
         //===== General variables =====
         //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
+        mode currentGameMode = gameMode; // pour changer facilement de mode
         Event event(rWindow);
         std::vector<EventBinding> eventsMonitored;
             
@@ -47,31 +49,36 @@ int main()
         std::vector<Text> textList;
             textList.push_back(Text("Not Found", fontList[0], 50));
         
+        std::vector<SoundBuffer> soundBufferList;
         std::vector<Sound> soundList;
-            soundList.push_back(Sound("notFound.mp3"));
+            soundBufferList.push_back(SoundBuffer("notFound.mp3"));
+            soundList.push_back(Sound(soundBufferList[0]));
 
         Music musique("notFound.ogg");
 
 
         //===== Menu Variables ===== 
-        //std::vector<MenuEntry> menu;
-        //int menuCursor;
+        std::vector<MenuEntry> menu;
+        menuState menuState;
+        int menuCursor;
         
         //===== Editor Variables ===== 
         // Tableau de blocs etc...
 
         //=========================== LOAD & INIT ===========================
   
-        loadAssets(gameMode, textureList, spriteList, soundList, musique);
+        loadAssets(gameMode, textureList, soundBufferList, musique);
 
-        // initialisation de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
-        // Ex : menu...
+        // initialisation des variables du mode  
+        // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
+        // (certains textes, évènements, ...)
   
         EventBinding evQuit(quitGame, std::ref(gameMode));
         evQuit.addTypes(CROSS, ESC);//ESC for testing
         eventsMonitored.push_back(evQuit);
 
-        //initialize(gameMode, eventsMonitored, ...)//TODO
+        initialize(gameMode, eventsMonitored, fontList, textList,
+            menu, menuCursor, menuState);
 
         
 
@@ -86,7 +93,7 @@ int main()
         //Play Music
         musique.play();
 
-        while (gameMode != END){
+        while ((gameMode != END) && (gameMode == currentGameMode)){
    
             // Process events + play sounds
                 //close window, button pressed (Menu, Movement), Request to load a game mode...

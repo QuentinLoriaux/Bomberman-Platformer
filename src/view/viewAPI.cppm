@@ -93,23 +93,29 @@ export class RenderWindow {
 
 //========================= AUDIO =========================
 
-//Il faudra séparer le soundBuffer de sound afin de pouvoir gérer les sons simultanés identiques
+
+export class SoundBuffer{
+
+    public :
+        sf::SoundBuffer sfxBuf;
+    
+        soundBuffer(const std::string& nameSfx): sfxBuf(sf::SoundBuffer()){
+            if (!sfxBuf.loadFromFile("./assets/sound/" + nameSfx)){
+                std::cout << "Error : Sound '" << nameSfx << "' not found" << std::endl;
+            }
+        }
+
+};
+
 export class Sound{
     private :
-        sf::SoundBuffer sfxBuf;
         sf::Sound sfx;
     
     public :
-        Sound(const std::string& nameSfx): sfxBuf(sf::SoundBuffer()) {
-            if (!sfxBuf.loadFromFile("./assets/sound/" + nameSfx)){
-                std::cout << "Error : texture '" << nameSfx << "' not found" << std::endl;
-            }
+        Sound(SoundBuffer &_sfxBuf): sfx(sf::Sound(_sfxBuf.sfxBuf)) {
             sfx = sf::Sound(sfxBuf);
-        }//Directement assigner un son à Sound
-
-        sf::Sound getSfx(){return sfx;}
-        sf::SoundBuffer getSfxBuf(){return sfxBuf;}    
-
+        }
+   
         void play(){sfx.play();}
 
 };

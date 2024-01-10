@@ -1,12 +1,14 @@
 module;
 
-#include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-import viewAPI;
-import tMode;
+
+#include <vector>
 #include <any>
 #include <functional>
-#include <vector>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+import tMode;
+import viewAPI;
+
 
 export module Event;
 
