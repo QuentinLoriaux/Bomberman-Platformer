@@ -14,8 +14,8 @@ export module initializer;
 
 export void quitGame(mode &gameMode){gameMode = END;}
 
-void initMainTitle(std::vector<eventBinding> &eventsMonitored,
-                   std::vector<fontList> &fontList,
+void initMainTitle(std::vector<EventBinding> &eventsMonitored,
+                   std::vector<Font> &fontList,
                    std::vector<Text> &textList,
 
                    mode &gameMode,
@@ -24,7 +24,7 @@ void initMainTitle(std::vector<eventBinding> &eventsMonitored,
                    menuState &menuState){
    
     menuCursor = 0;
-    menuState = MAIN_TITLE;
+    menuState = MENU_MAIN_TITLE;
 
     menu.push_back(MenuEntry(loadSoloMenu, std::ref(menuState))); //0
     menu.push_back(MenuEntry(loadMultiMenu, std::ref(menuState))); //1
@@ -66,9 +66,12 @@ export void initialize(mode &gameMode,
     switch (gameMode){
         case MAIN_TITLE : initMainTitle(eventsMonitored, fontList, textList,
             gameMode, menu, menuCursor, menuState); break;
-        case EDITOR : initMainTitle(textureList, spriteList, soundList, musique); break;
-        case GAME : initMainTitle(textureList, spriteList, soundList, musique); break;
-        case WIN_SCREEN : initMainTitle(textureList, spriteList, soundList, musique); break;
+        case EDITOR : initMainTitle(eventsMonitored, fontList, textList,
+            gameMode, menu, menuCursor, menuState); break;
+        case GAME : initMainTitle(eventsMonitored, fontList, textList,
+            gameMode, menu, menuCursor, menuState); break;
+        case WIN_SCREEN : initMainTitle(eventsMonitored, fontList, textList,
+            gameMode, menu, menuCursor, menuState); break;
     }
 
 }

@@ -3,3 +3,4 @@ _DOCUMENTS
 .vscode
 build/*
 assets
+SFML

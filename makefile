@@ -30,7 +30,7 @@ SRC_C = $(wildcard $(C)/*.cppm)
 OBJ_C = $(patsubst $(C)/%.cppm,build/%.o,$(SRC_C))
 
 
-TEST_MODULES = tMode tMenuType viewAPI #initializer
+TEST_MODULES = tMode viewAPI Menu Event #initializer
 
 all : create_modules Bomberman_Plat
 

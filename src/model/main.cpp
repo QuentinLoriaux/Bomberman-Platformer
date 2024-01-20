@@ -160,7 +160,7 @@ int main()
             rWindow.draw(textList[0]);
             
             // Display (tous les 1/60s)
-            window.display();
+            rWindow.display();
 
             // Pause to achieve approximately 1/60th of a second delay so that the game doesn't run faster than 60fps
             std::this_thread::sleep_for(std::chrono::microseconds(16667));
