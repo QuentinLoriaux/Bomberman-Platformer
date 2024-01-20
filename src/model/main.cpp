@@ -56,6 +56,10 @@ int main()
     // Initialize game mode
     mode gameMode = MAIN_TITLE;
 
+    // Initialize fps counter
+    auto startFrameTime = std::chrono::steady_clock::now();
+    const std::chrono::duration<double> targetFrameDuration(1.0 / static_cast<double>(FPS));
+
     // App loop
     while (gameMode != END){
         //=========================== VARIABLES ===========================
@@ -159,11 +163,14 @@ int main()
             rWindow.draw(spriteList[1]);
             rWindow.draw(textList[0]);
             
-            // Display (tous les 1/60s)
-            window.display();
-
-            // Pause to achieve approximately 1/60th of a second delay so that the game doesn't run faster than 60fps
-            std::this_thread::sleep_for(std::chrono::microseconds(16667));
+            // Display (toutes les 1/60s)
+            auto currentTime = std::chrono::steady_clock::now();
+            auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - startTime);
+            if (elapsedTime >= targetFrameDuration) {
+                // Update the time for the next frame
+                startTime = currentTime;
+                window.display();
+            }
 
         }
     }//End of App loop
