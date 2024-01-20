@@ -1,6 +1,10 @@
 #include <vector>
 #include <iostream>
 #include <any>
+#include <chrono>
+#include <thread>
+#include <pthread.h>
+
 import tMode;
 import Menu;
 
@@ -18,9 +22,32 @@ import initializer;
 
 int main()
 {
-    
+    // // Create different threads
+    // // structure : std::thread threadName(functionName, args)
+    // std::thread getKeyboardInput(getKeyboard);
+    // std::thread screenDisplay(display);
+    // std::thread gameDisplay(game);
+
+
+    // // Order threads by priority
+    // // pthread_setschedprio() is a POSIX function that sets the scheduling priority for the thread
+    // // structure : pthread_setschedprio(threadName.native_handle(), SCHED_FIFO (for first in first out), &params)
+    // struct sched_param params; // built in on POSIX systems
+
+    // params.sched_priority = 1;
+    // pthread_setschedprio(getKeyboardInput.native_handle(), SCHED_FIFO, &params);
+    // params.sched_priority = 2;
+    // pthread_setschedprio(screenDisplay.native_handle(), SCHED_FIFO, &params);
+    // params.sched_priority = 3;
+    // pthread_setschedprio(gameDisplay.native_handle(), SCHED_FIFO, &params);
+
+
+
     // Create the main window
     RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
+
+    // Set the framerate limit to 60 fps
+    rWindow.setFramerateLimit(FPS);
 
     // load fonts
     std::vector<Font> fontList;
@@ -123,7 +150,6 @@ int main()
 
 
 
-            // Display (tous les 1/60s)
             //BESOIN D'UN TIMER
             
             // for (auto it = drawOrder.begin(); it != drawOrder.end() ; it++ ){
@@ -132,7 +158,13 @@ int main()
             rWindow.clear();
             rWindow.draw(spriteList[1]);
             rWindow.draw(textList[0]);
-            rWindow.display();
+            
+            // Display (tous les 1/60s)
+            window.display();
+
+            // Pause to achieve approximately 1/60th of a second delay so that the game doesn't run faster than 60fps
+            std::this_thread::sleep_for(std::chrono::microseconds(16667));
+
         }
     }//End of App loop
 
