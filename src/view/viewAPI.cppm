@@ -88,6 +88,7 @@ export class RenderWindow {
         void draw(Text &_txt){rWindow.draw(_txt.text);}
         void clear(){rWindow.clear();}
         void display(){rWindow.display();}
+        void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
 };
 
 
@@ -99,7 +100,7 @@ export class SoundBuffer{
     public :
         sf::SoundBuffer sfxBuf;
     
-        soundBuffer(const std::string& nameSfx): sfxBuf(sf::SoundBuffer()){
+        SoundBuffer(const std::string& nameSfx): sfxBuf(sf::SoundBuffer()){
             if (!sfxBuf.loadFromFile("./assets/sound/" + nameSfx)){
                 std::cout << "Error : Sound '" << nameSfx << "' not found" << std::endl;
             }
@@ -112,9 +113,7 @@ export class Sound{
         sf::Sound sfx;
     
     public :
-        Sound(SoundBuffer &_sfxBuf): sfx(sf::Sound(_sfxBuf.sfxBuf)) {
-            sfx = sf::Sound(sfxBuf);
-        }
+        Sound(SoundBuffer &_sfxBuf): sfx(sf::Sound(_sfxBuf.sfxBuf)) {}
    
         void play(){sfx.play();}
 

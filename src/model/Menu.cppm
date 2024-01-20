@@ -10,7 +10,7 @@ import tMode;
 export module Menu;
 
 export typedef enum _menuState{
-    MAIN_TITLE,
+    MENU_MAIN_TITLE,
     MAIN_MENU,
     SOLO,
     MULTIPLAYER,
@@ -32,29 +32,29 @@ export class MenuEntry {
         //ATTENTION il faut absolument noter les éléments passés en référence de la sorte : std::ref<arg> sinon ça marche pas
         //****************************************************************************************************************
         template<typename Func, typename... Args>
-        MenuEntry(const std::string &_name, Func _fun, Args&&... args) :
+        MenuEntry(Func _fun, Args&&... args) :
             func(std::bind(_fun, std::forward<Args>(args)...)) {}
 
         void execute(){func();}
 };
 
 
-void loadEditorFromMenu(mode &gameMode){gameMode = EDITOR;}
+export void loadEditorFromMenu(mode &gameMode){gameMode = EDITOR;}
 
-void unloadMenu(menuState &menuState){menuState = MAIN_TITLE}
-void loadMainMenu(menuState &menuState){menuState = MAIN_MENU}
-void loadSoloMenu(menuState &menuState){menuState = SOLO}
-void loadMultiMenu(menuState &menuState){menuState = MULTIPLAYER}
+export void unloadMenu(menuState &menuState){menuState = MENU_MAIN_TITLE;}
+export void loadMainMenu(menuState &menuState){menuState = MAIN_MENU;}
+export void loadSoloMenu(menuState &menuState){menuState = SOLO;}
+export void loadMultiMenu(menuState &menuState){menuState = MULTIPLAYER;}
 
 
-void proceedMenu(std::vector<MenuEntry> &menu, int &menuCursor){
+export void proceedMenu(std::vector<MenuEntry> &menu, int &menuCursor){
     menu[menuCursor].execute(); // A voir, soit le calcul de la position clc, soit c'est l'indice du menu
 }
 
-void backMenu(menuState &menuState){
+export void backMenu(menuState &menuState){
     switch (menuState){
-        case MAIN_TITLE : break;
-        case MAIN_MENU : menuState = MAIN_TITLE; break;
+        case MENU_MAIN_TITLE : break;
+        case MAIN_MENU : menuState = MENU_MAIN_TITLE; break;
         case SOLO: case MULTIPLAYER : menuState = MAIN_MENU; break;
     }
 }
