@@ -164,6 +164,7 @@ int main()
             rWindow.draw(textList[0]);
             
             // Display (toutes les 1/60s)
+            // On perd l'aspect thread avec ce code
             auto currentTime = std::chrono::steady_clock::now();
             auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - startTime);
             if (elapsedTime >= targetFrameDuration) {
