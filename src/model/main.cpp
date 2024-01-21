@@ -68,6 +68,9 @@ int main()
         //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
         mode currentGameMode = gameMode; // pour changer facilement de mode
         Event event(rWindow);
+        if (event.getType() == CROSS) {
+            gameMode = END;
+        }
         std::vector<EventBinding> eventsMonitored;
             
 

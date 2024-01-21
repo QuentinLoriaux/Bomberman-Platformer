@@ -86,7 +86,7 @@ export class RenderWindow {
 
         void draw(Sprite &_sp){rWindow.draw(_sp.sp);}
         void draw(Text &_txt){rWindow.draw(_txt.text);}
-        void clear(){rWindow.clear();}
+        void clear(){rWindow.clear(sf::Color::Black);}
         void display(){rWindow.display();}
         void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
 };
