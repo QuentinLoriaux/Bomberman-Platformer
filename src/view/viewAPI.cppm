@@ -24,9 +24,9 @@ export module viewAPI;
 
 export class Texture{
     public :
-        sf:: Texture tex;
+        sf::Texture tex;
 
-        Texture(const std::string& nameTex) : tex(sf::Texture()){
+        Texture(const std::string nameTex) : tex(sf::Texture()){
             if (!tex.loadFromFile("./assets/img/" + nameTex)){
                 std::cout << "Error : texture '" << nameTex << "' not found" << std::endl;
             }

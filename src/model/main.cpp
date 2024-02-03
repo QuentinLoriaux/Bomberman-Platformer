@@ -68,9 +68,6 @@ int main()
         //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
         mode currentGameMode = gameMode; // pour changer facilement de mode
         Event event(rWindow);
-        if (event.getType() == CROSS) {
-            gameMode = END;
-        }
         std::vector<EventBinding> eventsMonitored;
             
 
@@ -78,7 +75,7 @@ int main()
         std::vector<Texture> textureList;
         std::vector<Sprite> spriteList;
             textureList.push_back(Texture("notFound.png"));
-            spriteList.push_back(Sprite(textureList[0]));
+            
 
         std::vector<Text> textList;
             textList.push_back(Text("Not Found", fontList[0], 50));
@@ -86,7 +83,7 @@ int main()
         std::vector<SoundBuffer> soundBufferList;
         std::vector<Sound> soundList;
             soundBufferList.push_back(SoundBuffer("notFound.mp3"));
-            soundList.push_back(Sound(soundBufferList[0]));
+            
 
         Music musique("notFound.ogg");
 
@@ -102,6 +99,9 @@ int main()
         //=========================== LOAD & INIT ===========================
   
         loadAssets(gameMode, textureList, soundBufferList, musique);
+        spriteList.push_back(Sprite(textureList[0]));//problèmes si on change textureList après
+        spriteList.push_back(Sprite(textureList[1]));
+        soundList.push_back(Sound(soundBufferList[0]));
 
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
@@ -111,11 +111,11 @@ int main()
         evQuit.addTypes(CROSS, ESC);//ESC for testing
         eventsMonitored.push_back(evQuit);
 
-        initialize(gameMode, eventsMonitored, fontList, textList,
-            menu, menuCursor, menuState);
+        //initialize(gameMode, eventsMonitored, fontList, textList,
+          //  menu, menuCursor, menuState);
 
         
-
+        
 
 
         // On va loader le reste des textes plus tard, selon les besoins
@@ -162,18 +162,19 @@ int main()
             // for (auto it = drawOrder.begin(); it != drawOrder.end() ; it++ ){
             //     rWindow.draw(*it);
             // }
-            rWindow.clear();
-            rWindow.draw(spriteList[1]);
-            rWindow.draw(textList[0]);
+
             
             // Display (toutes les 1/60s)
             // On perd l'aspect thread avec ce code
             auto currentTime = std::chrono::steady_clock::now();
-            auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - startTime);
+            auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - startFrameTime);
             if (elapsedTime >= targetFrameDuration) {
                 // Update the time for the next frame
-                startTime = currentTime;
-                window.display();
+                startFrameTime = currentTime;
+                rWindow.clear();
+                rWindow.draw(spriteList[1]);
+                rWindow.draw(textList[0]);
+                rWindow.display();
             }
 
         }
