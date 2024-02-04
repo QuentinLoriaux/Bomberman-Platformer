@@ -4,8 +4,8 @@ LIB = /usr/local/lib
 INC = /usr/local/include
 
 
-PRECOMPILE = -fprebuilt-module-path=build --precompile
-CFLAGS =  -Wall -Wextra  -std=c++20 #for modules
+MFLAGS = -std=c++20  -fprebuilt-module-path=build # for modules
+CFLAGS =  -Wall -Wextra -I $(INC) -I /usr/include/rapidxml
 LDFLAGS =  -L $(LIB)/SFML #-Wl,--disable-new-dtags,--rpath=$(LIBSFML) 
 LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
 
@@ -44,7 +44,7 @@ create_modules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES)))
 
 Bomberman_Plat : $(M)/main.cpp  $(OBJ_M) $(OBJ_V) $(OBJ_C)
 # Linkage
-	$(CXX) $(CFLAGS) -fprebuilt-module-path=build $^ -o $@.x $(LDFLAGS)
+	$(CXX)  $(MFLAGS)  $(CFLAGS) $^ -o $@.x $(LDFLAGS)
 
 
 
@@ -58,26 +58,26 @@ test : $(addsuffix .o, $(addprefix build/,$(TEST)))
 
 
 
-SFML_FLAG = -I $(INC)
-XML_FLAG = -I /usr/include/rapidxml
+
+
 
 build/%.o : $(M)/%.cppm # model
 # précompilation des modules
-	$(CXX) $(CFLAGS) $(PRECOMPILE) $^ -o $(patsubst $(M)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(M)/%.cppm, build/%.pcm, $<)
 # génération des fichiers objets
-	$(CXX) $(CFLAGS) -c $(patsubst $(M)/%.cppm, build/%.pcm, $<) -o $@
+	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(M)/%.cppm, build/%.pcm, $<) -o $@
 
 build/%.o : $(V)/%.cppm # view
-	$(CXX) $(CFLAGS) $(PRECOMPILE) $(XML_FLAG) $(SFML_FLAG) $^ -o $(patsubst $(V)/%.cppm, build/%.pcm, $<)
-	$(CXX) $(CFLAGS) -c $(patsubst $(V)/%.cppm, build/%.pcm, $<) -o $@
+	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(V)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(V)/%.cppm, build/%.pcm, $<) -o $@
 
 build/%.o : $(C)/%.cppm # controller
-	$(CXX) $(CFLAGS) $(PRECOMPILE) $(SFML_FLAG) $^ -o $(patsubst $(C)/%.cppm, build/%.pcm, $<)
-	$(CXX) $(CFLAGS) -c $(patsubst $(C)/%.cppm, build/%.pcm, $<) -o $@
+	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst $(C)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst $(C)/%.cppm, build/%.pcm, $<) -o $@
 
 build/%.o : src/%.cppm # classes et types
-	$(CXX) $(CFLAGS) $(PRECOMPILE) $^ -o $(patsubst src/%.cppm, build/%.pcm, $<)
-	$(CXX) $(CFLAGS) -c $(patsubst src/%.cppm, build/%.pcm, $<) -o $@
+	$(CXX) $(MFLAGS) $(CFLAGS) --precompile $^ -o $(patsubst src/%.cppm, build/%.pcm, $<)
+	$(CXX) $(MFLAGS) $(CFLAGS) -c $(patsubst src/%.cppm, build/%.pcm, $<) -o $@
 
 
 

@@ -63,7 +63,6 @@ export class Font{
 
 
 export class Text{
-
     
     public :
         sf::Text text;
@@ -71,26 +70,28 @@ export class Text{
         Text(const std::string& content, const Font& _ft, int size):
             text(sf::Text(content, _ft.ft, size)){}
 
-        
 };
 
-
-
-//========================= WINDOW =========================
-export class RenderWindow {
-
+export class TextManager{
     public :
-        sf::RenderWindow rWindow;
+        std::vector<Font> fontList;
+        std::vector<Text> textList;
 
-        RenderWindow(unsigned int width, unsigned int height, const std::string& title):
-            rWindow(sf::VideoMode(width, height), title){}
+        TextManager(): fontList(std::vector<Font>()), textList(std::vector<Text>()){}
 
-        void draw(Sprite &_sp){rWindow.draw(_sp.sp);}
-        void draw(Text &_txt){rWindow.draw(_txt.text);}
-        void clear(){rWindow.clear(sf::Color::Black);}
-        void display(){rWindow.display();}
-        void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
+        void addFont(const std::string &nameFont){fontList.push_back(Font(nameFont));}
+
+        void addText(const std::string &content, int numFont, int size){textList.push_back(Text(content, fontList[numFont], size));}
+
+        Text& getText(int numText){return textList[numText];}
+
+        void removeText(int numText){
+            textList.erase(textList.begin() + numText);
+        }
+
 };
+
+
 
 
 //========================= AUDIO =========================
@@ -197,4 +198,22 @@ export class Assets{
 
         Music& getMus(){return mus;}
 
+};
+
+
+
+//========================= WINDOW =========================
+export class RenderWindow {
+
+    public :
+        sf::RenderWindow rWindow;
+
+        RenderWindow(unsigned int width, unsigned int height, const std::string& title):
+            rWindow(sf::VideoMode(width, height), title){}
+
+        void draw(Sprite &_sp){rWindow.draw(_sp.sp);}
+        void draw(Text &_txt){rWindow.draw(_txt.text);}
+        void clear(){rWindow.clear(sf::Color::Black);}
+        void display(){rWindow.display();}
+        void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
 };

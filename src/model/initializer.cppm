@@ -66,25 +66,24 @@ export class GameVariables{
 
 // }
 
-void initGame(Event &event, std::vector<Font> &fontlist, std::vector<Text> &textList, GameVariables &gameVars){
+void initGame(Event &event, TextManager texts, GameVariables &gameVars){
     std::cout <<"yo\n";
 }
 
 
 export void initialize(mode &gameMode,
                        Event &event,
-                       std::vector<Font> &fontList,
-                       std::vector<Text> &textList,
+                       TextManager &texts,
 
                        GameVariables &gameVars
                        
                        ){
     
     switch (gameMode){
-        case MAIN_TITLE : initGame(event, fontList, textList,gameVars); break;
-        case EDITOR : initGame(event, fontList, textList,gameVars); break;
-        case GAME : initGame(event, fontList, textList,gameVars); break;
-        case WIN_SCREEN : initGame(event, fontList, textList,gameVars); break;
+        case MAIN_TITLE : initGame(event, texts,gameVars); break;
+        case EDITOR : initGame(event, texts, gameVars); break;
+        case GAME : initGame(event, texts, gameVars); break;
+        case WIN_SCREEN : initGame(event, texts, gameVars); break;
     }
 
 }

@@ -52,8 +52,8 @@ int main()
     rWindow.setFramerateLimit(FPS);
 
     // load fonts
-    std::vector<Font> fontList;
-    fontList.push_back(Font("arial.ttf"));
+    TextManager texts;
+    texts.addFont("arial.ttf");
 
     // Initialize game mode
     mode gameMode = GAME;
@@ -78,8 +78,7 @@ int main()
         assets.addSoundBuffer("notFound.mp3");
         assets.selectMusic("notFound.ogg");
 
-        std::vector<Text> textList;
-        textList.push_back(Text("Not Found", fontList[0], 50));
+        texts.addText("Not Found", 0, 50);
 
         //game variables
         GameVariables gameVars;
@@ -99,10 +98,11 @@ int main()
   
         event.addEvent(quitGame, std::ref(gameMode));
         event.addBinding(0, CROSS, ESC);//ESC for testing
+
         event.addEvent(testSound, std::ref(assets));
         event.addBinding(1,SPACE);
         
-        initialize(gameMode, event, fontList, textList, gameVars);
+        initialize(gameMode, event, texts, gameVars);
           //  menu, menuCursor, menuState);
 
         gameVars.board.displayBoard();
@@ -161,7 +161,7 @@ int main()
                 startFrameTime = currentTime;
                 rWindow.clear();
                 rWindow.draw(assets.getSp(1));
-                rWindow.draw(textList[0]);
+                rWindow.draw(texts.getText(0));
                 rWindow.display();
             }
 
