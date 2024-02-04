@@ -1,12 +1,13 @@
 module;
 
+import game;
 #include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
-import game;
+
 
 export module boardManager;
 

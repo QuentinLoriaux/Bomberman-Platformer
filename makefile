@@ -1,4 +1,4 @@
-CXX=clang++
+CXX=clang++-16
 
 LIB = /usr/local/lib
 INC = /usr/local/include
@@ -44,7 +44,7 @@ create_modules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES)))
 
 Bomberman_Plat : $(M)/main.cpp  $(OBJ_M) $(OBJ_V) $(OBJ_C)
 # Linkage
-	$(CXX) $(CFLAGS) -fprebuilt-module-path=build $^ -o $@.x $(LDFLAGS)
+	$(CXX) $(CFLAGS)  -fprebuilt-module-path=build $^ -o $@.x $(LDFLAGS)
 
 
 
@@ -58,7 +58,7 @@ test : $(addsuffix .o, $(addprefix build/,$(TEST)))
 
 
 
-SFML_FLAG = -I $(INC)
+SFML_FLAG = -I $(INC)/SFML
 XML_FLAG = -I /usr/include/rapidxml
 
 build/%.o : $(M)/%.cppm # model

@@ -1,5 +1,7 @@
 module;
 
+import tMode;
+import viewAPI;
 
 #include <vector>
 #include <any>
@@ -7,8 +9,7 @@ module;
 #include <algorithm>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-import tMode;
-import viewAPI;
+
 
 
 export module Event;

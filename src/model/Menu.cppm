@@ -1,11 +1,12 @@
 module;
 
+import tMode;
 #include <iostream>
 #include <vector>
 #include <string>
 #include <any>
 #include <functional>
-import tMode;
+
 
 export module Menu;
 
