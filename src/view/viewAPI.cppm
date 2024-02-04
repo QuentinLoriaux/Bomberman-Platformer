@@ -3,6 +3,7 @@ module;
 #include <iostream>
 #include <string>
 #include <variant>
+#include <vector>
 
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
@@ -132,4 +133,68 @@ export class Music{
         
         bool openFromFile(const std::string &nameMusic){return mus.openFromFile("./assets/music/" + nameMusic);}
         void play(){mus.play();}
+};
+
+//========================= ASSETS =========================
+
+export class Assets{
+    public :
+        std::vector<Texture> textureList;
+        std::vector<Sprite> spriteList;
+        std::vector<SoundBuffer> sfxBufList;
+        std::vector<Sound> soundList;
+        Music mus;
+
+        Assets(): textureList(std::vector<Texture>()), spriteList(std::vector<Sprite>()), sfxBufList(std::vector<SoundBuffer>()), soundList(std::vector<Sound>()), mus(Music()) {}
+        
+
+        // ----------- Texture -----------
+        void addTex(const std::string &nameTex){textureList.push_back(Texture(nameTex));}
+
+        void addSprite(int numTex){
+            int size = textureList.size();
+            if (numTex < size ){spriteList.push_back(textureList[numTex]);}
+            else{
+                std::cout << "Erreur : il n'y a que " << size << " textures enregistrées or vous avez demandé la n°" << numTex << ".\n";
+                spriteList.push_back(textureList[0]);
+            }
+        }
+
+        Sprite& getSp(int numSp){
+            int size = spriteList.size();
+            if (numSp < size ){return spriteList[numSp];}
+            else{
+                std::cout << "Erreur : il n'y a que " << size << " sprites enregistrés or vous avez demandé le n°" << numSp << ".\n";
+                return spriteList[0];
+            }
+        }
+
+        // ----------- Sons -----------
+
+        void addSoundBuffer(const std::string &nameSfx){sfxBufList.push_back(SoundBuffer(nameSfx));}
+
+        void addSound(int numSfx){
+            int size = sfxBufList.size();
+            if (numSfx < size ){soundList.push_back(sfxBufList[numSfx]);}
+            else{
+                std::cout << "Erreur : il n'y a que " << size << " soundBuffer enregistrés or vous avez demandé le n°" << numSfx << ".\n";
+                soundList.push_back(sfxBufList[0]);
+            }
+        }
+
+        Sound& getSfx(int numSfx){
+            int size = soundList.size();
+            if (numSfx < size ){return soundList[numSfx];}
+            else{
+                std::cout << "Erreur : il n'y a que " << size << " sons enregistrés or vous avez demandé le n°" << numSfx << ".\n";
+                return soundList[0];
+            }            
+        }
+
+        // ----------- Musique -----------
+
+        void selectMusic(const std::string &nameMusic){mus.openFromFile(nameMusic);}
+
+        Music& getMus(){return mus;}
+
 };

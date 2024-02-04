@@ -1,10 +1,3 @@
-#include <vector>
-#include <iostream>
-#include <any>
-#include <chrono>
-#include <thread>
-#include <pthread.h>
-
 import tMode;
 import Menu;
 
@@ -13,6 +6,15 @@ import Event;
 
 import loader;
 import initializer;
+
+#include <iostream>
+#include <vector>
+#include <any>
+#include <chrono>
+#include <thread>
+#include <pthread.h>
+
+
 
 #define W_WIDTH 1920
 #define W_HEIGHT 1080
@@ -54,7 +56,7 @@ int main()
     fontList.push_back(Font("arial.ttf"));
 
     // Initialize game mode
-    mode gameMode = MAIN_TITLE;
+    mode gameMode = GAME;
 
     // Initialize fps counter
     auto startFrameTime = std::chrono::steady_clock::now();
@@ -68,53 +70,42 @@ int main()
         //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
         mode currentGameMode = gameMode; // pour changer facilement de mode
         Event event(rWindow);
-        std::vector<EventBinding> eventsMonitored;
             
 
         //assets & texts
-        std::vector<Texture> textureList;
-        std::vector<Sprite> spriteList;
-            textureList.push_back(Texture("notFound.png"));
-            
+        Assets assets;
+        assets.addTex("notFound.png");
+        assets.addSoundBuffer("notFound.mp3");
+        assets.selectMusic("notFound.ogg");
 
         std::vector<Text> textList;
-            textList.push_back(Text("Not Found", fontList[0], 50));
-        
-        std::vector<SoundBuffer> soundBufferList;
-        std::vector<Sound> soundList;
-            soundBufferList.push_back(SoundBuffer("notFound.mp3"));
-            
+        textList.push_back(Text("Not Found", fontList[0], 50));
 
-        Music musique("notFound.ogg");
+        //game variables
+        GameVariables gameVars;
 
-
-        //===== Menu Variables ===== 
-        std::vector<MenuEntry> menu;
-        menuState menuState;
-        int menuCursor;
-        
-        //===== Editor Variables ===== 
-        // Tableau de blocs etc...
 
         //=========================== LOAD & INIT ===========================
   
-        loadAssets(gameMode, textureList, soundBufferList, musique);
-        spriteList.push_back(Sprite(textureList[0]));//problèmes si on change textureList après
-        spriteList.push_back(Sprite(textureList[1]));
-        soundList.push_back(Sound(soundBufferList[0]));
+        loadAssets(gameMode, assets);
+    
+        assets.addSprite(0);//problèmes si on change textureList après
+        assets.addSprite(1);
+        assets.addSound(0);
 
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
         // (certains textes, évènements, ...)
   
-        EventBinding evQuit(quitGame, std::ref(gameMode));
-        evQuit.addTypes(CROSS, ESC);//ESC for testing
-        eventsMonitored.push_back(evQuit);
-
-        //initialize(gameMode, eventsMonitored, fontList, textList,
+        event.addEvent(quitGame, std::ref(gameMode));
+        event.addBinding(0, CROSS, ESC);//ESC for testing
+        event.addEvent(testSound, std::ref(assets));
+        event.addBinding(1,SPACE);
+        
+        initialize(gameMode, event, fontList, textList, gameVars);
           //  menu, menuCursor, menuState);
 
-        
+        gameVars.board.displayBoard();
         
 
 
@@ -125,17 +116,14 @@ int main()
         //=========================== MAIN LOOP ===========================
         
         //Play Music
-        musique.play();
+        assets.getMus().play();
 
         while ((gameMode != END) && (gameMode == currentGameMode)){
    
             // Process events + play sounds
                 //close window, button pressed (Menu, Movement), Request to load a game mode...
-            while (event.poll()){
-                for (auto it = eventsMonitored.begin(); it != eventsMonitored.end() ; it++){
-                    if (event.isMonitored(it->types)){ it-> execute();}
-                }
-            }
+                
+            event.processEvents();
             
 
 
@@ -172,7 +160,7 @@ int main()
                 // Update the time for the next frame
                 startFrameTime = currentTime;
                 rWindow.clear();
-                rWindow.draw(spriteList[1]);
+                rWindow.draw(assets.getSp(1));
                 rWindow.draw(textList[0]);
                 rWindow.display();
             }

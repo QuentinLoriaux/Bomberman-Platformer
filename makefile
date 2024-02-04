@@ -5,9 +5,10 @@ INC = /usr/local/include
 
 
 MFLAGS = -std=c++20  -fprebuilt-module-path=build # for modules
-CFLAGS =  -Wall -Wextra -I $(INC)
+CFLAGS =  -Wall -Wextra -I $(INC) -I /usr/include/rapidxml
 LDFLAGS =  -L $(LIB)/SFML #-Wl,--disable-new-dtags,--rpath=$(LIBSFML) 
 LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
+
 
 # # Static attempt
 # LDFLAGS +=  -D SFML_STATIC -l GL  -l X11 -l freetype -l Xrandr -l Xcursor -l udev  
@@ -30,7 +31,8 @@ SRC_C = $(wildcard $(C)/*.cppm)
 OBJ_C = $(patsubst $(C)/%.cppm,build/%.o,$(SRC_C))
 
 
-TEST_MODULES = tMode viewAPI Menu Event #initializer
+ORDER_MODULES = tMode viewAPI Menu Event game boardManager #initializer
+TEST = boardManager
 
 all : create_modules Bomberman_Plat
 
@@ -38,8 +40,11 @@ Bomberman_Plat : $(M)/main.cpp  $(OBJ_M) $(OBJ_V) $(OBJ_C)
 # Linkage
 	$(CXX)  $(MFLAGS)  $(CFLAGS) $^ -o $@.x $(LDFLAGS)
 
-create_modules : $(addsuffix .o, $(addprefix build/,$(TEST_MODULES))) 
+create_modules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
 	echo "pls work"
+
+test : $(addsuffix .o, $(addprefix build/,$(TEST))) 
+	echo "pls work its making me sad"
 
 build/%.o : $(M)/%.cppm # model
 # précompilation des modules

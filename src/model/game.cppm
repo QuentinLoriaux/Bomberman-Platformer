@@ -1,6 +1,7 @@
 module;
 
 #include <vector>
+#include <iostream>
 #include <cstdlib>
 
 export module game;
@@ -8,23 +9,27 @@ export module game;
 #define NB_EFFECTS 10
 
 
-class Board{
-    private:
-        const int width;
-        const int height;
-        std::vector<Bloc> cases;
+//--------------------------------- bonus/malus effects ---------------------------------
 
+
+
+class Effect{
+    private:
+        int id;
     public:
+        Effect(int b_id): id(b_id){};
 };
 
-class Bloc{
+//--------------------------------- TYPES OF BLOCS ---------------------------------
+
+export class Bloc{
     protected:
-        bool crossable;
-        bool crossUp;
-        bool crossDown;
+        bool crossable;//traversable
+        bool crossUp;//par en dessous
+        bool crossDown;//par au dessus
         bool damaging;
         bool breakable;
-        bool bumpable;
+        bool bumpable;//fait bounce
 
 
 
@@ -32,20 +37,41 @@ class Bloc{
         Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, bool b_bumpable): 
             crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable), bumpable(b_bumpable){}
         
+        virtual void printInfo() const {
+            std::cout << "Generic Bloc" << std::endl;
+        }
+
+        virtual ~Bloc(){}
 };
 
-//--------------------------------- TYPES OF BLOCS ---------------------------------
 
-class Wall: public Bloc{
+export class Wall: public Bloc{
     private:
     public:
         Wall(): Bloc(false, false, false, true, false, false){}
+
+        void printInfo() const override {
+            std::cout << "Wall ";
+        }
 };
 
-class Air: public Bloc{
+export class Air: public Bloc{
     private:
     public:
         Air(): Bloc(true, true, true, false, false, false){}
+
+        void printInfo() const override {
+            std::cout << "Air ";
+        }
+};
+
+
+
+class BonusBloc: public Bloc{
+    private:
+        Effect c_effect;
+    public:
+        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, false){}
 };
 
 class BreakableWall: public Bloc{
@@ -58,13 +84,6 @@ class BreakableWall: public Bloc{
             Effect item = Effect(rand()%NB_EFFECTS);
             return BonusBloc(item);
         }
-};
-
-class BonusBloc: public Bloc{
-    private:
-        Effect c_effect;
-    public:
-        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, false){}
 };
 
 class ThinPlatform: public Bloc{
@@ -85,16 +104,6 @@ class BombFlare: public Bloc{
         BombFlare(): Bloc(true, true, true, true, false, false){}
 };
 
-//--------------------------------- bonus/malus effects ---------------------------------
-
-
-
-class Effect{
-    private:
-        int id;
-    public:
-        Effect(int b_id): id(b_id){};
-};
 
 
 //--------------------------------- Entities ---------------------------------

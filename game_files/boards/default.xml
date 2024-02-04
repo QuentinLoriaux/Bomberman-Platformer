@@ -1,0 +1,16 @@
+<Board>
+    <height>3</height>
+    <width>3</width>
+
+    <Bloc>Wall</Bloc>
+    <Bloc>Wall</Bloc>
+    <Bloc>Wall</Bloc>
+
+    <Bloc>Air</Bloc>
+    <Bloc>Air</Bloc>
+    <Bloc>Air</Bloc>
+
+    <Bloc>Air</Bloc>
+    <Bloc>Air</Bloc>
+    <Bloc>Air</Bloc>
+</Board>
