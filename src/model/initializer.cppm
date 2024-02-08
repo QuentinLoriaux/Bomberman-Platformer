@@ -5,8 +5,7 @@ import viewAPI;
 import Event;
 
 import Menu;
-import boardManager;
-import game;
+import Board;
 
 #include <vector>
 #include <any>

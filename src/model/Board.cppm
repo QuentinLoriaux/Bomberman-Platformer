@@ -1,24 +1,18 @@
 module;
 
+import parser;
+import Entity;
+#include <memory>
 #include <vector>
 #include <iostream>
 #include <cstdlib>
 
-export module game;
+export module Board;
 
 #define NB_EFFECTS 10
 
 
-//--------------------------------- bonus/malus effects ---------------------------------
 
-
-
-class Effect{
-    private:
-        int id;
-    public:
-        Effect(int b_id): id(b_id){};
-};
 
 //--------------------------------- TYPES OF BLOCS ---------------------------------
 
@@ -31,7 +25,7 @@ export class Bloc{
         bool breakable;
         bool bumpable;//fait bounce
 
-
+        std::vector<Entity*> entities;
 
     public:
         Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, bool b_bumpable): 
@@ -104,53 +98,42 @@ class BombFlare: public Bloc{
         BombFlare(): Bloc(true, true, true, true, false, false){}
 };
 
+//--------------------------------- BOARD ---------------------------------
 
-
-//--------------------------------- Entities ---------------------------------
-
-
-// Contrairement aux Blocs, les entités peuvent se déplacer 
-class Entity{
-    protected:
-        int wCoord;// index tableau
-        int hCoord;
-        float wPos;// position réelle
-        float hPos;
-
-        int hp;
-        int speed;
-
-
-    public:
-
-};
-
-class Player: public Entity{
+export class Board{
     private:
-        int playerId;
-        int controllerId;
-        int maxBomb;
-        int activeBomb;// à l'écran
-
-        std::vector<Effect> effects;
+        int width;
+        int height;
+        std::vector<std::unique_ptr<Bloc>> cases;
 
     public:
-        void move(){}// Gauche ou Droite
-        void jump(){}
-        bool isAlive(){return hp==0;}
-        bool pause(){}
-        bool cameraMode(){}// 0: fixe | 1: suit le joueur 
+        Board(){loadBoard("./game_files/boards/default.xml");}
+        Board(const std::string& xmlFilePath){loadBoard(xmlFilePath);}
+
+        void loadBoard(const std::string& xmlFilePath){
+            parsedXML xmlFile(xmlFilePath);
+            width = xmlFile.width;
+            height = xmlFile.height;
+            for (auto it = xmlFile.cases.begin() ; it != xmlFile.cases.end() ; it++){
+                if (*it == "Wall"){cases.push_back(std::make_unique<Wall>());}
+                else if (*it == "Air"){cases.push_back(std::make_unique<Air>());}
+            }
+        }
+
+
+        void displayBoard() const {
+            for (const auto& bloc : cases) {
+                bloc->printInfo();
+            }
+            std::cout << std::endl;
+        }
 };
 
 
 
 
-class Monster: public Entity{
-    private:
-    public:
-        void move(){}
-        //void jump(){}
-        bool isAlive(){return hp==0;}
-};
+//--------------------------------- COLLISION ---------------------------------
 
+void collide(Entity ent){
 
+}

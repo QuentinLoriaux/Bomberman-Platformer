@@ -38,7 +38,7 @@ all : create_modules Bomberman_Plat
 
 
 
-ORDER_MODULES = tMode viewAPI Menu Event game boardManager
+ORDER_MODULES = tMode viewAPI Menu Event parser Entity Board
 create_modules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
 	echo "pls work"
 

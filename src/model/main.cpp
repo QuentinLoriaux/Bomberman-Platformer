@@ -104,7 +104,7 @@ int main()
         
         initialize(gameMode, event, texts, gameVars);
           //  menu, menuCursor, menuState);
-
+        
         gameVars.board.displayBoard();
         
 
