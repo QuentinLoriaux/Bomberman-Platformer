@@ -54,7 +54,7 @@ export class Entity{
         bool isAlive(){return hp==0;}
 
         void updateHSpeed(){
-            if (grounded){ hSpeed = 0};
+            if (grounded){ hSpeed = 0;}
             else{
                 float newSpeed = vSpeed - GRAVITY*TIME;
                 if (newSpeed > - GRAVITY){vSpeed = newSpeed;}  

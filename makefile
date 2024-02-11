@@ -1,4 +1,4 @@
-CXX=clang++-16
+CXX = clang++-16
 
 LIB = /usr/local/lib
 INC = /usr/local/include
@@ -9,6 +9,17 @@ CFLAGS =  -Wall -Wextra  -std=c++20 #for modules
 LDFLAGS =  -L $(LIB)/SFML 
 LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
 
+# ========= commands for users =========
+
+all : createBuild createModules Bomberman_Plat
+
+cleanAll:
+	rm  build/*
+#	rm Bomberman_Plat.x
+
+createBuild:
+	- mkdir build
+
 
 # ========= rules for compiling =========
 
@@ -16,53 +27,52 @@ API = src/engine/libAPI
 SFML_FLAG = -I $(INC)/SFML
 XML_FLAG = -I /usr/include/rapidxml
 
-build/%.o : $(API)/%.cppm # API
+build/%.o : $(API)/%.cppm # engine/libAPI
 	$(CXX) $(CFLAGS) $(PRECOMPILE) $(XML_FLAG) $(SFML_FLAG) $^ -o $(patsubst $(API)/%.cppm, build/%.pcm, $<)
 	$(CXX) $(CFLAGS) -c $(patsubst $(API)/%.cppm, build/%.pcm, $<) -o $@
 
+LOGIC = src/engine/logic
+build/%.o : $(LOGIC)/%.cppm # engine/logic
+	$(CXX) $(CFLAGS) $(PRECOMPILE)  $^ -o $(patsubst $(LOGIC)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(CFLAGS) -c $(patsubst $(LOGIC)/%.cppm, build/%.pcm, $<) -o $@
+
+
+BOMB = src/bomberman
+build/%.o : $(BOMB)/%.cppm # bomberman
+	$(CXX) $(CFLAGS) $(PRECOMPILE)  $^ -o $(patsubst $(BOMB)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(CFLAGS) -c $(patsubst $(BOMB)/%.cppm, build/%.pcm, $<) -o $@
+
+
+GAME = src/bomberman/game
+build/%.o : $(GAME)/%.cppm # bomberman/game
+	$(CXX) $(CFLAGS) $(PRECOMPILE)  $^ -o $(patsubst $(GAME)/%.cppm, build/%.pcm, $<)
+	$(CXX) $(CFLAGS) -c $(patsubst $(GAME)/%.cppm, build/%.pcm, $<) -o $@
+
+
+# compile: 
+#     @for file in $(SOURCES); do \
+#         $(CC) $(CFLAGS) -c $$file -o $$(basename $$file .c).o; \
+# 		$(CXX) $(CFLAGS) $(PRECOMPILE) $^ -o $(patsubst $(V)/%.cppm, build/%.pcm, $<) \
+# 		$(CXX) $(CFLAGS) -c $(patsubst $(V)/%.cppm, build/%.pcm, $<) -o $@ \
+#     done
 
 
 
-
-
-
-SOURCES = $(shell find src -type f -iname '*.c')
+SOURCES = $(shell find src -type f -iname '*.cppm')
 MODULES = $(notdir $(SOURCES))
-OBJ = $(patsubst %.cppm, build/%.pcm, $(MODULES))
-
-
-compile:
-    @for file in $(SOURCES); do \
-        $(CC) $(CFLAGS) -c $$file -o $$(basename $$file .c).o; \
-		$(CXX) $(CFLAGS) $(PRECOMPILE) $(XML_FLAG) $(SFML_FLAG) $^ -o $(patsubst $(V)/%.cppm, build/%.pcm, $<) \
-		$(CXX) $(CFLAGS) -c $(patsubst $(V)/%.cppm, build/%.pcm, $<) -o $@ \
-    done
-
-
-
-
-
-
-
-
+OBJ = $(patsubst %.cppm, build/%.o, $(MODULES))
 
 Bomberman_Plat : src/engine/logic/main.cpp  $(OBJ)
 # Linkage
+	@echo $(MODULES)
 	$(CXX) $(CFLAGS)  -fprebuilt-module-path=build $^ -o $@.x $(LDFLAGS)
 
-# ========= commands for users =========
-
-all : create_modules Bomberman_Plat
-
-cleanAll:
-	rm  build/*
-#	rm Bomberman_Plat.x
 
 
 # ========= When things go wrong =========
 
-ORDER_MODULES = tMode viewAPI Menu Event parser Entity Board
-create_modules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
+ORDER_MODULES = tMode Menu viewAPI Event loader parser Entity Board initializer 
+createModules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
 	@echo "pls work"
 
 TEST = boardManager

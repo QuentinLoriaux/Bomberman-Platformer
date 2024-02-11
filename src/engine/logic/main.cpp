@@ -1,16 +1,15 @@
 import tMode;
 import Menu;
 
-import viewAPI;
-import Event;
-
 import loader;
 import initializer;
+
+import Event;
+import viewAPI;
 // import updateVariables;
 
 #include <iostream>
 #include <vector>
-#include <any>
 #include <chrono>
 #include <thread>
 #include <pthread.h>
@@ -100,7 +99,8 @@ int main()
         
         initialize(gameMode, event, texts, gameVars);
 
-        
+        event.addEvent(testSound, std::ref(assets));
+        event.addBinding(1,SPACE);
         gameVars.board.displayBoard();
         
 

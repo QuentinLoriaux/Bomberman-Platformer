@@ -10,12 +10,13 @@ import Board;
 #include <vector>
 #include <any>
 #include <iostream>
+#include <functional>
 
 
 export module initializer;
 
 void quitGame(mode &gameMode){gameMode = END;}
-void testSound(Assets &assets){assets.getSfx(0).play();}
+export void testSound(Assets &assets){assets.getSfx(0).play();}
 
 export class GameVariables{
     public :
@@ -82,8 +83,7 @@ export void initialize(mode &gameMode,
     event.addEvent(quitGame, std::ref(gameMode));
     event.addBinding(0, CROSS, ESC);//ESC for testing
     
-    event.addEvent(testSound, std::ref(assets));
-    event.addBinding(1,SPACE);
+
 
     switch (gameMode){
         case MAIN_TITLE : initGame(event, texts,gameVars); break;

@@ -3,23 +3,28 @@ module;
 import tMode;
 import viewAPI;
 import Event;
+import initializer;
+
+#include <iostream>
 
 export module updateVariables;
 
 
+void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
+    std::cout <<"yo\n";
+}
 
-
-xport void updateVars(mode &gameMode,
+export void updateVars(mode &gameMode,
                        Event &event,
                        TextManager &texts,
                        GameVariables &gameVars
                        ){
 
     switch (gameMode){
-        case MAIN_TITLE : initGame(event, texts,gameVars); break;
-        case EDITOR : initGame(event, texts, gameVars); break;
-        case GAME : initGame(event, texts, gameVars); break;
-        case WIN_SCREEN : initGame(event, texts, gameVars); break;
+        case MAIN_TITLE : updateGame(event, texts,gameVars); break;
+        case EDITOR : updateGame(event, texts, gameVars); break;
+        case GAME : updateGame(event, texts, gameVars); break;
+        case WIN_SCREEN : updateGame(event, texts, gameVars); break;
     }
 
 }
