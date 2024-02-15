@@ -114,7 +114,7 @@ export class Board{
             loadBoard(xmlFilePath);
             updateBlocLength(rWindow);
         }
-        Board(): Board("./game_files/boards/default.xml"){}
+        Board(RenderWindow& rWindow): Board("./game_files/boards/default.xml",rWindow){}
 
 
         void loadBoard(const std::string& xmlFilePath){

@@ -53,7 +53,7 @@ export class Entity{
         
 
         Entity(float _xSize, float _ySize): hCoord(0), vCoord(0), hPos(0), vPos(0), dir(NO_DIR), vSpeed(0), hSpeed(0), grounded(true),
-                ySize(_ySize), xSize(_xSize) {}
+                xSize(_xSize), ySize(_ySize), closeBlocs(std::vector<int>()) {}
 
 
         bool isAlive(){return hp==0;}
@@ -98,7 +98,7 @@ export class Player: public Entity{
 
 
     public:
-        Player
+        
         void move(){}// Gauche ou Droite
         void jump(){}
         
@@ -119,5 +119,5 @@ export class Monster: public Entity{
 
 export class Entities {
     public:
-        std::vector<Entity>
-}
+        std::vector<Entity> toto;
+};

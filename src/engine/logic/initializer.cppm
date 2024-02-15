@@ -29,6 +29,8 @@ export class GameVariables{
         //GAME
         Board board;
 
+        GameVariables(RenderWindow& rWindow): board(Board(rWindow)){}
+
 
 };
 

@@ -3,9 +3,11 @@ import Menu;
 
 import loader;
 import initializer;
+import displayer;
 
 import Event;
 import viewAPI;
+
 // import updateVariables;
 
 #include <iostream>
@@ -81,7 +83,7 @@ int main()
         texts.addText("Not Found", 0, 50);
 
         //game variables
-        GameVariables gameVars;
+        GameVariables gameVars(rWindow);
 
 
         //=========================== LOAD & INIT ===========================
@@ -101,6 +103,7 @@ int main()
 
         event.addEvent(testSound, std::ref(assets));
         event.addBinding(1,SPACE);
+
         gameVars.board.displayBoard();
         
 
@@ -154,8 +157,7 @@ int main()
                 // Update the time for the next frame
                 startFrameTime = currentTime;
                 
-                rWindow.draw(assets.getSp(1));
-                rWindow.draw(texts.getText(0));
+                display(gameMode, rWindow, assets, texts, gameVars);
                 
             }
 

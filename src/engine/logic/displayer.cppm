@@ -2,15 +2,15 @@ module;
 
 import viewAPI;
 import initializer;
+import tMode;
 
 export module displayer;
 
 
 
 void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
-    std::cout <<"yo\n";
     
-    rWindow.draw(assets.getSp(1)); //draw background
+    rWindow.draw(assets.getSp(0)); //draw background
 
     //draw Board
     
