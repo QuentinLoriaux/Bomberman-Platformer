@@ -153,10 +153,10 @@ int main()
             if (elapsedTime >= targetFrameDuration) {
                 // Update the time for the next frame
                 startFrameTime = currentTime;
-                rWindow.clear();
+                
                 rWindow.draw(assets.getSp(1));
                 rWindow.draw(texts.getText(0));
-                rWindow.display();
+                
             }
 
         }

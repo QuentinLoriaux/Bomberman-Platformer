@@ -41,6 +41,12 @@ export class Sprite{
         sf::Sprite sp;
 
         Sprite(Texture& _tex): sp(sf::Sprite(_tex.tex)) {}//Directement assigner une image au sprite
+        Sprite(Texture& _tex, int xSize, int ySize): sp(sf::Sprite(_tex.tex)) {
+            
+
+        }//Directement assigner une image au sprite
+
+
 
 };
 
@@ -216,4 +222,10 @@ export class RenderWindow {
         void clear(){rWindow.clear(sf::Color::Black);}
         void display(){rWindow.display();}
         void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
+        
+        void getSize(int& xSize, int& ySize){
+            sf::Vector2u vec = rWindow.getSize();
+            xSize = vec.x;
+            ySize = vec.y;
+        }
 };

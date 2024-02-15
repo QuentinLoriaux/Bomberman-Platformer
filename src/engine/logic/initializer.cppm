@@ -29,6 +29,7 @@ export class GameVariables{
         //GAME
         Board board;
 
+
 };
 
 // void initMainTitle(Event &event,
@@ -68,7 +69,7 @@ export class GameVariables{
 
 // }
 
-void initGame(Event &event, TextManager texts, GameVariables &gameVars){
+void initGame(Event &event, TextManager& texts, GameVariables &gameVars){
     std::cout <<"yo\n";
 }
 

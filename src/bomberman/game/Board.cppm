@@ -2,6 +2,7 @@ module;
 
 import parser;
 import Entity;
+import viewAPI;
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -23,13 +24,14 @@ export class Bloc{
         bool crossDown;//par au dessus
         bool damaging;
         bool breakable;
-        bool bumpable;//fait bounce
 
         std::vector<Entity*> entities;
 
     public:
-        Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, bool b_bumpable): 
-            crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable), bumpable(b_bumpable){}
+        int displayId;
+
+        Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, int b_ID): 
+            crossable(b_crossable), crossUp(b_crossUp), crossDown(b_crossDown), damaging(b_damaging), breakable(b_breakable), displayId(b_ID){}
         
         virtual void printInfo() const {
             std::cout << "Generic Bloc" << std::endl;
@@ -42,7 +44,7 @@ export class Bloc{
 export class Wall: public Bloc{
     private:
     public:
-        Wall(): Bloc(false, false, false, true, false, false){}
+        Wall(): Bloc(false, false, false, true, false, 1){}
 
         void printInfo() const override {
             std::cout << "Wall ";
@@ -52,7 +54,7 @@ export class Wall: public Bloc{
 export class Air: public Bloc{
     private:
     public:
-        Air(): Bloc(true, true, true, false, false, false){}
+        Air(): Bloc(true, true, true, false, false, 2){}
 
         void printInfo() const override {
             std::cout << "Air ";
@@ -65,14 +67,14 @@ class BonusBloc: public Bloc{
     private:
         Effect c_effect;
     public:
-        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, false){}
+        BonusBloc(Effect b_effet): c_effect(b_effet), Bloc(true, true, true, false, true, 3){}
 };
 
 class BreakableWall: public Bloc{
     private:
         //bool bonus;
     public:
-        BreakableWall():  Bloc(false, false, false, true, true, false){}
+        BreakableWall():  Bloc(false, false, false, true, true, 4){}
 
         BonusBloc generateBonus(){
             Effect item = Effect(rand()%NB_EFFECTS);
@@ -83,19 +85,19 @@ class BreakableWall: public Bloc{
 class ThinPlatform: public Bloc{
     private:
     public:
-        ThinPlatform(): Bloc(false, true, false, false, false, false){}
+        ThinPlatform(): Bloc(false, true, false, false, false, 5){}
 };
 
 class BombBloc: public Bloc{
     private:
     public:
-        BombBloc(): Bloc(false, false, false,  false, false, false){}
+        BombBloc(): Bloc(false, false, false,  false, false, 6){}
 };
 
 class BombFlare: public Bloc{
     private:
     public:
-        BombFlare(): Bloc(true, true, true, true, false, false){}
+        BombFlare(): Bloc(true, true, true, true, false, 7){}
 };
 
 //--------------------------------- BOARD ---------------------------------
@@ -105,10 +107,15 @@ export class Board{
         int width;
         int height;
         std::vector<std::unique_ptr<Bloc>> cases;
+        int blocLength;
 
     public:
-        Board(){loadBoard("./game_files/boards/default.xml");}
-        Board(const std::string& xmlFilePath){loadBoard(xmlFilePath);}
+        Board(const std::string& xmlFilePath, RenderWindow& rWindow){
+            loadBoard(xmlFilePath);
+            updateBlocLength(rWindow);
+        }
+        Board(): Board("./game_files/boards/default.xml"){}
+
 
         void loadBoard(const std::string& xmlFilePath){
             parsedXML xmlFile(xmlFilePath);
@@ -129,6 +136,14 @@ export class Board{
             }
             std::cout << std::endl;
         }
+
+        void updateBlocLength(RenderWindow& rWindow){
+            int ySize; int xSize;
+            rWindow.getSize(xSize, ySize);
+            ySize = height/ySize;   xSize = width/xSize;
+            blocLength = (ySize > xSize) ? xSize : ySize;
+        }
+
 };
 
 
