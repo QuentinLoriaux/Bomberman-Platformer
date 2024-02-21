@@ -1,6 +1,6 @@
 module;
 
-import tMode;
+// import mode;
 #include <iostream>
 #include <vector>
 #include <string>
@@ -8,7 +8,9 @@ import tMode;
 #include <functional>
 
 
-export module Menu;
+export module menu;
+
+
 
 export typedef enum _menuState{
     MENU_MAIN_TITLE,
@@ -40,12 +42,13 @@ export class MenuEntry {
 };
 
 
-export void loadEditorFromMenu(mode &gameMode){gameMode = EDITOR;}
 
-export void unloadMenu(menuState &menuState){menuState = MENU_MAIN_TITLE;}
-export void loadMainMenu(menuState &menuState){menuState = MAIN_MENU;}
-export void loadSoloMenu(menuState &menuState){menuState = SOLO;}
-export void loadMultiMenu(menuState &menuState){menuState = MULTIPLAYER;}
+// export void loadEditorFromMenu(mode &gameMode){gameMode = EDITOR;}
+
+// export void unloadMenu(menuState &menuState){menuState = MENU_MAIN_TITLE;}
+// export void loadMainMenu(menuState &menuState){menuState = MAIN_MENU;}
+// export void loadSoloMenu(menuState &menuState){menuState = SOLO;}
+// export void loadMultiMenu(menuState &menuState){menuState = MULTIPLAYER;}
 
 
 export void proceedMenu(std::vector<MenuEntry> &menu, int &menuCursor){

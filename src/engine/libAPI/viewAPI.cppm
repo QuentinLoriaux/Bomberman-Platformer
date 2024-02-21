@@ -41,12 +41,24 @@ export class Sprite{
         sf::Sprite sp;
 
         Sprite(Texture& _tex): sp(sf::Sprite(_tex.tex)) {}//Directement assigner une image au sprite
-        Sprite(Texture& _tex, int xSize, int ySize): sp(sf::Sprite(_tex.tex)) {
-            
+        
+        void setTexRect(int x, int y, int w, int h){
+            sf::Rect rect(x, y, w, h);
+            sp.setTextureRect(rect);
+        }
 
-        }//Directement assigner une image au sprite
+        void setTexRect(int num, int offset, int texPerLine){
+            setTexRect((num%texPerLine)*offset, (num/texPerLine)*offset, offset, offset);
+        }
 
+        void setOrigin(float x, float y){sp.setOrigin(x,y);}
 
+        void setPos(float x, float y){sp.setPosition(x,y);}
+
+        void resize(float w, float h){
+            auto size = sp.getTextureRect().getSize();
+            sp.setScale(w/size.x, h/size.y);
+        }
 
 };
 
@@ -223,8 +235,8 @@ export class RenderWindow {
         void display(){rWindow.display();}
         void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
         
-        void getSize(int& xSize, int& ySize){
-            sf::Vector2u vec = rWindow.getSize();
+        void getSize(float& xSize, float& ySize){
+            auto vec = rWindow.getSize();
             xSize = vec.x;
             ySize = vec.y;
         }

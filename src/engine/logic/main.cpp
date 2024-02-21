@@ -1,14 +1,10 @@
-import tMode;
-import Menu;
-
-import loader;
-import initializer;
-import displayer;
 
 import Event;
 import viewAPI;
+import modes;
+import gameVars;
 
-// import updateVariables;
+
 
 #include <iostream>
 #include <vector>
@@ -91,7 +87,7 @@ int main()
         loadAssets(gameMode, assets);
     
         assets.addSprite(0);//problèmes si on change textureList après avoir créé des sprites
-        assets.addSprite(1);
+        // assets.addSprite(1);
         assets.addSound(0);
 
         // initialisation des variables du mode  
@@ -99,7 +95,7 @@ int main()
         // (certains sprites, textes, évènements, ...)
 
         
-        initialize(gameMode, event, texts, gameVars);
+        initialize(gameMode, event, texts, gameVars, assets);
 
         event.addEvent(testSound, std::ref(assets));
         event.addBinding(1,SPACE);

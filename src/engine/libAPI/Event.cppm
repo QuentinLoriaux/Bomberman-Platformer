@@ -1,6 +1,5 @@
 module;
 
-import tMode;
 import viewAPI;
 
 #include <vector>
@@ -74,10 +73,11 @@ class EventBinding{//Toujours initialiser avec le constructeur(fonction) puis aj
 export class Event{
     private :
         sf::Event ev;
-        RenderWindow* window;
         std::vector<EventBinding> eventList;
         std::vector<int> monitoredList;
     public :
+        RenderWindow* window;
+        
         //On passe la fenêtre en référence
         Event(RenderWindow &_rWindow) : ev(sf::Event()), window(&_rWindow) {}
 
