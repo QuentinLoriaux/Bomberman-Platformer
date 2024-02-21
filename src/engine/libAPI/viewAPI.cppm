@@ -240,4 +240,6 @@ export class RenderWindow {
             xSize = vec.x;
             ySize = vec.y;
         }
+
+
 };

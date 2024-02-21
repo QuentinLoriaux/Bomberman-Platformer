@@ -28,27 +28,27 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 
     //background
     assets.addSprite(1);
-    float xSize; float ySize;
-    event.window->getSize(xSize, ySize);
-    assets.getSp(1).resize(xSize, ySize);
+    // float xSize; float ySize;
+    // event.window->getSize(xSize, ySize);
+    // assets.getSp(1).resize(xSize, ySize);
 
     //blocs
     gameVars.board.createSprites(assets);
-    gameVars.board.textureBinding(assets);
+    // gameVars.board.textureBinding(assets);
     
-    float xStart; float yStart; 
-    gameVars.board.updateBlocLength(*event.window, xStart, yStart);
-    float side = gameVars.board.blocLength;
+    // float xStart; float yStart; 
+    // gameVars.board.updateBlocLength(*event.window, xStart, yStart);
+    // float side = gameVars.board.blocLength;
 
 
-    float xOffset; float yOffset;
-    for (auto k = 0; k < gameVars.board.cases.size(); k++){
-        gameVars.board.computeOffset(k, xOffset, yOffset);
+    // float xOffset; float yOffset;
+    // for (auto k = 0; k < gameVars.board.cases.size(); k++){
+    //     gameVars.board.computeOffset(k, xOffset, yOffset);
 
-        auto sp = assets.getSp(2+k);
-        sp.setPos(xStart + xOffset, yStart + yOffset);
-        sp.resize(side, side);
-    } 
+    //     auto sp = assets.getSp(2+k);
+    //     sp.setPos(xStart + xOffset, yStart + yOffset);
+    //     sp.resize(side, side);
+    // } 
 
 }
 
@@ -57,12 +57,12 @@ export void updateGame(Event &event, TextManager texts, GameVariables &gameVars)
 }
 
 export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
-    float xScreen; float yScreen;
-    rWindow.getSize(xScreen, yScreen);
 
     //draw background
+    float xSize; float ySize;
+    rWindow.getSize(xSize, ySize);
+    assets.getSp(1).resize(xSize, ySize);
     rWindow.draw(assets.getSp(1));
-
 
 
     //draw Board

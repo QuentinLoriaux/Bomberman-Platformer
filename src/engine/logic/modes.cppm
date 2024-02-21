@@ -15,6 +15,7 @@ export module modes;
 // ========================== Test functions ==========================
 
 export void quitGame(mode &gameMode){gameMode = END;}
+export void resizeWindow(Event& event){event.resize();}
 export void testSound(Assets &assets){assets.getSfx(0).play();}
 
 
@@ -45,7 +46,9 @@ export void initialize(mode &gameMode,
                        ){
     event.addEvent(quitGame, std::ref(gameMode));
     event.addBinding(0, CROSS, ESC);//ESC for testing
-    
+
+    event.addEvent(resizeWindow, std::ref(event));
+    event.addBinding(1, RESIZE);
 
 
     switch (gameMode){

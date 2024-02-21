@@ -16,6 +16,7 @@ export module Event;
 export typedef enum _evType{
     NOT_MAPPED,
     CROSS,
+    RESIZE,
 
     //Keys
     ESC,
@@ -89,6 +90,10 @@ export class Event{
                 case sf::Event::Closed:
                     return CROSS;
 
+                case sf::Event::Resized:
+                    return RESIZE;
+
+
                 case sf::Event::KeyPressed:
                     switch (ev.key.code) {
                         case sf::Keyboard::Escape:
@@ -150,6 +155,11 @@ export class Event{
                     }
                 }
             }
+        }
+
+
+        void resize(){
+            window->rWindow.setView(sf::View(sf::FloatRect(0, 0, ev.size.width, ev.size.height)));
         }
 
 

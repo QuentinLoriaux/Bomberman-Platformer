@@ -145,6 +145,7 @@ export class Board{
         void updateBlocLength(RenderWindow& rWindow, float& xStart, float& yStart){
             float xSize; float ySize;
             rWindow.getSize(xSize, ySize);
+            // std::cout << xSize << "," << ySize << std::endl;
 
             if (ySize/height > xSize/width){
                 blocLength = xSize/width;
@@ -164,6 +165,10 @@ export class Board{
         void createSprites(Assets& assets){
             for (auto it = cases.begin() ; it != cases.end(); it++){assets.addSprite(2);}
         }
+
+        // void clearSprites(Assets& assets){
+        //     for (auto it = cases.begin() ; it != cases.end(); it++){assets.addSprite(2);}
+        // }
 
         void textureBinding(Assets& assets){
             for (auto k = 0; k < cases.size(); k++){assets.getSp(2+k).setTexRect(cases[k]->displayId, TEX_OFFSET, TEX_PER_LINE);}

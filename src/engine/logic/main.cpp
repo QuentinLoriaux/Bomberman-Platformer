@@ -98,7 +98,7 @@ int main()
         initialize(gameMode, event, texts, gameVars, assets);
 
         event.addEvent(testSound, std::ref(assets));
-        event.addBinding(1,SPACE);
+        event.addBinding(2,SPACE);
 
         gameVars.board.displayBoard();
         
