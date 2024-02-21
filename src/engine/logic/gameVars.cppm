@@ -7,7 +7,7 @@ import menu;
 import Board;
 
 #include <iostream>
-#include <vector>
+
 
 
 export module gameVars;
@@ -33,9 +33,12 @@ export class GameVariables{
         // int menuCursor;
 
         //GAME
+        int nbPlayers;
         Board board;
 
-        GameVariables(RenderWindow& rWindow): board(Board(rWindow)){}
+
+        GameVariables(RenderWindow& rWindow): nbPlayers(1), board(Board(rWindow)){}
+        GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board(rWindow)){}
 
 
 };

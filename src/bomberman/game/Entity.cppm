@@ -33,18 +33,17 @@ export typedef enum _direction{
 export class Entity{
     // protected:
     public:
-        int hCoord;// index tableau
-        int vCoord;
-        float hPos;// position réelle
-        float vPos;
+        int blocIndex;// index tableau pour bombes
+        float xPos;// position réelle
+        float yPos;
         
 
         direction dir; //input direction
-        float vSpeed;
-        float hSpeed;
+        float ySpeed;
+        float xSpeed;
         bool grounded;
 
-        float xSize;
+        float xSize;//1 = côté d'une case
         float ySize;
         
         std::vector<int> closeBlocs;
@@ -52,17 +51,17 @@ export class Entity{
         int hp;
         
 
-        Entity(float _xSize, float _ySize): hCoord(0), vCoord(0), hPos(0), vPos(0), dir(NO_DIR), vSpeed(0), hSpeed(0), grounded(true),
-                xSize(_xSize), ySize(_ySize), closeBlocs(std::vector<int>()) {}
+        Entity(int _blocIndex, float _xPos, float _yPos): blocIndex(_blocIndex), xPos(_xPos), yPos(_yPos), dir(NO_DIR), ySpeed(0), xSpeed(0), grounded(true),
+                xSize(0.5), ySize(0.75), closeBlocs(std::vector<int>()), hp(1) {}
 
 
         bool isAlive(){return hp==0;}
 
-        void updateHSpeed(){
-            if (grounded){ hSpeed = 0;}
+        void updateYSpeed(){
+            if (grounded){ xSpeed = 0;}
             else{
-                float newSpeed = vSpeed - GRAVITY*TIME;
-                if (newSpeed > - GRAVITY){vSpeed = newSpeed;}  
+                float newSpeed = ySpeed - GRAVITY*TIME;
+                if (newSpeed > - GRAVITY){ySpeed = newSpeed;}  
             }
         }
 
@@ -70,12 +69,12 @@ export class Entity{
 
         void updatePos(){
             switch (dir){
-                case LEFT : hPos += hSpeed * TIME; break;
-                case RIGHT : hPos -= hSpeed * TIME; break;
+                case LEFT : xPos += xSpeed * TIME; break;
+                case RIGHT : xPos -= xSpeed * TIME; break;
                 default:
                     break;
             }             
-            vPos = vSpeed * TIME;
+            yPos = ySpeed * TIME;
         }
 
 
@@ -112,12 +111,9 @@ export class Player: public Entity{
 export class Monster: public Entity{
     private:
     public:
+        Monster(int _blocIndex, float _xPos, float _yPos): Entity(_blocIndex, _xPos, _yPos){}
+
         void move(){}
         //void jump(){}
-        // bool isAlive(){return hp==0;}
 };
 
-export class Entities {
-    public:
-        std::vector<Entity> toto;
-};
