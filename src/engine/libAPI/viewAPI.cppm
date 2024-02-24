@@ -47,8 +47,8 @@ export class Sprite{
             sp.setTextureRect(rect);
         }
 
-        void setTexRect(int num, int offset, int texPerLine){
-            setTexRect((num%texPerLine)*offset, (num/texPerLine)*offset, offset, offset);
+        void setTexRect(int num, std::vector<int>& bindings){
+            setTexRect(bindings[4*num], bindings[4*num+1], bindings[4*num+2], bindings[4*num+3]);
         }
 
         void setOrigin(float x, float y){sp.setOrigin(x,y);}
@@ -170,13 +170,14 @@ export class Assets{
         // ----------- Texture -----------
         void addTex(const std::string &nameTex){textureList.push_back(Texture(nameTex));}
 
-        void addSprite(int numTex){
+        int addSprite(int numTex){
             int size = textureList.size();
             if (numTex < size ){spriteList.push_back(textureList[numTex]);}
             else{
                 std::cout << "Erreur : il n'y a que " << size << " textures enregistrées or vous avez demandé la n°" << numTex << ".\n";
                 spriteList.push_back(textureList[0]);
             }
+            return spriteList.size()-1;
         }
 
         Sprite& getSp(int numSp){

@@ -3,7 +3,11 @@ module;
 import viewAPI;
 import Event;
 import gameVars;
+import assetsBindings;
+import Entity;
 #include <iostream>
+#include <vector>
+#include <memory>
 
 export module modeGame;
 
@@ -21,30 +25,82 @@ export void loadGameAssets(Assets &assets){
     assets.addSoundBuffer("cursorMove.mp3");
     assets.addSoundBuffer("validateMenu.mp3");
     assets.selectMusic("Dire_Dire_Docks.ogg");
-    
-
 }
+
+
+
+
+
 
 export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, Assets& assets){
     std::cout <<"initGame\n";
+    auto board = &(gameVars.board);
+
 
     //background
     assets.addSprite(1);
     
     //Board
-    gameVars.board.createSprites(assets);
+    for (unsigned int k = 0 ; k < gameVars.board.cases.size() ; k++){
+        assets.addSprite(2);
+    }
 
     //Entities
-    gameVars.board.createMonsters(assets);
-    // gameVars.board.createPlayers(assets, gameVars.nbPlayers);//we need to add events for each player!
+    for (unsigned int k = 0 ; k < board->cases.size() ; k++){
+        if (board->cases[k]->monsterSpawn){
+            board->addMonster(k);
+            assets.addSprite(3);
+        }
+    }
+
+    int k = 0; int cpt = 0;
+    while (cpt < gameVars.nbPlayers){
+        if (board->cases[k]->playerSpawn){
+            int num = board->addPlayer(k);
+            auto& player = dynamic_cast<Player&>(*(board->entities[num]));
+            player.playerId = cpt;
+            
+            add Bindings for the player (les events commencent à 2)
+            event.addEvent(jump, std::ref(player));
+            event.addBinding(2, SPACE);
+
+            event.addEvent(move, std::ref(player));
+            event.addBinding(3, D);
+
+            assets.addSprite(4);
+            cpt++;
+            std::cout <<"yes\n";
+        }
+        k++;
+    }
+    // board->createPlayers(assets, gameVars.nbPlayers);//we need to add events for each player!
 
 }
+
+
+
+
+
+
+
 
 export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
-    std::cout <<"updateGame\n";
+    gameVars.board.updateEntityPos();
 }
 
+
+
+
+
+
+
+
+
 export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
+    static std::vector<int> monsterSprites = monsterTexBinding() ;
+    static std::vector<int> bombermanSprites = bombermanTexBinding() ;
+    static std::vector<int> boardSprites = boardTexBinding() ;
+    auto board = &(gameVars.board);
 
     //draw background
     float xScreen; float yScreen;
@@ -53,33 +109,41 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     rWindow.draw(assets.getSp(1));
 
 
-
     float xStart; float yStart; 
-    gameVars.board.updateBlocLength(rWindow, xStart, yStart);
-    float side = gameVars.board.blocLength;
+    board->updateBlocLength(rWindow, xStart, yStart);
+    float side = board->blocLength;
+
     float xOffset; float yOffset;
 
     //draw Board
-    gameVars.board.textureBinding(assets);//Idéalement, ne le faire que pour sprites changés? OSEF en vrai
-    for (int k = 0; k < gameVars.board.cases.size(); k++){
-        gameVars.board.computeOffset(k, xOffset, yOffset);
+    for (unsigned int k = 0; k < board->cases.size(); k++){
+        board->blocOffset(k, xOffset, yOffset);
 
         auto sp = assets.getSp(2+k);
+        sp.setTexRect(board->cases[k]->displayId, boardSprites);
+        //plus tard, mettre les tableaux en static dans les classes
         sp.setPos(xStart + xOffset, yStart + yOffset);
         sp.resize(side, side);
         rWindow.draw(sp);
     }
 
     //draw Entities
-    //change sprite according to animation
     float xSize; float ySize;
-    for (int k = 0; k < gameVars.board.entities.size(); k++){
-        //compute offset
-        gameVars.board.sharePosition(k, xOffset, yOffset);
+    for (unsigned int k = 0; k < board->entities.size(); k++){
+        board->sharePosition(k, xOffset, yOffset);
 
-        auto sp = assets.getSp(2+gameVars.board.cases.size()+k);
+        auto sp = assets.getSp(2+board->cases.size()+k);
+        //change sprite according to animation
+        switch (board->entities[k]->entityId){
+            case 0: //player
+                sp.setTexRect(board->entities[k]->SpriteId, bombermanSprites);
+                break;
+            case 1: //monster
+                sp.setTexRect(board->entities[k]->SpriteId, monsterSprites);
+                break;
+        }
         sp.setPos(xStart + xOffset, yStart + yOffset);
-        gameVars.board.shareSize(k, xSize, ySize);
+        board->shareSize(k, xSize, ySize);
         sp.resize(side*xSize, side*ySize);
         rWindow.draw(sp);
     }

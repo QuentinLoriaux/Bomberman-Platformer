@@ -17,6 +17,8 @@ export module Board;
 #define TEX_PER_LINE 16
 #define MONST_OFFSET 30
 #define MONST_PER_LINE 5
+#define PLAYER_OFFSET 55
+#define PLAYER_PER_LINE 7
 
 //--------------------------------- TYPES OF BLOCS ---------------------------------
 
@@ -207,31 +209,33 @@ export class Board{
             float unused; updateBlocLength(rWindow, unused, unused);   
         }
 
-        void createSprites(Assets& assets){
-            for (auto it = cases.begin() ; it != cases.end(); it++){assets.addSprite(2);}
-        }
-
-
-        void textureBinding(Assets& assets){
-            for (auto k = 0; k < cases.size(); k++){assets.getSp(2+k).setTexRect(cases[k]->displayId, TEX_OFFSET, TEX_PER_LINE);}
-        }
-
-        void computeOffset(int k, float& xOffset, float& yOffset){
+        void blocOffset(int k, float& xOffset, float& yOffset){
             xOffset=blocLength*(k%width); yOffset = blocLength*(k/width);
         }
 
 
+
         // ====== For entities ======
 
-        void createMonsters(Assets& assets){
-            for (int k = 0 ; k < cases.size() ; k++){
-                if (cases[k]->monsterSpawn){
-                    entities.push_back(std::make_unique<Monster>(k, (k%width)*blocLength, (k/width + 1 - 0.75)*blocLength));
-                    assets.addSprite(3);
-                    assets.getSp(assets.spriteList.size()-1).setTexRect(0, MONST_OFFSET, MONST_PER_LINE);
-                }
-            }
+
+
+        template<typename T>
+        int addEntity(int blocIndex, int size){//size = 1 => 0.75*blocLength
+            auto ent = std::make_unique<T>(blocIndex, size);
+            ent->xPos = (blocIndex%width)*blocLength;
+            ent->yPos = (blocIndex/width + 1 - ent->ySize)*blocLength;
+            entities.push_back(std::move(ent));
+            return entities.size() - 1;
         }
+        template<typename T>
+        int addEntity(int blocIndex){return addEntity<T>(blocIndex, 1);} 
+
+        int addPlayer(int blocIndex){return addEntity<Player>(blocIndex);}
+        int addMonster(int blocIndex){return addEntity<Monster>(blocIndex);}
+
+
+
+
 
         void sharePosition(int k, float& xOffset, float& yOffset){
             xOffset = entities[k]->xPos; yOffset = entities[k]->yPos;
@@ -239,6 +243,14 @@ export class Board{
 
         void shareSize(int k, float& xSize, float& ySize){
             xSize = entities[k]->xSize; ySize = entities[k]->ySize;
+        }
+
+        void updateEntityPos(){
+            for (int k = 0 ; k < entities.size() ; k++){
+                auto ent = &entities[k];
+                int position = (*ent)->blocIndex;
+                (*ent)->xPos = (position%width)*blocLength; (*ent)->yPos =  (position/width + 1 - (*ent)->ySize)*blocLength;
+            }
         }
 };
 

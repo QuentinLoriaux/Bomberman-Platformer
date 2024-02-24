@@ -97,8 +97,8 @@ int main()
         
         initialize(gameMode, event, texts, gameVars, assets);
 
-        event.addEvent(testSound, std::ref(assets));
-        event.addBinding(2,SPACE);
+        // event.addEvent(testSound, std::ref(assets));
+        // event.addBinding(2,SPACE);
 
         gameVars.board.displayBoard();
         
@@ -118,31 +118,17 @@ int main()
                 
             event.processEvents();
             
-
-            //updateVars(gameMode, event, tesxts, gameVars);
+            updateVars(gameMode, event, texts, gameVars);
             
             // Update variables ---> SPECIFIC TO EACH MODE
                 /*
-                    Se fait conjointement aux events
-                    (y a des trucs qui ne dépendent pas d'events et qui sont soumis à un TIMER comme l'animation d'une bombe)
-
                     Menu : cursor position 
                     Editor : FavMenu, current cursor item, state of the map...
 
-                    display_state
+                  display_state
 
-                    On peut se débrouiller pour ne calculer les positions relatives à l'écran que lorsque l'on display 
-                    (à chaque frame)
                 */
 
-
-
-
-            //BESOIN D'UN TIMER
-            
-            // for (auto it = drawOrder.begin(); it != drawOrder.end() ; it++ ){
-            //     rWindow.draw(*it);
-            // }
 
             
             // Display (toutes les 1/60s)

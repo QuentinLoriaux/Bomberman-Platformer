@@ -31,6 +31,7 @@ export void loadAssets(mode &gameMode, Assets &assets){
         case EDITOR : loadMainTitleAssets(assets); break;
         case GAME : loadGameAssets(assets); break;
         case WIN_SCREEN : loadMainTitleAssets(assets); break;
+        case END : break;
     }
 
 }
@@ -56,6 +57,7 @@ export void initialize(mode &gameMode,
         case EDITOR : initGame(event, texts, gameVars, assets); break;
         case GAME : initGame(event, texts, gameVars, assets); break;
         case WIN_SCREEN : initGame(event, texts, gameVars, assets); break;
+        case END : break;
     }
 
 }
@@ -71,6 +73,7 @@ export void updateVars(mode &gameMode,
         case EDITOR : updateGame(event, texts, gameVars); break;
         case GAME : updateGame(event, texts, gameVars); break;
         case WIN_SCREEN : updateGame(event, texts, gameVars); break;
+        case END : break;
     }
 
 }
@@ -88,6 +91,7 @@ export void display(mode &gameMode,
         case EDITOR : dispGame(rWindow, assets, texts,gameVars); break;
         case GAME : dispGame(rWindow, assets, texts,gameVars); break;
         case WIN_SCREEN : dispGame(rWindow, assets, texts,gameVars); break;
+        case END : break;
     }
     rWindow.display();
 }
