@@ -52,12 +52,12 @@ export class Entity{
         bool grounded;
 
         int hp;
-        int SpriteId;
+        int spriteId;
         int entityId;
         
 
-        Entity(int _blocIndex, float _size, int _entityId): blocIndex(_blocIndex), xPos(0), yPos(0), dir(NO_DIR), ySpeed(0), xSpeed(0), grounded(true),
-                xSize(X_SIZE*_size), ySize(Y_SIZE*_size), closeBlocs(std::vector<int>()), hp(1), entityId(_entityId) {}
+        Entity(int _blocIndex, float _size, int _entityId): blocIndex(_blocIndex), xPos(0), yPos(0), dir(NO_DIR), xSize(X_SIZE*_size), ySize(Y_SIZE*_size), ySpeed(0), xSpeed(0), grounded(true),
+                 hp(1), spriteId(0), entityId(_entityId) {}
         
         // virtual ~Entity(){};
 
@@ -112,10 +112,10 @@ export class Player: public Entity{
         void pause(){}
         void cameraMode(){}// 0: fixe | 1: suit le joueur 
 
-        void animation(){
-            static auto startFrameTime = std::chrono::steady_clock::now();
-            auto currentTime = std::chrono::steady_clock::now(); 
-        }
+        // void animation(){
+        //     static auto startFrameTime = std::chrono::steady_clock::now();
+        //     auto currentTime = std::chrono::steady_clock::now(); 
+        // }
 };
 
 
@@ -130,10 +130,10 @@ export class Monster: public Entity{
 
         void move(){}
         //void jump(){}
-        void animation(){
-            static auto startFrameTime = std::chrono::steady_clock::now();
-            auto currentTime = std::chrono::steady_clock::now(); 
-        }
+        // void animation(){
+        //     static auto startFrameTime = std::chrono::steady_clock::now();
+        //     auto currentTime = std::chrono::steady_clock::now(); 
+        // }
 };
 
 

@@ -152,8 +152,9 @@ export class Board{
     public:
         int width;
         int height;
-        std::vector<std::unique_ptr<Bloc>> cases;
-        std::vector<std::unique_ptr<Entity>> entities;
+        std::vector<std::shared_ptr<Bloc>> cases;
+        std::vector<std::shared_ptr<Entity>> entities;
+        std::vector<std::shared_ptr<Player>> players;
         float blocLength;
         
         Board(const std::string& xmlFilePath, RenderWindow& rWindow){
@@ -168,10 +169,10 @@ export class Board{
             width = xmlFile.width;
             height = xmlFile.height;
             for (auto it = xmlFile.cases.begin() ; it != xmlFile.cases.end() ; it++){
-                if (*it == "Wall"){cases.push_back(std::make_unique<Wall>());}
-                else if (*it == "Air"){cases.push_back(std::make_unique<Air>());}
-                else if (*it == "playerSpawn"){cases.push_back(std::make_unique<playerSpawn>());}
-                else if (*it == "monsterSpawn"){cases.push_back(std::make_unique<monsterSpawn>());}
+                if (*it == "Wall"){cases.push_back(std::make_shared<Wall>());}
+                else if (*it == "Air"){cases.push_back(std::make_shared<Air>());}
+                else if (*it == "playerSpawn"){cases.push_back(std::make_shared<playerSpawn>());}
+                else if (*it == "monsterSpawn"){cases.push_back(std::make_shared<monsterSpawn>());}
             }
         }
 
@@ -221,29 +222,37 @@ export class Board{
 
         template<typename T>
         int addEntity(int blocIndex, int size){//size = 1 => 0.75*blocLength
-            auto ent = std::make_unique<T>(blocIndex, size);
+
+            entities.push_back(std::make_shared<T>(blocIndex, size));
+            auto ent = entities[entities.size()-1];
             ent->xPos = (blocIndex%width)*blocLength;
             ent->yPos = (blocIndex/width + 1 - ent->ySize)*blocLength;
-            entities.push_back(std::move(ent));
             return entities.size() - 1;
         }
         template<typename T>
         int addEntity(int blocIndex){return addEntity<T>(blocIndex, 1);} 
 
-        int addPlayer(int blocIndex){return addEntity<Player>(blocIndex);}
         int addMonster(int blocIndex){return addEntity<Monster>(blocIndex);}
 
 
-
-
-
-        void sharePosition(int k, float& xOffset, float& yOffset){
-            xOffset = entities[k]->xPos; yOffset = entities[k]->yPos;
+        int addPlayer(int blocIndex){
+            players.push_back(std::make_shared<Player>(blocIndex, 1));
+            auto player = players[players.size()-1];
+            player->xPos = (blocIndex%width)*blocLength;
+            player->yPos = (blocIndex/width + 1 - player->ySize)*blocLength;
+            // entities.push_back(std::move(player));
+            return players.size()-1;
         }
 
-        void shareSize(int k, float& xSize, float& ySize){
-            xSize = entities[k]->xSize; ySize = entities[k]->ySize;
-        }
+
+
+        // void sharePosition(int k, float& xOffset, float& yOffset){
+        //     xOffset = entities[k]->xPos; yOffset = entities[k]->yPos;
+        // }
+
+        // void shareSize(int k, float& xSize, float& ySize){
+        //     xSize = entities[k]->xSize; ySize = entities[k]->ySize;
+        // }
 
         void updateEntityPos(){
             for (int k = 0 ; k < entities.size() ; k++){
