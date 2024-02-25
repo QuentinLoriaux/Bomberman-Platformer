@@ -3,6 +3,7 @@ module;
 import parser;
 import Entity;
 import viewAPI;
+import assetsBindings;
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -214,7 +215,9 @@ export class Board{
             xOffset=blocLength*(k%width); yOffset = blocLength*(k/width);
         }
 
-
+        void setBlocSprite(Sprite& sp, int k){
+            static std::vector<int> boardSprites = boardTexBinding();
+            sp.setTexRect(cases[k]->displayId, boardSprites);}
 
         // ====== For entities ======
 
@@ -240,22 +243,16 @@ export class Board{
             auto player = players[players.size()-1];
             player->xPos = (blocIndex%width)*blocLength;
             player->yPos = (blocIndex/width + 1 - player->ySize)*blocLength;
-            // entities.push_back(std::move(player));
+            entities.push_back(player);
             return players.size()-1;
         }
 
 
-
-        // void sharePosition(int k, float& xOffset, float& yOffset){
-        //     xOffset = entities[k]->xPos; yOffset = entities[k]->yPos;
-        // }
-
-        // void shareSize(int k, float& xSize, float& ySize){
-        //     xSize = entities[k]->xSize; ySize = entities[k]->ySize;
-        // }
+        void setEntitySprite(Sprite& sp, int k){entities[k]->setSprite(sp);}
+    
 
         void updateEntityPos(){
-            for (int k = 0 ; k < entities.size() ; k++){
+            for (unsigned int k = 0 ; k < entities.size() ; k++){
                 auto ent = &entities[k];
                 int position = (*ent)->blocIndex;
                 (*ent)->xPos = (position%width)*blocLength; (*ent)->yPos =  (position/width + 1 - (*ent)->ySize)*blocLength;

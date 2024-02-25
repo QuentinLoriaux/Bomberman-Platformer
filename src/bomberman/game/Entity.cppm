@@ -1,5 +1,7 @@
 module;
 
+import assetsBindings;
+import viewAPI;
 #include <vector>
 #include <iostream>
 #include <chrono>
@@ -33,8 +35,6 @@ export typedef enum _direction{
 
 
 
-
-// Contrairement aux Blocs, les entités peuvent se déplacer 
 export class Entity{
     // protected:
     public:
@@ -56,10 +56,10 @@ export class Entity{
         int entityId;
         
 
-        Entity(int _blocIndex, float _size, int _entityId): blocIndex(_blocIndex), xPos(0), yPos(0), dir(NO_DIR), xSize(X_SIZE*_size), ySize(Y_SIZE*_size), ySpeed(0), xSpeed(0), grounded(true),
+        Entity(int _blocIndex, float _size, int _entityId):  blocIndex(_blocIndex), xPos(0), yPos(0), dir(NO_DIR), xSize(X_SIZE*_size), ySize(Y_SIZE*_size), ySpeed(0), xSpeed(0), grounded(true),
                  hp(1), spriteId(0), entityId(_entityId) {}
         
-        // virtual ~Entity(){};
+        virtual ~Entity(){};
 
 
         bool isAlive(){return hp==0;}
@@ -85,8 +85,15 @@ export class Entity{
 
         void animation(){std::cout << "hello, I wanna moooove" << std::endl;}
 
+        virtual void setSprite(Sprite& sp){std::cout << "Im da best sprite eva" << std::endl;}
 
 };
+
+
+
+
+
+
 
 export class Player: public Entity{
     public:
@@ -100,11 +107,11 @@ export class Player: public Entity{
         int maxBomb;
         int activeBomb;// à l'écran
 
+        
         std::vector<Effect> effects;
 
 
         Player(int _blocIndex, float _size): Entity(_blocIndex, _size, 0){}
-        // ~Player(){}
 
         // void move(){}// Gauche ou Droite
         // void jump(){ySpeed = GRAVITY;}
@@ -112,10 +119,15 @@ export class Player: public Entity{
         void pause(){}
         void cameraMode(){}// 0: fixe | 1: suit le joueur 
 
-        // void animation(){
-        //     static auto startFrameTime = std::chrono::steady_clock::now();
-        //     auto currentTime = std::chrono::steady_clock::now(); 
-        // }
+        void animation(){
+            static auto startFrameTime = std::chrono::steady_clock::now();
+            auto currentTime = std::chrono::steady_clock::now(); 
+        }
+
+        void setSprite(Sprite& sp){
+            static std::vector<int> playerSprites = bombermanTexBinding();
+            sp.setTexRect(spriteId, playerSprites);
+        }
 };
 
 
@@ -124,16 +136,18 @@ export class Player: public Entity{
 export class Monster: public Entity{
     private:
     public:
-        // Monster(int _blocIndex, float _xPos, float _yPos): Entity(_blocIndex, _xPos, _yPos){}
         Monster(int _blocIndex, float _size): Entity(_blocIndex, _size, 1){}
-        // ~Monster(){};
 
-        void move(){}
         //void jump(){}
-        // void animation(){
-        //     static auto startFrameTime = std::chrono::steady_clock::now();
-        //     auto currentTime = std::chrono::steady_clock::now(); 
-        // }
+        void animation(){
+            static auto startFrameTime = std::chrono::steady_clock::now();
+            auto currentTime = std::chrono::steady_clock::now(); 
+        }
+
+        void setSprite(Sprite& sp){
+            static std::vector<int> monsterSprites = monsterTexBinding();
+            sp.setTexRect(spriteId, monsterSprites);
+        }
 };
 
 

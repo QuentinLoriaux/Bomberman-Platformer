@@ -96,12 +96,11 @@ export void updateGame(Event &event, TextManager texts, GameVariables &gameVars)
 
 
 export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
-    static std::vector<int> monsterSprites = monsterTexBinding() ;
-    static std::vector<int> bombermanSprites = bombermanTexBinding() ;
-    static std::vector<int> boardSprites = boardTexBinding() ;
     auto board = &(gameVars.board);
     int nbCases = board->cases.size();
     int nbEntites = board->entities.size();
+
+
 
     //draw background
     float xScreen; float yScreen;
@@ -110,55 +109,47 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     rWindow.draw(assets.getSp(1));
 
 
+
+
+
+
     float xStart; float yStart; 
     board->updateBlocLength(rWindow, xStart, yStart);
     float side = board->blocLength;
 
     float xOffset; float yOffset;
 
+
+
     //draw Board
     for (unsigned int k = 0; k < nbCases; k++){
-        board->blocOffset(k, xOffset, yOffset);
-
         auto sp = assets.getSp(2+k);
-        sp.setTexRect(board->cases[k]->displayId, boardSprites);
-        //plus tard, mettre les tableaux en static dans les classes
+        board->setBlocSprite(sp, k);
+
+        board->blocOffset(k, xOffset, yOffset);
         sp.setPos(xStart + xOffset, yStart + yOffset);
         sp.resize(side, side);
         rWindow.draw(sp);
     }
 
+
+
     //draw Entities
     float xSize; float ySize;
     for (unsigned int k = 0; k < nbEntites; k++){
         auto ent = board->entities[k]; 
-        xOffset = ent->xPos;
-        yOffset = ent->yPos;
-        xSize = ent->xSize;  
-        ySize = ent->ySize;
+        xOffset = ent->xPos; yOffset = ent->yPos;
+        xSize = ent->xSize;  ySize = ent->ySize;
         
 
         auto sp = assets.getSp(2 + nbCases + k);
         //change sprite according to animation
-        sp.setTexRect(ent->spriteId, monsterSprites);
+        board->setEntitySprite(sp, k);
         sp.setPos(xStart + xOffset, yStart + yOffset);
         // board->shareSize(k, xSize, ySize);
         sp.resize(side*xSize, side*ySize);
         rWindow.draw(sp);
     }
 
-    for (unsigned int k = 0; k < board->players.size(); k++){
-        xOffset = board->players[k]->xPos;
-        yOffset = board->players[k]->yPos;
-        xSize = board->players[k]->xSize;  
-        ySize = board->players[k]->ySize;
-
-        auto sp = assets.getSp(2 + nbCases + nbEntites + k);
-        //change sprite according to animation
-        sp.setTexRect(3, bombermanSprites);
-        sp.setPos(xStart + xOffset, yStart + yOffset);
-        sp.resize(side*xSize, side*ySize);
-        rWindow.draw(sp);
-    }
 
 }
