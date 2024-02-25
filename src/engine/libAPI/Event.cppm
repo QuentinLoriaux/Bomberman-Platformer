@@ -21,11 +21,13 @@ export typedef enum _evType{
     //Keys
     ESC,
     ENTER,
-    SPACE,
-    BACKSPACE,
+    SPACE, SPACE_RELEASE,
+    BACKSPACE, BACKSPACE_RELEASE,
     TAB,
     Z, Q, S, D,
+    Z_RELEASE, Q_RELEASE, S_RELEASE, D_RELEASE,
     ARROW_U, ARROW_D, ARROW_L, ARROW_R,
+    ARROW_U_RELEASE, ARROW_D_RELEASE, ARROW_L_RELEASE, ARROW_R_RELEASE,
     
     //Joycontroller
     JOY_A, JOY_B, JOY_START
@@ -122,6 +124,39 @@ export class Event{
                             return ARROW_L;
                         case sf::Keyboard::Right:
                             return ARROW_R;
+                        default:
+                            return NOT_MAPPED;
+                    }
+                    break;
+
+                case sf::Event::KeyReleased:
+                    switch (ev.key.code) {
+                        case sf::Keyboard::Escape:
+                            return ESC;
+                        case sf::Keyboard::Enter:
+                            return ENTER;
+                        case sf::Keyboard::Space:
+                            return SPACE_RELEASE;
+                        case sf::Keyboard::Backspace:
+                            return BACKSPACE_RELEASE;
+                        case sf::Keyboard::Tab:
+                            return TAB;
+                        case sf::Keyboard::Z:
+                            return Z_RELEASE;
+                        case sf::Keyboard::Q:
+                            return Q_RELEASE;
+                        case sf::Keyboard::S:
+                            return S_RELEASE;
+                        case sf::Keyboard::D:
+                            return D_RELEASE;
+                        case sf::Keyboard::Up:
+                            return ARROW_U_RELEASE;
+                        case sf::Keyboard::Down:
+                            return ARROW_D_RELEASE;
+                        case sf::Keyboard::Left:
+                            return ARROW_L_RELEASE;
+                        case sf::Keyboard::Right:
+                            return ARROW_R_RELEASE;
                         default:
                             return NOT_MAPPED;
                     }

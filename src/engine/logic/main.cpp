@@ -118,7 +118,7 @@ int main()
                 
             event.processEvents();
             
-            updateVars(gameMode, event, texts, gameVars);
+            
             
             // Update variables ---> SPECIFIC TO EACH MODE
                 /*
@@ -138,7 +138,7 @@ int main()
             if (elapsedTime >= targetFrameDuration) {
                 // Update the time for the next frame
                 startFrameTime = currentTime;
-                
+                updateVars(gameMode, event, texts, gameVars);
                 display(gameMode, rWindow, assets, texts, gameVars);
                 
             }

@@ -19,11 +19,13 @@ export class Effect{
 
 //--------------------------------- Entities ---------------------------------
 
-#define GRAVITY 3
-#define TIME 0.3
+#define GRAVITY 5
+#define TIME 0.01
 
 #define X_SIZE 0.5
 #define Y_SIZE 0.75
+
+#define X_SPEED 3
 
 export typedef enum _direction{
     NO_DIR,
@@ -36,17 +38,16 @@ export typedef enum _direction{
 
 
 export class Entity{
-    // protected:
     public:
         std::vector<int> closeBlocs; //pour collisions
         int blocIndex;// indice tableau pour bombes
         float xPos;// position réelle
         float yPos;
 
-        float xSize;//1 = côté d'une case
+        float xSize;// 1 = blocLength
         float ySize;        
 
-        direction dir; //input direction
+        direction dir; // input direction
         float ySpeed;
         float xSpeed;
         bool grounded;
@@ -74,13 +75,14 @@ export class Entity{
         }
 
         void updatePos(){
+            updateYSpeed();
             switch (dir){
-                case LEFT : xPos += xSpeed * TIME; break;
-                case RIGHT : xPos -= xSpeed * TIME; break;
+                case LEFT : xPos -= xSpeed; break;
+                case RIGHT : xPos += xSpeed; break;
                 default:
                     break;
             }             
-            yPos = ySpeed * TIME;
+            yPos -= ySpeed;
         }
 
         void animation(){std::cout << "hello, I wanna moooove" << std::endl;}
@@ -98,8 +100,6 @@ export class Entity{
 export class Player: public Entity{
     public:
         
-        bool dirPressed;// for horizontal movement
-        
         
         int playerId;
         int controllerId;
@@ -116,8 +116,8 @@ export class Player: public Entity{
         // void move(){}// Gauche ou Droite
         // void jump(){ySpeed = GRAVITY;}
         
-        void pause(){}
-        void cameraMode(){}// 0: fixe | 1: suit le joueur 
+        // void pause(){}
+        // void cameraMode(){}// 0: fixe | 1: suit le joueur 
 
         void animation(){
             static auto startFrameTime = std::chrono::steady_clock::now();
@@ -156,9 +156,24 @@ export class Monster: public Entity{
 
 
 export void jump(Player& player){
-    player.ySpeed = GRAVITY;
+    if (player.grounded){
+        player.ySpeed = GRAVITY;
+        player.grounded = false;
+    }
 }
 
-export void move(Player& player){
-    player.dirPressed = true;
+export void walkLeft(Player& player){
+    player.xSpeed = X_SPEED;
+    player.dir = LEFT;
+}
+export void walkRight(Player& player){
+    player.xSpeed = X_SPEED;
+    player.dir = RIGHT;
+}
+
+export void stopWalkLeft(Player& player){
+    if (player.dir == LEFT) {player.dir = NO_DIR; player.xSpeed = 0;}
+}
+export void stopWalkRight(Player& player){
+    if (player.dir == RIGHT) {player.dir = NO_DIR; player.xSpeed = 0;}
 }

@@ -251,11 +251,18 @@ export class Board{
         void setEntitySprite(Sprite& sp, int k){entities[k]->setSprite(sp);}
     
 
+        void setFirstTimeEntityPos(){
+            for (unsigned int k = 0 ; k < entities.size() ; k++){
+                auto& ent = *entities[k];
+                int position = ent.blocIndex;
+                ent.xPos = (position%width)*blocLength; ent.yPos =  (position/width + 1 - ent.ySize)*blocLength;
+            }
+        }
+
         void updateEntityPos(){
             for (unsigned int k = 0 ; k < entities.size() ; k++){
-                auto ent = &entities[k];
-                int position = (*ent)->blocIndex;
-                (*ent)->xPos = (position%width)*blocLength; (*ent)->yPos =  (position/width + 1 - (*ent)->ySize)*blocLength;
+                auto& ent = *entities[k];
+                ent.updatePos();
             }
         }
 };

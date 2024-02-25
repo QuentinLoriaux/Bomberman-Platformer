@@ -19,8 +19,7 @@ export void loadGameAssets(Assets &assets){
     assets.addTex("boardTextures.png");//2
     assets.addTex("monster.png");//3
     assets.addTex("bomberman.png");//4
-    // assets.addTex("menuEntryBackground.png");//3
-    // assets.addTex("menuCursor.png");//4
+
 
     assets.addSoundBuffer("cursorMove.mp3");
     assets.addSoundBuffer("validateMenu.mp3");
@@ -53,7 +52,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
     }
 
-    int k = 0; int cpt = 0;
+    int k = 0; int cpt = 0; int nbActions = 5;
     while (cpt < gameVars.nbPlayers){
         if (board->cases[k]->playerSpawn){
             board->addPlayer(k);
@@ -62,10 +61,21 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
             
             // add Bindings for the player (les events commencent à 2)
             event.addEvent(jump, std::ref(player));
-            event.addBinding(2, SPACE);
+            event.addBinding(2 + nbActions*cpt, SPACE);
 
-            event.addEvent(move, std::ref(player));
-            event.addBinding(3, D);
+            event.addEvent(walkLeft, std::ref(player));
+            event.addBinding(3 + nbActions*cpt, Q);
+
+            event.addEvent(stopWalkLeft, std::ref(player));
+            event.addBinding(4 + nbActions*cpt, Q_RELEASE);
+            
+            event.addEvent(walkRight, std::ref(player));
+            event.addBinding(5 + nbActions*cpt, D);
+            
+            event.addEvent(stopWalkRight, std::ref(player));
+            event.addBinding(6 + nbActions*cpt, D_RELEASE);
+
+
 
             assets.addSprite(4);
             cpt++;
@@ -73,6 +83,8 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
         k++;
     }
+
+    board->setFirstTimeEntityPos();
 
 }
 
@@ -84,7 +96,8 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 
 
 export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
-    gameVars.board.updateEntityPos();
+    auto board = &(gameVars.board);
+    board->updateEntityPos();
 }
 
 
@@ -115,7 +128,7 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
 
     float xStart; float yStart; 
     board->updateBlocLength(rWindow, xStart, yStart);
-    float side = board->blocLength;
+    float side = board->blocLength;//unit reference
 
     float xOffset; float yOffset;
 
@@ -137,16 +150,13 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     //draw Entities
     float xSize; float ySize;
     for (unsigned int k = 0; k < nbEntites; k++){
+        auto sp = assets.getSp(2 + nbCases + k);
+        board->setEntitySprite(sp, k);//change sprite according to animation
+
         auto ent = board->entities[k]; 
         xOffset = ent->xPos; yOffset = ent->yPos;
         xSize = ent->xSize;  ySize = ent->ySize;
-        
-
-        auto sp = assets.getSp(2 + nbCases + k);
-        //change sprite according to animation
-        board->setEntitySprite(sp, k);
         sp.setPos(xStart + xOffset, yStart + yOffset);
-        // board->shareSize(k, xSize, ySize);
         sp.resize(side*xSize, side*ySize);
         rWindow.draw(sp);
     }
