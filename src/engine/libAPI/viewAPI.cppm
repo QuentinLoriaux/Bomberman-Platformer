@@ -46,19 +46,29 @@ export class Sprite{
             sf::Rect rect(x, y, w, h);
             sp.setTextureRect(rect);
         }
-
         void setTexRect(int num, std::vector<int>& bindings){
             setTexRect(bindings[4*num], bindings[4*num+1], bindings[4*num+2], bindings[4*num+3]);
         }
 
-        void setOrigin(float x, float y){sp.setOrigin(x,y);}
 
         void setPos(float x, float y){sp.setPosition(x,y);}
 
-        void resize(float w, float h){
+
+
+        void resize(float w, float h, bool flip){
             auto size = sp.getTextureRect().getSize();
             sp.setScale(w/size.x, h/size.y);
+            if (flip){
+                auto size = sp.getTextureRect().getSize();
+                sp.setOrigin(size.x, 0);
+                sp.scale(sf::Vector2f(-1.0,1.0));
+            }
+            else{
+                sp.setOrigin(0,0);
+            }
         }
+        void resize(float w, float h){resize(w,h,false);}
+
 
 };
 

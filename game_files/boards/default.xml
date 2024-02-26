@@ -27,7 +27,7 @@
     <Bloc>Wall</Bloc>
 
 
-    <Bloc>Air</Bloc>
+    <Bloc>Wall</Bloc>
     <Bloc>Air</Bloc>
     <Bloc>Air</Bloc>
     <Bloc>playerSpawn</Bloc>

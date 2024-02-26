@@ -248,23 +248,19 @@ export class Board{
         }
 
 
-        void setEntitySprite(Sprite& sp, int k){entities[k]->setSprite(sp);}
     
 
         void setFirstTimeEntityPos(){
             for (unsigned int k = 0 ; k < entities.size() ; k++){
                 auto& ent = *entities[k];
                 int position = ent.blocIndex;
-                ent.xPos = (position%width)*blocLength; ent.yPos =  (position/width + 1 - ent.ySize)*blocLength;
+                ent.xPos = position%width; ent.yPos =  position/width + 1 - ent.ySize;
+                ent.xTry = ent.xPos; ent.yTry = ent.yPos;
             }
         }
 
-        void updateEntityPos(){
-            for (unsigned int k = 0 ; k < entities.size() ; k++){
-                auto& ent = *entities[k];
-                ent.updatePos();
-            }
-        }
+
+
 };
 
 
@@ -274,4 +270,15 @@ export class Board{
 
 void collide(Entity ent){
 
+}
+
+// =============== Actions modifying board ===============
+
+
+
+export void placeBomb(Player& player, Board& board){
+    if (player.activeBomb < player.maxBomb){
+        player.activeBomb++;
+        board.cases[player.blocIndex]= std::make_shared<BombBloc>();
+    }
 }

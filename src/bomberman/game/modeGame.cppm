@@ -5,6 +5,7 @@ import Event;
 import gameVars;
 import assetsBindings;
 import Entity;
+import Board;
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -45,6 +46,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
 
     //Entities
+    Entity::setWidth(board->width);
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         if (board->cases[k]->monsterSpawn){
             board->addMonster(k);
@@ -52,7 +54,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
     }
 
-    int k = 0; int cpt = 0; int nbActions = 5;
+    int k = 0; int cpt = 0; int nbActions = 7;
     while (cpt < gameVars.nbPlayers){
         if (board->cases[k]->playerSpawn){
             board->addPlayer(k);
@@ -75,7 +77,11 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
             event.addEvent(stopWalkRight, std::ref(player));
             event.addBinding(6 + nbActions*cpt, D_RELEASE);
 
+            event.addEvent(placeBomb, std::ref(player), std::ref(*board));
+            event.addBinding(7 + nbActions*cpt, TAB);
 
+            event.addEvent(debug, std::ref(player));
+            event.addBinding(8 + nbActions*cpt, ENTER);
 
             assets.addSprite(4);
             cpt++;
@@ -85,7 +91,6 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
 
     board->setFirstTimeEntityPos();
-
 }
 
 
@@ -97,8 +102,25 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 
 export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
     auto board = &(gameVars.board);
-    board->updateEntityPos();
+
+    for (unsigned int k = 0 ; k < board->entities.size() ; k++){
+        auto& ent = *(board->entities[k]);
+        ent.tryPos();
+        ent.updateBlocIndex();
+        ent.updateCloseBlocs();
+        for (auto it = ent.closeBlocs.begin(); it != ent.closeBlocs.end(); it++){
+            auto& bloc = *(board->cases[*it]);
+            if (! bloc.crossable){
+                direction dir = ent.collideBloc(*it);
+                ent.correctPos(dir);
+                
+            }
+        }
+        ent.updatePos();
+    }
 }
+
+
 
 
 
@@ -151,13 +173,13 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     float xSize; float ySize;
     for (unsigned int k = 0; k < nbEntites; k++){
         auto sp = assets.getSp(2 + nbCases + k);
-        board->setEntitySprite(sp, k);//change sprite according to animation
-
         auto ent = board->entities[k]; 
-        xOffset = ent->xPos; yOffset = ent->yPos;
-        xSize = ent->xSize;  ySize = ent->ySize;
+        ent->setSprite(sp);//change sprite according to animation 
+
+        xOffset = ent->xPos*side; yOffset = ent->yPos*side;
+        xSize = ent->xSize*side;  ySize = ent->ySize*side;
         sp.setPos(xStart + xOffset, yStart + yOffset);
-        sp.resize(side*xSize, side*ySize);
+        sp.resize(xSize, ySize, ent->facing == LEFT);
         rWindow.draw(sp);
     }
 
