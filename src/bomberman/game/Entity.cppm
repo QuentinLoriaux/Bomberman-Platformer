@@ -20,13 +20,13 @@ export class Effect{
 
 //--------------------------------- Entities ---------------------------------
 
-#define GRAVITY 0.05
-#define TIME 0.03
+#define GRAVITY 0.003
 
 #define X_SIZE 0.5
 #define Y_SIZE 0.75
 
 #define X_SPEED 0.05
+#define Y_SPEED 0.12
 
 
 export typedef enum _direction{
@@ -48,38 +48,37 @@ export class Entity{
         float xTry;//supposant pas de collision
         float yTry;
         static int width;
+        static int height;
 
         float xSize;// 1 = blocLength
         float ySize;        
 
         direction dir; // input direction
         direction facing;
-        float ySpeed;
         float xSpeed;
+        float ySpeed;
         bool grounded;
 
         int hp;
         int entityId;
+        std::chrono::time_point<std::chrono::steady_clock> spriteTimer;
         
 
-        Entity(int _blocIndex, float _size, int _entityId):  blocIndex(_blocIndex), xPos(0), yPos(0), dir(NO_DIR), xSize(X_SIZE*_size), ySize(Y_SIZE*_size), ySpeed(0), xSpeed(0), grounded(true),
-                 hp(1), entityId(_entityId), facing(RIGHT) {}
+        Entity(int _blocIndex, float _size, int _entityId):  blocIndex(_blocIndex), xPos(0), yPos(0), xSize(X_SIZE*_size), ySize(Y_SIZE*_size), dir(NO_DIR), facing(RIGHT), xSpeed(0), ySpeed(0),
+                 hp(1), entityId(_entityId), spriteTimer(std::chrono::steady_clock::now()){}
         
         virtual ~Entity(){};
 
-        static void setWidth(int _width){width = _width;}
+        static void setBoardDims(int _width, int _height){width = _width; height = _height;}
 
-        bool isAlive(){return hp==0;}
-        void setGrounded(){
-            grounded = true;
-        }
+        bool isAlive(){return hp>0;}
+
 
         void updateYSpeed(){
-            if (grounded){ ySpeed = 0;}
-            else{
-                float newSpeed = ySpeed - GRAVITY*TIME;
-                if (newSpeed > - GRAVITY){ySpeed = newSpeed;}  
-            }
+                float newSpeed = ySpeed - GRAVITY;
+                if (newSpeed > - Y_SPEED){ySpeed = newSpeed;}  
+
+                if (ySpeed < - 2 * GRAVITY) { grounded = false;}
         }
 
         void tryPos(){
@@ -91,6 +90,10 @@ export class Entity{
                     break;
             }             
             yTry = yPos - ySpeed;
+
+            //Borders of the board
+            if (xTry + xSize > width || xTry < 0) {xTry = xPos;}
+            if (yTry > height || yTry < 0) {yTry = yPos; ySpeed = 0;}
         }
 
         void correctPos(direction collDir){
@@ -99,13 +102,16 @@ export class Entity{
                 case RIGHT : 
                     xTry = xPos; break;
                 case UP : 
-                    std::cout << "UP\n";
+                    // std::cout << "UP\n";
                     yTry = yPos;
                     ySpeed = 0;
+                    break;
                 case DOWN :
-                    std::cout << "DOWN\n";
-                    yTry = yPos;
-                    setGrounded();
+                    // std::cout << "DOWN\n";
+                    yTry = static_cast<int>(yTry+ySize)-ySize;
+                    ySpeed = 0;
+                    grounded = true;
+                    break;
                 default:
                     break;
             }             
@@ -119,28 +125,19 @@ export class Entity{
             blocIndex = xCenter+width*yCenter;
         }
 
-        void updateCloseBlocs(){
-            int x1 = xTry - 0.1;
+        virtual void updateCloseBlocs(){
+            int x1 = xTry;
             int x2 = xTry + xSize;
             int y1 = width*(int)yTry;
             int y2 = width*(int)(yTry+ySize);
             closeBlocs.assign({
-                //gauche
-                x1 + y1 -1,
-                x1 + y2 -1,
-                //droite
-                x2 + y1 +1,
-                x2 + y2 +1,
                 //rectangle collision
                 x1 + y1,
                 x2 + y1,
                 x1 + y2,
                 x2 + y2,
             });
-            if (!grounded){
-                closeBlocs.push_back(x1 + y2 + width); 
-                closeBlocs.push_back(x2+ y2 + width); 
-            }
+
             //remove redundancies
             std::sort(closeBlocs.begin(), closeBlocs.end());
             auto it = std::unique(closeBlocs.begin(), closeBlocs.end());
@@ -154,30 +151,56 @@ export class Entity{
             bool rightIn = (k%width < xTry+xSize && xTry+xSize < k%width+1);
             bool vertiAlign = headIn && footIn;
             bool horizAlign =  leftIn && rightIn;
+            bool goLeft = xTry < xPos;
+            bool goRight = xTry > xPos;
+            bool goUp = yTry < yPos;
+            bool goDown = yTry > yPos;
 
             if (!grounded && horizAlign){
-                if (headIn){return UP;}
-                else if (footIn){return DOWN;}
+                if (headIn && goUp){ return UP;}
+                else if (footIn && goDown){return DOWN;}
             }
             if (vertiAlign){
-                if (leftIn){return LEFT;}
-                else if (rightIn){return RIGHT;}
+                if (leftIn && goLeft){return LEFT;}
+                else if (rightIn && goRight){return RIGHT;}
             }
 
 
             //coins...
-            //ne pas tomber d'une plateforme
             if (headIn && leftIn){
-                return (yTry - k/width > xTry - k%width) ? LEFT:UP;
+                if (k/width +1 - yTry > k%width + 1 - xTry){
+                    if (goLeft) return LEFT;
+                }
+                else {
+                    if (goUp) return UP;
+                } 
             }
             if (headIn && rightIn){
-                return (yTry - k/width > xTry + xSize - k%width) ? RIGHT:UP;
+                // return (k/width +1 - yTry > xTry + xSize - k%width) ? RIGHT:UP;
+                if (k/width +1 - yTry > xTry + xSize - k%width){
+                    if (goRight) return RIGHT;
+                }
+                else {
+                    if (goUp) return UP;
+                } 
             }
-            if (!grounded && footIn && leftIn){
-                return (yTry + ySize - k/width > xTry - k%width) ? LEFT:DOWN;
+            if (footIn && leftIn){
+                // return (yTry + ySize - k/width > k%width + 1 - xTry) ? LEFT:DOWN;
+                if (yTry + ySize - k/width > k%width + 1 - xTry){
+                    if (goLeft && !grounded) return LEFT;
+                }
+                else {
+                    if (goDown) return DOWN;
+                } 
             }
-            if (!grounded && footIn && rightIn){
-                return (yTry + ySize - k/width > xTry + xSize - k%width) ? RIGHT:DOWN;
+            if (footIn && rightIn){
+                // return (yTry + ySize - k/width > xTry + xSize - k%width) ? RIGHT:DOWN;
+                if (yTry + ySize - k/width > xTry + xSize - k%width){
+                    if (goRight) return RIGHT;
+                }
+                else {
+                    if (goDown) return DOWN;
+                } 
             }
             return NO_DIR;
         }
@@ -188,6 +211,7 @@ export class Entity{
 };
 
 int Entity::width = 0;
+int Entity::height = 0;
 
 
 
@@ -202,27 +226,38 @@ export class Player: public Entity{
 
         int maxBomb;
         int activeBomb;// à l'écran
-
+        
+        int crossableBomb;//to prevent collision with bomb when placing it
         
         std::vector<Effect> effects;
 
 
-        Player(int _blocIndex, float _size): Entity(_blocIndex, _size, 0), maxBomb(1), activeBomb(0){}
+        Player(int _blocIndex, float _size): Entity(_blocIndex, _size, 0),
+        maxBomb(1), activeBomb(0), crossableBomb(-1){}
 
-
-        
         // void pause(){}
         // void cameraMode(){}// 0: fixe | 1: suit le joueur 
 
+        void updateCloseBlocs(){
+            Entity::updateCloseBlocs();
+            
+            //can move freely through placed bomb until out
+            if (std::find(closeBlocs.begin(), closeBlocs.end(),crossableBomb)!=closeBlocs.end()){
+                closeBlocs.erase(std::remove(closeBlocs.begin(), closeBlocs.end(), crossableBomb), closeBlocs.end());
+            }
+            else{
+                crossableBomb = -1;
+            }
+            
+        }
 
 
         void setSprite(Sprite& sp){
             static std::vector<int> playerSprites = bombermanTexBinding();
 
-            static auto begin = std::chrono::steady_clock::now();
             const std::chrono::duration<double> second(1.0);
             auto now = std::chrono::steady_clock::now();
-            auto timer =  now - begin;
+            auto timer =  now - spriteTimer;
             
             int spriteId = 0;
             
@@ -230,7 +265,7 @@ export class Player: public Entity{
             if (!grounded){
                 spriteId = 6;
                 if (timer > 0.4*second){
-                    begin = now;
+                    spriteTimer = now;
                     // sp.mirror();
                     facing = (facing == LEFT) ? RIGHT:LEFT; 
                 }
@@ -243,7 +278,7 @@ export class Player: public Entity{
                 else if (timer < 0.4*second){spriteId = 4;}
                 else if (timer < 0.6*second){spriteId = 3;}
                 else if (timer < 0.8*second){spriteId = 1;}
-                else{begin = now;}
+                else{spriteTimer = now;}
                 
                 facing = dir;
             }
@@ -267,10 +302,13 @@ export class Monster: public Entity{
         void setSprite(Sprite& sp){
             static std::vector<int> monsterSprites = monsterTexBinding();
             
-            static auto startFrameTime = std::chrono::steady_clock::now();
             auto currentTime = std::chrono::steady_clock::now(); 
             
             sp.setTexRect(0, monsterSprites);
+        }
+
+        void updateCloseBlocs(){
+            Entity::updateCloseBlocs();
         }
 };
 
@@ -281,7 +319,7 @@ export class Monster: public Entity{
 
 export void jump(Player& player){
     if (player.grounded){
-        player.ySpeed = GRAVITY;
+        player.ySpeed = Y_SPEED;
         player.grounded = false;
     }
 }
@@ -312,6 +350,7 @@ export void debug(Player& player){
     "\nxSpeed : " << player.xSpeed <<
     "\nySpeed : " << player.ySpeed <<
     "\nhp : " << player.hp <<
+    "\ngrounded : " << player.grounded <<
     "\ncloseBlocs : " ;
     for (auto& bloc : player.closeBlocs) { 
         std::cout << bloc << " "; 

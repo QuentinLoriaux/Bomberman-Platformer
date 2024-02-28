@@ -46,7 +46,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
 
     //Entities
-    Entity::setWidth(board->width);
+    Entity::setBoardDims(board->width, board->height);
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         if (board->cases[k]->monsterSpawn){
             board->addMonster(k);
@@ -103,21 +103,52 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
     auto board = &(gameVars.board);
 
-    for (unsigned int k = 0 ; k < board->entities.size() ; k++){
-        auto& ent = *(board->entities[k]);
-        ent.tryPos();
-        ent.updateBlocIndex();
-        ent.updateCloseBlocs();
-        for (auto it = ent.closeBlocs.begin(); it != ent.closeBlocs.end(); it++){
-            auto& bloc = *(board->cases[*it]);
-            if (! bloc.crossable){
-                direction dir = ent.collideBloc(*it);
-                ent.correctPos(dir);
-                
+    //Blocs
+    for (unsigned int k = 0 ; k < board->cases.size() ; k++){
+        auto bloc = board->cases[k];
+        if (bloc->displayId == 6){
+            std::shared_ptr<BombBloc> bBloc = std::dynamic_pointer_cast<BombBloc>(bloc);
+            if (bBloc->endedCountDown()){
+                board->explode(k, *(bBloc->player));
+                //add explosion sound effect
             }
         }
-        ent.updatePos();
+        if (bloc->displayId == 7){
+                std::shared_ptr<BombFlare> fBloc = std::dynamic_pointer_cast<BombFlare>(bloc);
+                if (fBloc->endedLifeTime()){
+                    
+                    board->freeSpace(k);
+                }
+        }
+ 
     }
+
+    //Entités
+    for (unsigned int k = 0 ; k < board->entities.size() ; k++){
+        auto& ent = *(board->entities[k]);
+        if (ent.isAlive()){
+            ent.tryPos();
+            ent.updateBlocIndex();
+            ent.updateCloseBlocs();
+            for (auto it = ent.closeBlocs.begin(); it != ent.closeBlocs.end(); it++){
+                auto& bloc = *(board->cases[*it]);
+                if (bloc.damaging){
+                    ent.hp--;
+                }
+                if (! bloc.crossable){
+                    direction dir = ent.collideBloc(*it);
+                    ent.correctPos(dir);
+                    
+                }
+                
+            }
+            ent.updatePos();
+        }
+    }
+
+
+
+
 }
 
 
@@ -132,8 +163,8 @@ export void updateGame(Event &event, TextManager texts, GameVariables &gameVars)
 
 export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
     auto board = &(gameVars.board);
-    int nbCases = board->cases.size();
-    int nbEntites = board->entities.size();
+    unsigned int nbCases = board->cases.size();
+    unsigned int nbEntites = board->entities.size();
 
 
 
@@ -176,11 +207,13 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
         auto ent = board->entities[k]; 
         ent->setSprite(sp);//change sprite according to animation 
 
-        xOffset = ent->xPos*side; yOffset = ent->yPos*side;
-        xSize = ent->xSize*side;  ySize = ent->ySize*side;
-        sp.setPos(xStart + xOffset, yStart + yOffset);
-        sp.resize(xSize, ySize, ent->facing == LEFT);
-        rWindow.draw(sp);
+        if (ent->isAlive()){
+            xOffset = ent->xPos*side; yOffset = ent->yPos*side;
+            xSize = ent->xSize*side;  ySize = ent->ySize*side;
+            sp.setPos(xStart + xOffset, yStart + yOffset);
+            sp.resize(xSize, ySize, ent->facing == LEFT);
+            rWindow.draw(sp);
+        }
     }
 
 

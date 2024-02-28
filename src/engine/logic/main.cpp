@@ -14,8 +14,8 @@ import gameVars;
 
 
 
-#define W_WIDTH 1920
-#define W_HEIGHT 1080
+#define W_WIDTH 1000
+#define W_HEIGHT 500
 #define FPS 60
 
 
@@ -48,24 +48,23 @@ int main()
 
     // Set the framerate limit
     rWindow.setFramerateLimit(FPS);
+    // Initialize fps counter
+    auto startFrameTime = std::chrono::steady_clock::now();
+    const std::chrono::duration<double> targetFrameDuration(1.0 / static_cast<double>(FPS));
 
     // load fonts
     TextManager texts;
     texts.addFont("arial.ttf");
 
+
     // Initialize game mode
     mode gameMode = GAME;
-
-    // Initialize fps counter
-    auto startFrameTime = std::chrono::steady_clock::now();
-    const std::chrono::duration<double> targetFrameDuration(1.0 / static_cast<double>(FPS));
 
     // App loop
     while (gameMode != END){
         //=========================== VARIABLES ===========================
 
         //===== General variables =====
-        //std::vector<std::any*> drawOrder; //Contiendra des pointeurs sur chaque élément à dessiner, dans l'ordre    
         mode currentGameMode = gameMode;
         Event event(rWindow);
             
@@ -87,7 +86,6 @@ int main()
         loadAssets(gameMode, assets);
     
         assets.addSprite(0);//problèmes si on change textureList après avoir créé des sprites
-        // assets.addSprite(1);
         assets.addSound(0);
 
         // initialisation des variables du mode  
@@ -113,19 +111,15 @@ int main()
 
         while ((gameMode != END) && (gameMode == currentGameMode)){
    
-            // Process events + play sounds
-                //close window, button pressed (Menu, Movement), Request to load a game mode...
                 
             event.processEvents();
             
             
             
-            // Update variables ---> SPECIFIC TO EACH MODE
+            // Update variables 
                 /*
                     Menu : cursor position 
                     Editor : FavMenu, current cursor item, state of the map...
-
-                  display_state
 
                 */
 
@@ -136,7 +130,6 @@ int main()
             auto currentTime = std::chrono::steady_clock::now();
             auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - startFrameTime);
             if (elapsedTime >= targetFrameDuration) {
-                // Update the time for the next frame
                 startFrameTime = currentTime;
                 updateVars(gameMode, event, texts, gameVars);
                 display(gameMode, rWindow, assets, texts, gameVars);

@@ -8,18 +8,13 @@ import assetsBindings;
 #include <vector>
 #include <iostream>
 #include <cstdlib>
+#include <chrono>
 
 export module Board;
 
 #define NB_EFFECTS 10
 
-//related to the chosen boardTexture.png
-#define TEX_OFFSET 64
-#define TEX_PER_LINE 16
-#define MONST_OFFSET 30
-#define MONST_PER_LINE 5
-#define PLAYER_OFFSET 55
-#define PLAYER_PER_LINE 7
+
 
 //--------------------------------- TYPES OF BLOCS ---------------------------------
 
@@ -33,7 +28,7 @@ export class Bloc{
         int displayId;
         bool playerSpawn; bool monsterSpawn;
 
-        std::vector<Entity*> entities;
+        // std::vector<Entity*> entities;
 
         
         Bloc(bool b_crossable, bool b_crossUp, bool b_crossDown, bool b_damaging, bool b_breakable, int b_ID): 
@@ -46,7 +41,6 @@ export class Bloc{
         
 
         
-        int getOffset(){return TEX_OFFSET*displayId;}
 
         virtual void printInfo() const {
             std::cout << "Generic Bloc" << std::endl;
@@ -60,7 +54,7 @@ export class Wall: public Bloc{
     private:
     public:
         Wall(): Bloc(false, false, false, 
-                     true, false, 1){}
+                     false, false, 1){}
 
         void printInfo() const override {
             std::cout << "Wall ";
@@ -133,18 +127,39 @@ class ThinPlatform: public Bloc{
                              false, false, 5){}
 };
 
-class BombBloc: public Bloc{
-    private:
+export class BombBloc: public Bloc{
     public:
-        BombBloc(): Bloc(false, false, false, 
-                         false, false, 6){}
+        Player* player;
+        std::chrono::time_point<std::chrono::steady_clock> countDown;
+    
+        BombBloc(Player& _player): Bloc(false, false, false, 
+                         false, false, 6),
+                         player(&_player),
+                         countDown(std::chrono::steady_clock::now()){}
+        
+        bool endedCountDown(){
+            const std::chrono::duration<double> second(1.0);
+            auto now = std::chrono::steady_clock::now();
+            return (now - countDown > 2*second);
+        }
+
+
 };
 
-class BombFlare: public Bloc{
+export class BombFlare: public Bloc{
     private:
+        std::chrono::time_point<std::chrono::steady_clock> lifeTime;
     public:
         BombFlare(): Bloc(true, true, true,
-                          true, false, 7){}
+                          true, false, 7),
+                          lifeTime(std::chrono::steady_clock::now()){}
+        
+        bool endedLifeTime(){
+            const std::chrono::duration<double> second(1.0);
+            auto now = std::chrono::steady_clock::now();
+            return (now - lifeTime > 0.5*second);
+        }
+
 };
 
 //--------------------------------- BOARD ---------------------------------
@@ -248,8 +263,6 @@ export class Board{
         }
 
 
-    
-
         void setFirstTimeEntityPos(){
             for (unsigned int k = 0 ; k < entities.size() ; k++){
                 auto& ent = *entities[k];
@@ -259,7 +272,35 @@ export class Board{
             }
         }
 
+        // ====== game mechanics ======
+        void explode(int k, Player& player){
+            player.activeBomb--;
+            player.crossableBomb = -1;
+            cases[k] = std::make_shared<BombFlare>();
+            if (k > width && cases[k-width]->displayId == 2 ){//bloc du haut
+                cases[k-width] = std::make_shared<BombFlare>();
+            }
 
+            if (k < width*(height - 1) && cases[k+width]->displayId == 2 ){//bloc du bas
+                cases[k+width] = std::make_shared<BombFlare>();
+            }
+
+
+            if (k%width > 0 && cases[k-1]->displayId == 2 ){//bloc de gauche
+                cases[k-1] = std::make_shared<BombFlare>();
+            }
+
+
+            if (k%width < width && cases[k+1]->displayId == 2 ){//bloc du haut
+                cases[k+1] = std::make_shared<BombFlare>();
+            }
+
+        }
+        //if breakableWall : bonus or not
+
+        void freeSpace(int k){
+            cases[k] = std::make_shared<Air>();
+        }
 
 };
 
@@ -268,9 +309,6 @@ export class Board{
 
 //--------------------------------- COLLISION ---------------------------------
 
-void collide(Entity ent){
-
-}
 
 // =============== Actions modifying board ===============
 
@@ -279,6 +317,7 @@ void collide(Entity ent){
 export void placeBomb(Player& player, Board& board){
     if (player.activeBomb < player.maxBomb){
         player.activeBomb++;
-        board.cases[player.blocIndex]= std::make_shared<BombBloc>();
+        board.cases[player.blocIndex]= std::make_shared<BombBloc>(player);
+        player.crossableBomb = player.blocIndex;
     }
 }
