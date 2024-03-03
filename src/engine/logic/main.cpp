@@ -41,7 +41,9 @@ int main()
     // params.sched_priority = 3;
     // pthread_setschedprio(gameDisplay.native_handle(), SCHED_FIFO, &params);
 
-
+    #ifdef SFML_2_6_0
+        std::cout << "Using SFML 2.6.0\n";
+    #endif
 
     // Create the main window
     RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");

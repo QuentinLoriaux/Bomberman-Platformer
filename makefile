@@ -3,11 +3,26 @@ CXX = clang++-16
 LIB = /usr/local/lib
 INC = /usr/local/include
 
-
 PRECOMPILE = -fprebuilt-module-path=build --precompile
 CFLAGS =  -Wall -Wextra  -std=c++20 #for modules
-LDFLAGS =  -L $(LIB)/SFML 
-LDFLAGS += -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
+
+
+ifeq ($(wildcard $(LIB)/SFML/libsfml-system.so.2.6),)
+# SFML2.6.0 not installed
+	LDFLAGS = -l sfml-window -l sfml-system -l sfml-graphics -l sfml-audio
+	SFML_FLAG = 
+else
+# SFML2.6.0 installed
+	LDFLAGS = -L $(LIB)/SFML -l:libsfml-window.so.2.6.0  -l:libsfml-system.so.2.6.0 -l:libsfml-graphics.so.2.6.0 -l:libsfml-audio.so.2.6.0
+	SFML_FLAG = -I $(INC)/SFML
+	CFLAGS+= -D SFML_2_6_0
+#Quelques différences dans le code
+endif
+
+XML_FLAG = -I /usr/include/rapidxml
+
+
+
 
 # ========= commands for users =========
 
@@ -15,18 +30,17 @@ all : createBuild createModules Bomberman_Plat
 
 cleanAll:
 	rm  build/*
+	- rm test.o
 #	rm Bomberman_Plat.x
 
 createBuild:
 	- mkdir build
 
 
+
 # ========= rules for compiling =========
 
 API = src/engine/libAPI
-SFML_FLAG = -I $(INC)/SFML
-XML_FLAG = -I /usr/include/rapidxml
-
 build/%.o : $(API)/%.cppm # engine/libAPI
 	$(CXX) $(CFLAGS) $(PRECOMPILE) $(XML_FLAG) $(SFML_FLAG) $^ -o $(patsubst $(API)/%.cppm, build/%.pcm, $<)
 	$(CXX) $(CFLAGS) -c $(patsubst $(API)/%.cppm, build/%.pcm, $<) -o $@
