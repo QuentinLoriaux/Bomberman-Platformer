@@ -16,7 +16,17 @@ apt install libsfml-dev -y
 apt install librapidxml-dev -y
 
 # Install clang++-16
-apt install clang-16 -y
+if ! command -v clang++-16 &>/dev/null; then
+    # If clang++-16 doesn't exist, proceed with installation
+    wget https://apt.llvm.org/llvm.sh
+    chmod +x llvm.sh
+    ./llvm.sh 16
+else
+    echo "clang++-16 is already installed."
+fi
+
+# Install make
+apt install make 
 
 # Run make in current directory
 make

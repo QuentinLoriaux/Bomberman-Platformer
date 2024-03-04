@@ -54,9 +54,11 @@ export class Sprite{
         void setPos(float x, float y){sp.setPosition(x,y);}
 
 
-
+        #ifdef SFML_2_6_0
         void resize(float w, float h, bool flip){
+            
             auto size = sp.getTextureRect().getSize();
+           
             sp.setScale(w/size.x, h/size.y);
             if (flip){
                 auto size = sp.getTextureRect().getSize();
@@ -67,6 +69,22 @@ export class Sprite{
                 sp.setOrigin(0,0);
             }
         }
+        #else
+        void resize(float w, float h, bool flip){
+            
+            sf::Vector2<float> size(sp.getTextureRect().width, sp.getTextureRect().height);
+           
+            sp.setScale(w/size.x, h/size.y);
+            if (flip){
+                sf::Vector2<float> size(sp.getTextureRect().width, sp.getTextureRect().height);
+                sp.setOrigin(size.x, 0);
+                sp.scale(sf::Vector2f(-1.0,1.0));
+            }
+            else{
+                sp.setOrigin(0,0);
+            }
+        }
+        #endif
         void resize(float w, float h){resize(w,h,false);}
 
 
