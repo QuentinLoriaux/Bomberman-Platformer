@@ -5,3 +5,4 @@ build/*
 assets
 SFML
 Bomberman_Plat.x
+llvm.sh*

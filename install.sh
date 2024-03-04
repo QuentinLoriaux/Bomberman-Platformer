@@ -26,7 +26,7 @@ else
 fi
 
 # Install make
-apt install make 
+apt install make -y
 
 # Run make in current directory
 make
