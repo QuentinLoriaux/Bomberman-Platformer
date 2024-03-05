@@ -21,6 +21,7 @@ if ! command -v clang++-16 &>/dev/null; then
     wget https://apt.llvm.org/llvm.sh
     chmod +x llvm.sh
     ./llvm.sh 16
+    rm llvm.sh
 else
     echo "clang++-16 is already installed."
 fi

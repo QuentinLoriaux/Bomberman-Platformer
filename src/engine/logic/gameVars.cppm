@@ -32,12 +32,15 @@ export class GameVariables{
         // menuState menuState;
         // int menuCursor;
 
+        //MODE
+        mode* gameMode;
+
         //GAME
         int nbPlayers;
         Board board;
 
 
-        GameVariables(RenderWindow& rWindow): nbPlayers(1), board(Board(rWindow)){}
+        GameVariables(RenderWindow& rWindow, mode& _gameMode): nbPlayers(1), board(Board(rWindow)), gameMode(&_gameMode){}
         GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board(rWindow)){}
 
 

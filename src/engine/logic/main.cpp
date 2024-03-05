@@ -80,7 +80,7 @@ int main()
         texts.addText("Not Found", 0, 50);
 
         //game variables
-        GameVariables gameVars(rWindow);
+        GameVariables gameVars(rWindow, gameMode);
 
 
         //=========================== LOAD & INIT ===========================

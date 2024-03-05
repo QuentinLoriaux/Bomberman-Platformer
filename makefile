@@ -29,8 +29,7 @@ XML_FLAG = -I /usr/include/rapidxml
 all : createBuild createModules Bomberman_Plat
 
 cleanAll:
-	rm  build/*
-	- rm test.o
+	- rm  build/*
 #	rm Bomberman_Plat.x
 
 createBuild:

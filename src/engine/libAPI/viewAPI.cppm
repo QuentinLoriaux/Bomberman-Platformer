@@ -116,6 +116,9 @@ export class Text{
         Text(const std::string& content, const Font& _ft, int size):
             text(sf::Text(content, _ft.ft, size)){}
 
+        //provisoire hein
+        void setPos(float x, float y){text.setPosition(x,y);}
+
 };
 
 export class TextManager{
@@ -134,6 +137,8 @@ export class TextManager{
         void removeText(int numText){
             textList.erase(textList.begin() + numText);
         }
+
+
 
 };
 

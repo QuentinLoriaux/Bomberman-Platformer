@@ -9,6 +9,8 @@ import Board;
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <string>
 
 export module modeGame;
 
@@ -165,7 +167,7 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     auto board = &(gameVars.board);
     unsigned int nbCases = board->cases.size();
     unsigned int nbEntites = board->entities.size();
-
+    
 
 
     //draw background
@@ -201,6 +203,9 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
 
 
     //draw Entities
+    unsigned int livingPlayers = 0;
+    unsigned int livingEntities = 0;
+
     float xSize; float ySize;
     for (unsigned int k = 0; k < nbEntites; k++){
         auto sp = assets.getSp(2 + nbCases + k);
@@ -208,6 +213,8 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
         ent->setSprite(sp);//change sprite according to animation 
 
         if (ent->isAlive()){
+            livingEntities ++;
+            if (ent->entityId == 0){livingPlayers++;}
             xOffset = ent->xPos*side; yOffset = ent->yPos*side;
             xSize = ent->xSize*side;  ySize = ent->ySize*side;
             sp.setPos(xStart + xOffset, yStart + yOffset);
@@ -215,6 +222,51 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
             rWindow.draw(sp);
         }
     }
+
+
+                
+    //end of the game
+
+    //text to print
+    if (texts.textList.size()== 1){
+        switch (livingPlayers){
+            case 0 :
+                texts.addText("Game Over - no Winner", 0, 50);
+                break;
+            case 1 :
+                if (livingPlayers == livingEntities){
+                    int numWin = 0;
+                    for (unsigned int k = 0; k < gameVars.nbPlayers; k++){
+                        auto player = board->players[k]; 
+                        if (player->isAlive()){
+                            numWin = k+1;
+                            break;
+                        }
+                    }
+                    texts.addText("Game Over - The winner is Player " + std::to_string(numWin) + " !", 0, 50);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    //Display text
+    if (livingPlayers == 0 || livingPlayers == livingEntities){
+        static std::chrono::_V2::steady_clock::time_point timer = std::chrono::steady_clock::now();
+        const std::chrono::duration<double> second(1.0);
+        auto now = std::chrono::steady_clock::now();
+
+        auto finalText = texts.getText(1);
+        finalText.setPos(0, yScreen/2);
+        rWindow.draw(finalText);
+
+        if (now - timer > 5*second){
+            *(gameVars.gameMode) = END;
+        }
+
+    }
+        
 
 
 }
