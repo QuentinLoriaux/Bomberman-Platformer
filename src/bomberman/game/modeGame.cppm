@@ -24,9 +24,11 @@ export void loadGameAssets(Assets &assets){
     assets.addTex("bomberman.png");//4
 
 
-    assets.addSoundBuffer("cursorMove.mp3");
-    assets.addSoundBuffer("validateMenu.mp3");
-    assets.selectMusic("Dire_Dire_Docks.ogg");
+    assets.addSoundBuffer("explosion.mp3");//1
+    assets.addSoundBuffer("playerWins.mp3");//2
+    assets.addSoundBuffer("gameOver.mp3");//3
+    assets.selectMusic("gameBattle.ogg");
+    
 }
 
 
@@ -38,6 +40,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     std::cout <<"initGame\n";
     auto board = &(gameVars.board);
 
+   
 
     //background
     assets.addSprite(1);
@@ -48,6 +51,8 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
 
     //Entities
+
+    //Monsters
     Entity::setBoardDims(board->width, board->height);
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         if (board->cases[k]->monsterSpawn){
@@ -56,6 +61,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
     }
 
+    //players
     int k = 0; int cpt = 0; int nbActions = 7;
     while (cpt < gameVars.nbPlayers){
         if (board->cases[k]->playerSpawn){
@@ -91,8 +97,9 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
         k++;
     }
-
     board->setFirstTimeEntityPos();
+
+    assets.addSound(1);//explosions
 }
 
 
@@ -105,13 +112,15 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
     auto board = &(gameVars.board);
 
+
+
     //Blocs
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         auto bloc = board->cases[k];
         if (bloc->displayId == 6){
             std::shared_ptr<BombBloc> bBloc = std::dynamic_pointer_cast<BombBloc>(bloc);
             if (bBloc->endedCountDown()){
-                board->explode(k, *(bBloc->player));
+                gameVars.soundPlay = board->explode(k, *(bBloc->player));
                 //add explosion sound effect
             }
         }
@@ -168,7 +177,15 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     unsigned int nbCases = board->cases.size();
     unsigned int nbEntites = board->entities.size();
     
-
+    //sound
+    switch (gameVars.soundPlay){
+        case 1: //explosion
+            assets.getSfx(1).play();
+            break;
+        default:
+            break;
+    }
+    gameVars.soundPlay = 0;
 
     //draw background
     float xScreen; float yScreen;
@@ -230,10 +247,12 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     //text to print
     if (texts.textList.size()== 1){
         switch (livingPlayers){
-            case 0 :
+            case 0 ://everyone loses
                 texts.addText("Game Over - no Winner", 0, 50);
+                assets.addSound(3);
+                assets.getSfx(2).play();
                 break;
-            case 1 :
+            case 1 ://a player wins
                 if (livingPlayers == livingEntities){
                     int numWin = 0;
                     for (unsigned int k = 0; k < gameVars.nbPlayers; k++){
@@ -244,6 +263,8 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
                         }
                     }
                     texts.addText("Game Over - The winner is Player " + std::to_string(numWin) + " !", 0, 50);
+                    assets.addSound(2);
+                    assets.getSfx(2).play();
                 }
                 break;
             default:

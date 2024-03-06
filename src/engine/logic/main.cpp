@@ -87,8 +87,9 @@ int main()
   
         loadAssets(gameMode, assets);
     
-        assets.addSprite(0);//problèmes si on change textureList après avoir créé des sprites
-        assets.addSound(0);
+        //problèmes si on change textureList ou soundBufferList après avoir créé des sprites/soundBuffers
+        assets.addSprite(0);//not found
+        assets.addSound(0);//not found
 
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay

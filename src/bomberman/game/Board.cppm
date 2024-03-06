@@ -273,7 +273,7 @@ export class Board{
         }
 
         // ====== game mechanics ======
-        void explode(int k, Player& player){
+        int explode(int k, Player& player){
             player.activeBomb--;
             player.crossableBomb = -1;
             cases[k] = std::make_shared<BombFlare>();
@@ -295,6 +295,7 @@ export class Board{
                 cases[k+1] = std::make_shared<BombFlare>();
             }
 
+            return 1;
         }
         //if breakableWall : bonus or not
 
