@@ -18,6 +18,9 @@ export void loadEditorAssets(Assets &assets){
     assets.addTex("boardTextures.png");//2
     assets.addTex("monster.png");//3
     assets.addTex("bomberman.png");//4
+    assets.addTex("editorButtons.png");//5
+    assets.addTex("editorBloc.png");//6
+    assets.addTex("cursor.png");//7
 
     assets.selectMusic("editor.ogg");
 
@@ -26,9 +29,13 @@ export void loadEditorAssets(Assets &assets){
 
 export void initEditor(Event &event, TextManager& texts, GameVariables& gameVars, Assets& assets){
 
+    event.window->hideCursor();
+
     //background
     assets.addSprite(1);
 
+    //Mouse
+    assets.addSprite(7);
 
 }
 
@@ -45,5 +52,11 @@ export void dispEditor(RenderWindow& rWindow, Assets &assets, TextManager& texts
     assets.getSp(1).resize(xScreen, yScreen);
     rWindow.draw(assets.getSp(1));
 
+
+    //draw cursor
+    float xCursor; float yCursor;
+    rWindow.getCursorPos(xCursor, yCursor);
+    assets.getSp(2).setPos(xCursor, yCursor);
+    rWindow.draw(assets.getSp(2));
 
 }

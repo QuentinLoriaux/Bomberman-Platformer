@@ -41,7 +41,7 @@ export class GameVariables{
         Board board;
 
 
-        GameVariables(RenderWindow& rWindow, mode& _gameMode): nbPlayers(1), soundPlay(0), board(Board(rWindow)), gameMode(&_gameMode){}
+        GameVariables(RenderWindow& rWindow, mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board(rWindow)){}
         GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board(rWindow)){}
 
 

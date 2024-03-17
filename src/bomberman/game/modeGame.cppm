@@ -273,7 +273,7 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     }
 
     //Display text
-    if (livingPlayers == 0 || livingPlayers == livingEntities){
+    if (livingPlayers == 0 || (livingPlayers == livingEntities && livingPlayers == 1)){
         static std::chrono::_V2::steady_clock::time_point timer = std::chrono::steady_clock::now();
         const std::chrono::duration<double> second(1.0);
         auto now = std::chrono::steady_clock::now();

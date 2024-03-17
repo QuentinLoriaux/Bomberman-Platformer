@@ -60,7 +60,7 @@ int main()
 
 
     // Initialize game mode
-    mode gameMode = GAME;
+    mode gameMode = EDITOR;
 
     // App loop
     while (gameMode != END){

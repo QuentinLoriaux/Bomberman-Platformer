@@ -4,8 +4,8 @@ LIB = /usr/local/lib
 INC = /usr/local/include
 
 PRECOMPILE = -fprebuilt-module-path=build --precompile
-CFLAGS =  -Wall -Wextra  -std=c++20 #for modules
-
+CFLAGS = -Wall -Wextra  -std=c++20 #for modules
+CFLAGS += -O0 # for debug
 
 ifeq ($(wildcard $(LIB)/SFML/libsfml-system.so.2.6),)
 # SFML2.6.0 not installed

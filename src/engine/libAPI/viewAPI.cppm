@@ -275,5 +275,12 @@ export class RenderWindow {
             ySize = vec.y;
         }
 
+        void hideCursor(){rWindow.setMouseCursorVisible(false);}
+        void getCursorPos(float& x, float& y){
+            auto pos = sf::Mouse::getPosition(rWindow);
+            x = pos.x;
+            y = pos.y;    
+        }
+
 
 };
