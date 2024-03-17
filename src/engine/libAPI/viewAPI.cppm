@@ -4,6 +4,7 @@ module;
 #include <string>
 #include <variant>
 #include <vector>
+#include <deque>
 
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
@@ -169,6 +170,7 @@ export class Sound{
         Sound(SoundBuffer &_sfxBuf): sfx(sf::Sound(_sfxBuf.sfxBuf)) {}
    
         void play(){sfx.play();}
+        bool playing(){return sfx.getStatus() == sf::Sound::Status::Playing;}
 
 };
 
@@ -192,57 +194,80 @@ export class Music{
 export class Assets{
     public :
         std::vector<Texture> textureList;
-        std::vector<Sprite> spriteList;
+        std::vector<std::vector<Sprite>> spriteList;
         std::vector<SoundBuffer> sfxBufList;
-        std::vector<Sound> soundList;
+        std::deque<Sound> soundList;
         Music mus;
 
-        Assets(): textureList(std::vector<Texture>()), spriteList(std::vector<Sprite>()), sfxBufList(std::vector<SoundBuffer>()), soundList(std::vector<Sound>()), mus(Music()) {}
+        Assets(): textureList(std::vector<Texture>()), spriteList(std::vector<std::vector<Sprite>>()), sfxBufList(std::vector<SoundBuffer>()), soundList(std::deque<Sound>()), mus(Music()) {
+            spriteList.push_back(std::vector<Sprite>());//Default list
+        }
         
 
         // ----------- Texture -----------
         void addTex(const std::string &nameTex){textureList.push_back(Texture(nameTex));}
 
-        int addSprite(int numTex){
+        void addSpriteVec(){
+            spriteList.push_back(std::vector<Sprite>());
+        }
+
+        int addSprite(int numTex, int numSubVec){
             int size = textureList.size();
-            if (numTex < size ){spriteList.push_back(textureList[numTex]);}
+            int sizeVec = spriteList.size();
+            if (numTex < size && numSubVec < sizeVec){spriteList[numSubVec].push_back(textureList[numTex]);}
             else{
-                std::cout << "Erreur : il n'y a que " << size << " textures enregistrées or vous avez demandé la n°" << numTex << ".\n";
-                spriteList.push_back(textureList[0]);
+                std::cout << "Erreur : il y a " << size << " textures enregistrées, vous avez demandé la n°" << numTex << ".\n";
+                std::cout << "         il y a " << sizeVec << " sous-vecteurs, vous avez demandé le n°" << numSubVec << ".\n";
+                spriteList[0].push_back(textureList[0]);
             }
             return spriteList.size()-1;
         }
 
-        Sprite& getSp(int numSp){
+        Sprite& getSp(int numSp, int numSubVec){
             int size = spriteList.size();
-            if (numSp < size ){return spriteList[numSp];}
-            else{
-                std::cout << "Erreur : il n'y a que " << size << " sprites enregistrés or vous avez demandé le n°" << numSp << ".\n";
-                return spriteList[0];
+            
+            if (numSubVec < size ){
+                int sizeVec = spriteList[numSubVec].size();
+
+                if (numSp < sizeVec){return spriteList[numSubVec][numSp];}
+                else{std::cout << "Erreur : il n'y a que " << sizeVec << " sprites enregistrés or vous avez demandé le n°" << numSp << ".\n";}
+                
             }
+            else{std::cout << "Erreur : il n'y a que " << size << " sous-vecteurs, or vous avez demandé le n°" << numSubVec << ".\n";}
+
+            return spriteList[0][0];
         }
 
         // ----------- Sons -----------
 
         void addSoundBuffer(const std::string &nameSfx){sfxBufList.push_back(SoundBuffer(nameSfx));}
 
-        void addSound(int numSfx){
+        void addSound(int numSfx){//add and play sound
             int size = sfxBufList.size();
-            if (numSfx < size ){soundList.push_back(sfxBufList[numSfx]);}
+            if (numSfx < size ){
+                soundList.push_back(sfxBufList[numSfx]);
+                soundList.back().play();
+            }
             else{
                 std::cout << "Erreur : il n'y a que " << size << " soundBuffer enregistrés or vous avez demandé le n°" << numSfx << ".\n";
                 soundList.push_back(sfxBufList[0]);
             }
         }
 
-        Sound& getSfx(int numSfx){
-            int size = soundList.size();
-            if (numSfx < size ){return soundList[numSfx];}
-            else{
-                std::cout << "Erreur : il n'y a que " << size << " sons enregistrés or vous avez demandé le n°" << numSfx << ".\n";
-                return soundList[0];
-            }            
+        void freeSounds(){
+            while (!soundList.empty() && !soundList.front().playing()){
+                soundList.pop_front();
+            }
         }
+
+        // Sound& getSfx(int numSfx){
+        //     int size = soundList.size();
+        //     if (numSfx < size ){return soundList[numSfx];}
+        //     else{
+        //         std::cout << "Erreur : il n'y a que " << size << " sons enregistrés or vous avez demandé le n°" << numSfx << ".\n";
+        //         return soundList[0];
+        //     }            
+        // }
 
         // ----------- Musique -----------
 

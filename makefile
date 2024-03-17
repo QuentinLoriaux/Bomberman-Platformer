@@ -84,7 +84,7 @@ Bomberman_Plat : src/engine/logic/main.cpp  $(OBJ)
 
 # ========= When things go wrong =========
 
-ORDER_MODULES = menu viewAPI Event parser assetsBindings Entity Board  gameVars modeGame modeMenu
+ORDER_MODULES = menu viewAPI Event parser assetsBindings Entity Board  gameVars modeGame modeMenu modeEditor
 createModules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
 	@echo "pls work"
 

@@ -8,6 +8,7 @@ import modeGame;
 import modeEditor;
 import modeMenu;
 #include <functional>
+#include <iostream>
 
 export module modes;
 
@@ -17,7 +18,7 @@ export module modes;
 
 export void quitGame(mode &gameMode){gameMode = END;}
 export void resizeWindow(Event& event){event.resize();}
-export void testSound(Assets &assets){assets.getSfx(0).play();}
+export void testSound(Assets &assets){assets.addSound(0);}
 
 
 

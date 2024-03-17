@@ -23,6 +23,9 @@ export void loadGameAssets(Assets &assets){
     assets.addTex("monster.png");//3
     assets.addTex("bomberman.png");//4
 
+    assets.addSpriteVec();//1 : blocs
+    assets.addSpriteVec();//2 : entities
+
 
     assets.addSoundBuffer("explosion.mp3");//1
     assets.addSoundBuffer("playerWins.mp3");//2
@@ -43,11 +46,11 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
    
 
     //background
-    assets.addSprite(1);
+    assets.addSprite(1,0);
     
     //Board
     for (unsigned int k = 0 ; k < gameVars.board.cases.size() ; k++){
-        assets.addSprite(2);
+        assets.addSprite(2,1);
     }
 
     //Entities
@@ -57,7 +60,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         if (board->cases[k]->monsterSpawn){
             board->addMonster(k);
-            assets.addSprite(3);
+            assets.addSprite(3,2);
         }
     }
 
@@ -91,7 +94,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
             event.addEvent(debug, std::ref(player));
             event.addBinding(8 + nbActions*cpt, ENTER);
 
-            assets.addSprite(4);
+            assets.addSprite(4,2);
             cpt++;
             std::cout <<"yes\n";
         }
@@ -99,7 +102,6 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
     board->setFirstTimeEntityPos();
 
-    assets.addSound(1);//explosions
 }
 
 
@@ -180,18 +182,19 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     //sound
     switch (gameVars.soundPlay){
         case 1: //explosion
-            assets.getSfx(1).play();
+            assets.addSound(1);
             break;
         default:
             break;
     }
     gameVars.soundPlay = 0;
+    assets.freeSounds();
 
     //draw background
     float xScreen; float yScreen;
     rWindow.getSize(xScreen, yScreen);
-    assets.getSp(1).resize(xScreen, yScreen);
-    rWindow.draw(assets.getSp(1));
+    assets.getSp(1,0).resize(xScreen, yScreen);
+    rWindow.draw(assets.getSp(1,0));
 
 
 
@@ -208,7 +211,7 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
 
     //draw Board
     for (unsigned int k = 0; k < nbCases; k++){
-        auto sp = assets.getSp(2+k);
+        auto sp = assets.getSp(k,1);
         board->setBlocSprite(sp, k);
 
         board->blocOffset(k, xOffset, yOffset);
@@ -225,7 +228,7 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
 
     float xSize; float ySize;
     for (unsigned int k = 0; k < nbEntites; k++){
-        auto sp = assets.getSp(2 + nbCases + k);
+        auto sp = assets.getSp(k,2);
         auto ent = board->entities[k]; 
         ent->setSprite(sp);//change sprite according to animation 
 
@@ -250,7 +253,6 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
             case 0 ://everyone loses
                 texts.addText("Game Over - no Winner", 0, 50);
                 assets.addSound(3);
-                assets.getSfx(2).play();
                 break;
             case 1 ://a player wins
                 if (livingPlayers == livingEntities){
@@ -264,7 +266,6 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
                     }
                     texts.addText("Game Over - The winner is Player " + std::to_string(numWin) + " !", 0, 50);
                     assets.addSound(2);
-                    assets.getSfx(2).play();
                 }
                 break;
             default:

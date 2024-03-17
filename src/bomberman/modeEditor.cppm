@@ -32,10 +32,10 @@ export void initEditor(Event &event, TextManager& texts, GameVariables& gameVars
     event.window->hideCursor();
 
     //background
-    assets.addSprite(1);
+    assets.addSprite(1,0);
 
     //Mouse
-    assets.addSprite(7);
+    assets.addSprite(7,0);
 
 }
 
@@ -49,14 +49,14 @@ export void dispEditor(RenderWindow& rWindow, Assets &assets, TextManager& texts
     //draw background
     float xScreen; float yScreen;
     rWindow.getSize(xScreen, yScreen);
-    assets.getSp(1).resize(xScreen, yScreen);
-    rWindow.draw(assets.getSp(1));
+    assets.getSp(1,0).resize(xScreen, yScreen);
+    rWindow.draw(assets.getSp(1,0));
 
 
     //draw cursor
     float xCursor; float yCursor;
     rWindow.getCursorPos(xCursor, yCursor);
-    assets.getSp(2).setPos(xCursor, yCursor);
-    rWindow.draw(assets.getSp(2));
+    assets.getSp(2,0).setPos(xCursor, yCursor);
+    rWindow.draw(assets.getSp(2,0));
 
 }

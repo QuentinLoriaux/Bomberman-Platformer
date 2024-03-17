@@ -60,7 +60,7 @@ int main()
 
 
     // Initialize game mode
-    mode gameMode = EDITOR;
+    mode gameMode = GAME;
 
     // App loop
     while (gameMode != END){
@@ -88,8 +88,8 @@ int main()
         loadAssets(gameMode, assets);
     
         //problèmes si on change textureList ou soundBufferList après avoir créé des sprites/soundBuffers
-        assets.addSprite(0);//not found
-        assets.addSound(0);//not found
+        assets.addSprite(0,0);//not found
+        // assets.addSound(0);//not found
 
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
@@ -116,7 +116,6 @@ int main()
    
                 
             event.processEvents();
-            
             
             
             // Update variables 
