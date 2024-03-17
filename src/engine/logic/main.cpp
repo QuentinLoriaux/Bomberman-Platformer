@@ -60,7 +60,7 @@ int main()
 
 
     // Initialize game mode
-    mode gameMode = GAME;
+    mode gameMode = EDITOR;
 
     // App loop
     while (gameMode != END){
@@ -94,7 +94,7 @@ int main()
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
         // (certains sprites, textes, évènements, ...)
-
+        gameVars.nbPlayers=2;
         
         initialize(gameMode, event, texts, gameVars, assets);
 

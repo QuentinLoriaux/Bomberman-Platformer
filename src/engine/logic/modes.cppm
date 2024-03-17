@@ -19,6 +19,7 @@ export module modes;
 export void quitGame(mode &gameMode){gameMode = END;}
 export void resizeWindow(Event& event){event.resize();}
 export void testSound(Assets &assets){assets.addSound(0);}
+export void changeMode(mode &gameMode){gameMode = (gameMode == GAME)? EDITOR:GAME;}
 
 
 
@@ -55,6 +56,8 @@ export void initialize(mode &gameMode,
     event.addEvent(resizeWindow, std::ref(event));
     event.addBinding(1, RESIZE);
 
+    event.addEvent(changeMode, std::ref(gameMode));
+    event.addBinding(2 , BACKSPACE);
 
     switch (gameMode){
         case MAIN_TITLE : initGame(event, texts, gameVars, assets); break;

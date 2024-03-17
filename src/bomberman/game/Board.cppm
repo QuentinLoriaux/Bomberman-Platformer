@@ -164,6 +164,7 @@ export class BombFlare: public Bloc{
 
 //--------------------------------- BOARD ---------------------------------
 
+//idéalement, séparer Board/gameBoard/editorBoard
 export class Board{
     public:
         int width;
@@ -177,8 +178,25 @@ export class Board{
             loadBoard(xmlFilePath);
             updateBlocLength(rWindow);
         }
-        Board(RenderWindow& rWindow): Board("./game_files/boards/default.xml",rWindow){}
+        // Board(RenderWindow& rWindow): Board("./game_files/boards/default.xml",rWindow){}
 
+        Board(RenderWindow& rWindow){//default map so we don't need a file to start it
+            width = 7; height = 5;
+            for (int k = 0 ; k <8; k++){cases.push_back(std::make_shared<Air>());}
+            cases.push_back(std::make_shared<monsterSpawn>());
+            for (int k = 0 ; k <3; k++){cases.push_back(std::make_shared<Air>());}
+            cases.push_back(std::make_shared<monsterSpawn>());
+            cases.push_back(std::make_shared<Air>());
+            for (int k = 0 ; k <2; k++){cases.push_back(std::make_shared<Wall>());}
+            for (int k = 0 ; k <3; k++){cases.push_back(std::make_shared<Air>());}
+            for (int k = 0 ; k <3; k++){cases.push_back(std::make_shared<Wall>());}
+            for (int k = 0 ; k <2; k++){cases.push_back(std::make_shared<Air>());}
+            cases.push_back(std::make_shared<playerSpawn>());
+            cases.push_back(std::make_shared<Air>());
+            cases.push_back(std::make_shared<playerSpawn>());
+            cases.push_back(std::make_shared<Air>());
+            for (int k = 0 ; k <7; k++){cases.push_back(std::make_shared<Wall>());}
+        }
 
         void loadBoard(const std::string& xmlFilePath){
             parsedXML xmlFile(xmlFilePath);
@@ -303,6 +321,27 @@ export class Board{
             cases[k] = std::make_shared<Air>();
         }
 
+
+        // ====== for Editor ======
+
+        void updateBlocLengthEditor(RenderWindow& rWindow, float& xStart, float& yStart){
+            float xSize; float ySize;
+            rWindow.getSize(xSize, ySize);
+            // std::cout << xSize << "," << ySize << std::endl;
+            xStart = xSize*(1./16.);// taille du bouton gauche
+            yStart = ySize*(1./16.);// taille du bouton haut
+
+            if (ySize/height > xSize/width){
+                blocLength = (xSize/width)*(3./4.);
+                xStart += 0;
+                yStart += (ySize/2)*(3./4.) - blocLength*height/2;
+            }
+            else{
+                blocLength = (ySize/height)*(3./4.);
+                xStart += (xSize/2)*(3./4.) - blocLength*width/2 ;
+                yStart += 0;
+            }
+        }
 };
 
 
@@ -316,7 +355,7 @@ export class Board{
 
 
 export void placeBomb(Player& player, Board& board){
-    if (player.activeBomb < player.maxBomb){
+    if (player.activeBomb < player.maxBomb && player.isAlive()){
         player.activeBomb++;
         board.cases[player.blocIndex]= std::make_shared<BombBloc>(player);
         player.crossableBomb = player.blocIndex;

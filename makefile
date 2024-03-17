@@ -26,7 +26,7 @@ XML_FLAG = -I /usr/include/rapidxml
 
 # ========= commands for users =========
 
-all : createBuild createModules Bomberman_Plat
+all : createBuild  createModules Bomberman_Plat
 
 cleanAll:
 	- rm  build/*
@@ -84,7 +84,7 @@ Bomberman_Plat : src/engine/logic/main.cpp  $(OBJ)
 
 # ========= When things go wrong =========
 
-ORDER_MODULES = menu viewAPI Event parser assetsBindings Entity Board  gameVars modeGame modeMenu modeEditor
+ORDER_MODULES = menu viewAPI Event parser assetsBindings Entity Board Editor  gameVars modeGame modeMenu modeEditor
 createModules : $(addsuffix .o, $(addprefix build/,$(ORDER_MODULES))) 
 	@echo "pls work"
 

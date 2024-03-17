@@ -74,11 +74,11 @@ class EventBinding{//Toujours initialiser avec le constructeur(fonction) puis aj
 
 
 export class Event{
-    private :
+
+    public :
         sf::Event ev;
         std::vector<EventBinding> eventList;
         std::vector<int> monitoredList;
-    public :
         RenderWindow* window;
         
         //On passe la fenêtre en référence

@@ -65,7 +65,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     }
 
     //players
-    int k = 0; int cpt = 0; int nbActions = 7;
+    int k = 0; int cpt = 0; int nbActions = 7; int actionsOffset = event.eventList.size();
     while (cpt < gameVars.nbPlayers){
         if (board->cases[k]->playerSpawn){
             board->addPlayer(k);
@@ -74,25 +74,25 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
             
             // add Bindings for the player (les events commencent à 2)
             event.addEvent(jump, std::ref(player));
-            event.addBinding(2 + nbActions*cpt, SPACE);
+            event.addBinding(actionsOffset + nbActions*cpt, SPACE);
 
             event.addEvent(walkLeft, std::ref(player));
-            event.addBinding(3 + nbActions*cpt, Q);
+            event.addBinding(actionsOffset + 1 + nbActions*cpt, Q);
 
             event.addEvent(stopWalkLeft, std::ref(player));
-            event.addBinding(4 + nbActions*cpt, Q_RELEASE);
+            event.addBinding(actionsOffset + 2 + nbActions*cpt, Q_RELEASE);
             
             event.addEvent(walkRight, std::ref(player));
-            event.addBinding(5 + nbActions*cpt, D);
+            event.addBinding(actionsOffset + 3 + nbActions*cpt, D);
             
             event.addEvent(stopWalkRight, std::ref(player));
-            event.addBinding(6 + nbActions*cpt, D_RELEASE);
+            event.addBinding(actionsOffset + 4 + nbActions*cpt, D_RELEASE);
 
             event.addEvent(placeBomb, std::ref(player), std::ref(*board));
-            event.addBinding(7 + nbActions*cpt, TAB);
+            event.addBinding(actionsOffset + 5 + nbActions*cpt, TAB);
 
             event.addEvent(debug, std::ref(player));
-            event.addBinding(8 + nbActions*cpt, ENTER);
+            event.addBinding(actionsOffset + 6 + nbActions*cpt, ENTER);
 
             assets.addSprite(4,2);
             cpt++;

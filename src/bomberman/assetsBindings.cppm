@@ -46,3 +46,21 @@ export std::vector<int> boardTexBinding(){
     };
     return tab;
 }
+
+export std::vector<int> editorButtonBinding(){
+    std::vector<int> tab = {
+        0,0,238,62,
+        244,0,238,62,
+        4,68,501,38
+    };
+    return tab;
+}
+
+export std::vector<int> editorMenuBinding(){
+    std::vector<int> tab = {
+        0,0,289,104,
+        290,0,50,50,
+        343,0,50,50
+    };
+    return tab;
+}

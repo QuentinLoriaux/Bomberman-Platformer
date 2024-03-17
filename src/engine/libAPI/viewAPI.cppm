@@ -54,6 +54,8 @@ export class Sprite{
 
         void setPos(float x, float y){sp.setPosition(x,y);}
 
+        void setRotation(float deg){sp.setRotation(deg);}
+
 
         #ifdef SFML_2_6_0
         void resize(float w, float h, bool flip){
