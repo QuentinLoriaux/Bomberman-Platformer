@@ -36,9 +36,9 @@ export void loadEditorAssets(Assets &assets){
 
 export void initEditor(Event &event, TextManager& texts, GameVariables& gameVars, Assets& assets){
     event.window->hideCursor();
-    auto buttonsSprites = editorButtonBinding();    
-    auto menuSprites = editorMenuBinding();    
-    auto boardSprites = boardTexBinding();
+    std::vector<int> buttonsSprites = editorButtonBinding();    
+    std::vector<int> menuSprites = editorMenuBinding();    
+    std::vector<int> boardSprites = boardTexBinding();
 
     //background
     assets.addSprite(1,0);//1
@@ -100,7 +100,7 @@ export void initEditor(Event &event, TextManager& texts, GameVariables& gameVars
     //selected bloc
     gameVars.selectedBloc = 0;
     assets.addSprite(2,0);//12
-    assets.getSp(12,0).setTexRect(gameVars.selectedBloc, boardSprites);
+ 
 }
 
 
@@ -115,9 +115,12 @@ export void initEditor(Event &event, TextManager& texts, GameVariables& gameVars
 
 
 export void updateEditor(Event &event, TextManager texts, GameVariables &gameVars){
-    if (gameVars.clickPressed){
+    static bool waitRelease = false;
+    if (gameVars.clickPressed && !waitRelease){
+        
         switch(gameVars.hoverList){
             case 0://button
+                waitRelease = true;
                 switch (gameVars.hoverSprite){
                     case 3://save
                         saveBoard(gameVars.board);
@@ -125,16 +128,16 @@ export void updateEditor(Event &event, TextManager texts, GameVariables &gameVar
                     case 4://namefile
                         break;
                     case 5://left button
-                        break;
                     case 6://up button
-                        break;
                     case 7://right button
-                        break;
                     case 8://down button
+                        expandBoard(gameVars.board,gameVars.hoverSprite);
                         break;
                     default:
                         break;
                 }
+                break;
+
             case 1://board
                 gameVars.board.changeBloc(gameVars.hoverSprite, gameVars.selectedBloc);
                 break;
@@ -144,6 +147,8 @@ export void updateEditor(Event &event, TextManager texts, GameVariables &gameVar
             default: break;
         }
     }
+    if (!gameVars.clickPressed){waitRelease =false;}
+
 }
 //hover sprite function needed, use getglobalbounds + contains
 
@@ -285,11 +290,21 @@ export void dispEditor(RenderWindow& rWindow, Assets &assets, TextManager& texts
     yOffset += yScreen*2*fButton + yScreen*fOffset/2;
     assets.getSp(4,0).setPos(xOffset, yOffset);
     assets.getSp(4,0).resize(xScreen - xOffset - xScreen*fOffset/2, yScreen*2*fButton);
-    rWindow.draw(assets.getSp(4,0));
+    // rWindow.draw(assets.getSp(4,0));
 
 
     //draw cursor
     assets.getSp(2,0).setPos(xCursor, yCursor);
     rWindow.draw(assets.getSp(2,0));
+    //draw selectedBLoc
+    static std::vector<int> boardSprites = boardTexBinding();
+    float selectOffset = 45;
+    int sizeSelectedBloc = 40;
+    assets.getSp(12,0).setTexRect(gameVars.selectedBloc, boardSprites);
+    assets.getSp(12,0).setPos(xCursor + selectOffset , yCursor + selectOffset);
+    assets.getSp(12,0).resize(sizeSelectedBloc, sizeSelectedBloc);
+    
+    rWindow.draw(assets.getSp(12,0));
+
 
 }

@@ -43,6 +43,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     std::cout <<"initGame\n";
     auto board = &(gameVars.board);
     
+    gameVars.gameEnded = false;
 
     
    
@@ -259,11 +260,12 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
     //end of the game
 
     //text to print
-    if (texts.textList.size()== 1){
+    if (!gameVars.gameEnded){
         switch (livingPlayers){
             case 0 ://everyone loses
                 texts.addText("Game Over - no Winner", 0, 50);
                 assets.addSound(3);
+                gameVars.gameEnded = true;
                 break;
             case 1 ://a player wins
                 if (livingPlayers == livingEntities){
@@ -277,22 +279,26 @@ export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, 
                     }
                     texts.addText("Game Over - The winner is Player " + std::to_string(numWin) + " !", 0, 50);
                     assets.addSound(2);
+                    gameVars.gameEnded = true;
+                    
                 }
                 break;
             default:
                 break;
         }
+
     }
 
     //Display text
-    if (livingPlayers == 0 || (livingPlayers == livingEntities && livingPlayers == 1)){
+    if (gameVars.gameEnded){
         static std::chrono::_V2::steady_clock::time_point timer = std::chrono::steady_clock::now();
         const std::chrono::duration<double> second(1.0);
         auto now = std::chrono::steady_clock::now();
 
-        auto finalText = texts.getText(1);
-        finalText.setPos(0, yScreen/2);
-        rWindow.draw(finalText);
+        texts.getText(1).setPos(xStart, yScreen/2);
+        // texts.getText(1).resize(xScreen - 2*xStart, yScreen/4);
+        texts.getText(1).setColor(0);
+        rWindow.draw(texts.getText(1));
 
         if (now - timer > 5*second){
             *(gameVars.gameMode) = END;

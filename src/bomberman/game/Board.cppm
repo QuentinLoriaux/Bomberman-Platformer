@@ -324,7 +324,7 @@ export class Board{
             }
 
 
-            if (k%width < width && cases[k+1]->displayId == 2 ){//bloc du haut
+            if (k%width < width -1 && cases[k+1]->displayId == 2 ){//bloc de droite
                 cases[k+1] = std::make_shared<BombFlare>();
             }
 

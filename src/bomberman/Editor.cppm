@@ -5,6 +5,7 @@ import parser;
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 
 export module Editor;
@@ -45,4 +46,22 @@ export void saveBoard(Board& board){
     }
 
     saveXML(board.width, board.height, cases);
+}
+
+//a transformer en méthode
+export void expandBoard(Board& board, int dir){
+    switch(dir){
+        case 5://left
+
+        case 6://up
+        case 7://right
+        case 8://down
+            board.height++;
+            for (int k = 0; k < board.width; k++){
+                board.cases.push_back(std::make_shared<Undefined>());
+            }
+            break;
+        default:
+            break;
+    }
 }

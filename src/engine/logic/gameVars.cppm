@@ -38,6 +38,7 @@ export class GameVariables{
         //GAME
         int nbPlayers;
         int soundPlay;
+        bool gameEnded;
         Board board;
 
         //EDITOR
@@ -48,8 +49,8 @@ export class GameVariables{
 
 
 
-        GameVariables(RenderWindow& rWindow, mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board("./game_files/boards/map0.xml")){}
-        GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board()){}
+        GameVariables(mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board("./game_files/boards/map0.xml")){}
+        // GameVariables(int _nbPlayers): nbPlayers(_nbPlayers), board(Board()){}
 
 
 };

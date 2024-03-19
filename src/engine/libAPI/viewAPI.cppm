@@ -135,6 +135,51 @@ export class Text{
         //provisoire hein
         void setPos(float x, float y){text.setPosition(x,y);}
 
+        #ifdef SFML_2_6_0
+        void resize(float w, float h, bool flip){
+            
+            auto size = text.getScale();
+           
+            text.setScale(w/size.x, h/size.y);
+            if (flip){
+                auto size = text.getScale();
+                text.setOrigin(size.x, 0);
+                text.scale(sf::Vector2f(-1.0,1.0));
+            }
+            else{
+                text.setOrigin(0,0);
+            }
+        }
+        #else
+        void resize(float w, float h, bool flip){
+            
+            sf::Vector2<float> size = text.getScale();
+           
+            text.setScale(w/size.x, h/size.y);
+            if (flip){
+                sf::Vector2<float> size = text.getScale();
+                text.setOrigin(size.x, 0);
+                text.scale(sf::Vector2f(-1.0,1.0));
+            }
+            else{
+                text.setOrigin(0,0);
+            }
+        }
+        #endif
+        void resize(float w, float h){resize(w,h,false);}
+
+        void setColor(int color){
+            switch(color){
+                case 0: text.setFillColor(sf::Color::Black); break;
+                case 1: text.setFillColor(sf::Color::White); break;
+                case 2: text.setFillColor(sf::Color::Red); break;
+                case 3: text.setFillColor(sf::Color::Green); break;
+                case 4: text.setFillColor(sf::Color::Blue); break;
+                default:
+                    break;
+            }
+        }
+
 };
 
 export class TextManager{
@@ -308,6 +353,7 @@ export class RenderWindow {
         void clear(){rWindow.clear(sf::Color::Black);}
         void display(){rWindow.display();}
         void setFramerateLimit(int fps){rWindow.setFramerateLimit(fps);}
+        void setVsync(bool val){rWindow.setVerticalSyncEnabled(val);}
         
         void getSize(float& xSize, float& ySize){
             auto vec = rWindow.getSize();

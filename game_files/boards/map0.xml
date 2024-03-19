@@ -1,34 +1,33 @@
 <Board>
-	<height>5</height>
+	<height>6</height>
 	<width>7</width>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>playerSpawn</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
 	<Bloc>Air</Bloc>
 	<Bloc>Air</Bloc>
 	<Bloc>monsterSpawn</Bloc>
 	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>playerSpawn</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>playerSpawn</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
@@ -36,5 +35,13 @@
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Undefined</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Undefined</Bloc>
 </Board>
 

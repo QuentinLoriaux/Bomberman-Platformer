@@ -49,18 +49,15 @@ int main()
     RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
 
     // Set the framerate limit
-    rWindow.setFramerateLimit(FPS);
+    // rWindow.setFramerateLimit(FPS);
+    rWindow.setVsync(true);
     // Initialize fps counter
     auto startFrameTime = std::chrono::steady_clock::now();
     const std::chrono::duration<double> targetFrameDuration(1.0 / static_cast<double>(FPS));
 
-    // load fonts
-    TextManager texts;
-    texts.addFont("arial.ttf");
-
 
     // Initialize game mode
-    mode gameMode = EDITOR;
+    mode gameMode = GAME;
 
     // App loop
     while (gameMode != END){
@@ -77,10 +74,13 @@ int main()
         assets.addSoundBuffer("notFound.mp3");
         assets.selectMusic("notFound.ogg");
 
+        // load fonts
+        TextManager texts;
+        texts.addFont("arial.ttf");
         texts.addText("Not Found", 0, 50);
 
         //game variables
-        GameVariables gameVars(rWindow, gameMode);
+        GameVariables gameVars(gameMode);
 
 
         //=========================== LOAD & INIT ===========================
