@@ -40,9 +40,16 @@ export class GameVariables{
         int soundPlay;
         Board board;
 
+        //EDITOR
+        int hoverSprite;
+        int hoverList;
+        bool clickPressed;
+        int selectedBloc;
 
-        GameVariables(RenderWindow& rWindow, mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board(rWindow)){}
-        GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board(rWindow)){}
+
+
+        GameVariables(RenderWindow& rWindow, mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board("./game_files/boards/map0.xml")){}
+        GameVariables(RenderWindow& rWindow, int _nbPlayers): nbPlayers(_nbPlayers), board(Board()){}
 
 
 };

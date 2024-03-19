@@ -40,6 +40,9 @@ export class Sprite{
 
     public :
         sf::Sprite sp;
+        //absolute coords for sprites that don't move
+        int _x; int _y; int _w; int _h;
+
 
         Sprite(Texture& _tex): sp(sf::Sprite(_tex.tex)) {}//Directement assigner une image au sprite
         
@@ -51,10 +54,13 @@ export class Sprite{
             setTexRect(bindings[4*num], bindings[4*num+1], bindings[4*num+2], bindings[4*num+3]);
         }
 
+        void adaptToWindow(float xScreen, float yScreen, float wScreen, float hScreen){
+            setPos(xScreen*_x, yScreen*_y); resize(wScreen*_w, hScreen *_h); 
+        }
 
         void setPos(float x, float y){sp.setPosition(x,y);}
 
-        void setRotation(float deg){sp.setRotation(deg);}
+
 
 
         #ifdef SFML_2_6_0
@@ -89,6 +95,13 @@ export class Sprite{
         }
         #endif
         void resize(float w, float h){resize(w,h,false);}
+
+        void setRotation(float deg){sp.setRotation(deg);}
+
+        bool contains(float x, float y){
+            auto rect = sp.getGlobalBounds();
+            return rect.contains(x, y);
+        }
 
 
 };

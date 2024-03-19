@@ -16,6 +16,7 @@ export class Effect{
         int id;
     public:
         Effect(int b_id): id(b_id){};
+        Effect():id(0){};
 };
 
 //--------------------------------- Entities ---------------------------------

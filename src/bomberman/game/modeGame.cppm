@@ -42,7 +42,9 @@ export void loadGameAssets(Assets &assets){
 export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, Assets& assets){
     std::cout <<"initGame\n";
     auto board = &(gameVars.board);
+    
 
+    
    
 
     //background
@@ -100,6 +102,15 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
         }
         k++;
     }
+
+    //turn playerSpawn/monsterSpawn into air
+    for (unsigned int k = 0 ; k < board->cases.size() ; k++){
+        if (board->cases[k]->monsterSpawn || board->cases[k]->playerSpawn){
+            board->freeSpace(k);
+        }
+    }
+
+
     board->setFirstTimeEntityPos();
 
 }
@@ -119,14 +130,14 @@ export void updateGame(Event &event, TextManager texts, GameVariables &gameVars)
     //Blocs
     for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         auto bloc = board->cases[k];
-        if (bloc->displayId == 6){
+        if (bloc->displayId == 8){
             std::shared_ptr<BombBloc> bBloc = std::dynamic_pointer_cast<BombBloc>(bloc);
             if (bBloc->endedCountDown()){
                 gameVars.soundPlay = board->explode(k, *(bBloc->player));
                 //add explosion sound effect
             }
         }
-        if (bloc->displayId == 7){
+        if (bloc->displayId == 9){
                 std::shared_ptr<BombFlare> fBloc = std::dynamic_pointer_cast<BombFlare>(bloc);
                 if (fBloc->endedLifeTime()){
                     

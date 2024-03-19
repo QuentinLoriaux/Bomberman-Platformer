@@ -49,6 +49,16 @@ export class Bloc{
         virtual ~Bloc(){}
 };
 
+export class Undefined: public Bloc{
+    private:
+    public:
+        Undefined(): Bloc(false, false, false, 
+                     false, false, 0){}
+
+        void printInfo() const override {
+            std::cout << "Undefined ";
+        }
+};
 
 export class Wall: public Bloc{
     private:
@@ -78,7 +88,7 @@ export class playerSpawn: public Bloc{
     private:
     public:
         playerSpawn(): Bloc(true, true, true,
-                            false, false, 2,
+                            false, false, 3,//provisoire
                             true, false){}
 
         void printInfo() const override {
@@ -90,7 +100,7 @@ export class monsterSpawn: public Bloc{
     private:
     public:
         monsterSpawn(): Bloc(true, true, true,
-                            false, false, 2,
+                            false, false, 4,//provisoire
                             false, true){}
 
         void printInfo() const override {
@@ -103,8 +113,10 @@ class BonusBloc: public Bloc{
         Effect c_effect;
     public:
         BonusBloc(Effect b_effet): Bloc(true, true, true,
-                                        false, true, 3),
+                                        false, true, 5),
                                     c_effect(b_effet){}
+        BonusBloc(): Bloc(true, true, true,
+                        false, true, 5){}
 };
 
 class BreakableWall: public Bloc{
@@ -112,7 +124,7 @@ class BreakableWall: public Bloc{
         //bool bonus;
     public:
         BreakableWall():  Bloc(false, false, false,
-                               true, true, 4){}
+                               true, true, 6){}
 
         BonusBloc generateBonus(){
             Effect item = Effect(rand()%NB_EFFECTS);
@@ -124,7 +136,7 @@ class ThinPlatform: public Bloc{
     private:
     public:
         ThinPlatform(): Bloc(false, true, false,
-                             false, false, 5){}
+                             false, false, 7){}
 };
 
 export class BombBloc: public Bloc{
@@ -133,7 +145,7 @@ export class BombBloc: public Bloc{
         std::chrono::time_point<std::chrono::steady_clock> countDown;
     
         BombBloc(Player& _player): Bloc(false, false, false, 
-                         false, false, 6),
+                         false, false, 8),
                          player(&_player),
                          countDown(std::chrono::steady_clock::now()){}
         
@@ -151,7 +163,7 @@ export class BombFlare: public Bloc{
         std::chrono::time_point<std::chrono::steady_clock> lifeTime;
     public:
         BombFlare(): Bloc(true, true, true,
-                          true, false, 7),
+                          true, false, 9),
                           lifeTime(std::chrono::steady_clock::now()){}
         
         bool endedLifeTime(){
@@ -174,13 +186,13 @@ export class Board{
         std::vector<std::shared_ptr<Player>> players;
         float blocLength;
         
-        Board(const std::string& xmlFilePath, RenderWindow& rWindow){
+        Board(const std::string& xmlFilePath){
             loadBoard(xmlFilePath);
-            updateBlocLength(rWindow);
+            // updateBlocLength(rWindow);
         }
         // Board(RenderWindow& rWindow): Board("./game_files/boards/default.xml",rWindow){}
 
-        Board(RenderWindow& rWindow){//default map so we don't need a file to start it
+        Board(){//default map so we don't need a file to start it
             width = 7; height = 5;
             for (int k = 0 ; k <8; k++){cases.push_back(std::make_shared<Air>());}
             cases.push_back(std::make_shared<monsterSpawn>());
@@ -198,15 +210,18 @@ export class Board{
             for (int k = 0 ; k <7; k++){cases.push_back(std::make_shared<Wall>());}
         }
 
+
         void loadBoard(const std::string& xmlFilePath){
             parsedXML xmlFile(xmlFilePath);
             width = xmlFile.width;
             height = xmlFile.height;
             for (auto it = xmlFile.cases.begin() ; it != xmlFile.cases.end() ; it++){
-                if (*it == "Wall"){cases.push_back(std::make_shared<Wall>());}
+                if (*it == "Undefined"){cases.push_back(std::make_shared<Undefined>());}
+                else if (*it == "Wall"){cases.push_back(std::make_shared<Wall>());}
                 else if (*it == "Air"){cases.push_back(std::make_shared<Air>());}
                 else if (*it == "playerSpawn"){cases.push_back(std::make_shared<playerSpawn>());}
                 else if (*it == "monsterSpawn"){cases.push_back(std::make_shared<monsterSpawn>());}
+                else if (*it == "BonusBloc"){cases.push_back(std::make_shared<BonusBloc>());}
             }
         }
 
@@ -340,6 +355,26 @@ export class Board{
                 blocLength = (ySize/height)*(3./4.);
                 xStart += (xSize/2)*(3./4.) - blocLength*width/2 ;
                 yStart += 0;
+            }
+        }
+
+        void changeBloc(int k, int newBlocId){
+            switch (newBlocId)
+            {
+            case 0:
+                cases[k]=std::make_shared<Undefined>(); break;
+            case 1:
+                cases[k]=std::make_shared<Wall>(); break;
+            case 2:
+                cases[k]=std::make_shared<Air>(); break;
+            case 3:
+                cases[k]=std::make_shared<playerSpawn>(); break;
+            case 4:
+                cases[k]=std::make_shared<monsterSpawn>(); break;
+            case 5:
+                cases[k]=std::make_shared<BonusBloc>(); break;
+            default:
+                break;
             }
         }
 };

@@ -18,6 +18,11 @@ export typedef enum _evType{
     CROSS,
     RESIZE,
 
+    //
+    CLICK_LEFT_PRESS,
+    CLICK_LEFT_RELEASE,
+
+
     //Keys
     ESC,
     ENTER,
@@ -95,6 +100,11 @@ export class Event{
                 case sf::Event::Resized:
                     return RESIZE;
 
+                case sf::Event::MouseButtonPressed:
+                    return CLICK_LEFT_PRESS;
+                
+                case sf::Event::MouseButtonReleased:
+                    return CLICK_LEFT_RELEASE;
 
                 case sf::Event::KeyPressed:
                     switch (ev.key.code) {
