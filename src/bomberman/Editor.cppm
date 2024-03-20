@@ -14,7 +14,7 @@ export module Editor;
 export void click(bool& clickPressed){clickPressed=true;}
 export void release(bool& clickPressed){clickPressed=false;}
 
-export void saveBoard(Board& board){
+export void saveBoard(std::<Board& board){//HERE
     std::vector<std::string> cases;
     for (unsigned int k = 0; k < board.cases.size(); k++){
         switch (board.cases[k]->displayId)
@@ -58,7 +58,7 @@ export void expandBoard(Board& board, int dir){
         case 8://down
             board.height++;
             for (int k = 0; k < board.width; k++){
-                board.cases.push_back(std::make_shared<Undefined>());
+                board.cases.push_back(std::make_shared<Air>());
             }
             break;
         default:

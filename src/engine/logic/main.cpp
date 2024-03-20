@@ -9,8 +9,9 @@ import gameVars;
 #include <iostream>
 #include <vector>
 #include <chrono>
-#include <thread>
-#include <pthread.h>
+#include <memory>
+// #include <thread>
+// #include <pthread.h>
 
 
 
@@ -46,62 +47,44 @@ int main()
     #endif
 
     // Create the main window
-    RenderWindow rWindow(W_WIDTH, W_HEIGHT, "Bomberman Platformer");
+    RenderWindow rWindow (W_WIDTH, W_HEIGHT, "Bomberman Platformer");
 
     // Set the framerate limit
     // rWindow.setFramerateLimit(FPS);
-    rWindow.setVsync(true);
+    rWindow->setVsync(true);
     // Initialize fps counter
     auto startFrameTime = std::chrono::steady_clock::now();
     const std::chrono::duration<double> targetFrameDuration(1.0 / static_cast<double>(FPS));
 
 
     // Initialize game mode
-    mode gameMode = GAME;
+    GameParams params(GAME, 2, "./game_files/boards/map0.xml");
 
     // App loop
     while (gameMode != END){
         //=========================== VARIABLES ===========================
 
-        //===== General variables =====
-        mode currentGameMode = gameMode;
-        Event event(rWindow);
-            
-
-        //assets & texts
-        Assets assets;
-        assets.addTex("notFound.png");
-        assets.addSoundBuffer("notFound.mp3");
-        assets.selectMusic("notFound.ogg");
-
-        // load fonts
-        TextManager texts;
-        texts.addFont("arial.ttf");
-        texts.addText("Not Found", 0, 50);
-
-        //game variables
-        GameVariables gameVars(gameMode);
+        GameVariables gameVars(params, rWindow);
+        mode currentGameMode = params.gameMode;
 
 
         //=========================== LOAD & INIT ===========================
   
-        loadAssets(gameMode, assets);
-    
         //problèmes si on change textureList ou soundBufferList après avoir créé des sprites/soundBuffers
-        assets.addSprite(0,0);//not found
-        // assets.addSound(0);//not found
+        loadAssets(gameVars);
+    
 
         // initialisation des variables du mode  
         // création de tout ce qui est supposé ne pas changer/être retiré le long du gameplay
         // (certains sprites, textes, évènements, ...)
-        gameVars.nbPlayers=2;
+        // diffère légèrement du constructeur
         
-        initialize(gameMode, event, texts, gameVars, assets);
+        initialize(gameVars);
 
         // event.addEvent(testSound, std::ref(assets));
         // event.addBinding(2,SPACE);
 
-        gameVars.board.displayBoard();
+        gameVars.board->displayBoard();
         
 
 
@@ -112,18 +95,12 @@ int main()
         //Play Music
         assets.getMus().play();
 
-        while ((gameMode != END) && (gameMode == currentGameMode)){
+        while ((params.gameMode != END) && (gameMode == currentGameMode)){
    
                 
-            event.processEvents();
+            gameVars.event.processEvents();
             
-            
-            // Update variables 
-                /*
-                    Menu : cursor position 
-                    Editor : FavMenu, current cursor item, state of the map...
 
-                */
 
 
             

@@ -177,13 +177,11 @@ export class BombFlare: public Bloc{
 //--------------------------------- BOARD ---------------------------------
 
 //idéalement, séparer Board/gameBoard/editorBoard
-export class Board{
+class Board{
     public:
         int width;
         int height;
         std::vector<std::shared_ptr<Bloc>> cases;
-        std::vector<std::shared_ptr<Entity>> entities;
-        std::vector<std::shared_ptr<Player>> players;
         float blocLength;
         
         Board(const std::string& xmlFilePath){
@@ -267,9 +265,18 @@ export class Board{
             static std::vector<int> boardSprites = boardTexBinding();
             sp.setTexRect(cases[k]->displayId, boardSprites);}
 
+};
+
+export class BoardGame : public Board{
+    public:
+        std::vector<std::shared_ptr<Entity>> entities;
+        std::vector<std::shared_ptr<Player>> players;
+
+        BoardGame(): Board(){}
+        BoardGame(const std::string& xmlFilePath): Board(xmlFilePath){}
+
+
         // ====== For entities ======
-
-
 
         template<typename T>
         int addEntity(int blocIndex, int size){//size = 1 => 0.75*blocLength
@@ -336,6 +343,14 @@ export class Board{
             cases[k] = std::make_shared<Air>();
         }
 
+};
+
+
+export class BoardEditor : public Board{
+    public:
+
+        BoardEditor(): Board(){}
+        BoardEditor(const std::string& xmlFilePath): Board(xmlFilePath){}
 
         // ====== for Editor ======
 
@@ -389,10 +404,10 @@ export class Board{
 
 
 
-export void placeBomb(Player& player, Board& board){
+export void placeBomb(Player& player, std::unique_ptr<BoardGame>& board){
     if (player.activeBomb < player.maxBomb && player.isAlive()){
         player.activeBomb++;
-        board.cases[player.blocIndex]= std::make_shared<BombBloc>(player);
+        board->cases[player.blocIndex]= std::make_shared<BombBloc>(player);
         player.crossableBomb = player.blocIndex;
     }
 }

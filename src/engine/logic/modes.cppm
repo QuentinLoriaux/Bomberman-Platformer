@@ -27,78 +27,75 @@ export void changeMode(mode &gameMode){gameMode = (gameMode == GAME)? EDITOR:GAM
 
 
 
-export void loadAssets(mode &gameMode, Assets &assets){
+export void loadAssets(GameVariables& gameVars){
+
+    gameVars.assets.addTex("notFound.png");
+    gameVars.assets.addSoundBuffer("notFound.mp3");
+    gameVars.assets.selectMusic("notFound.ogg");
+
+    gameVars.texts.addFont("arial.ttf");
+    gameVars.texts.addText("Not Found", 0, 50)
     
-    switch (gameMode){
-        case MAIN_TITLE : loadMainTitleAssets(assets); break;
-        case EDITOR : loadEditorAssets(assets); break;
-        case GAME : loadGameAssets(assets); break;
-        case WIN_SCREEN : loadMainTitleAssets(assets); break;
+    switch (gameVars.params.gameMode){
+        // case MAIN_TITLE : loadMainTitleAssets(assets); break;
+        case GAME : loadGameAssets(gameVars.assets); break;
+        case EDITOR : loadEditorAssets(gameVars.assets); break;
+        // case WIN_SCREEN : loadMainTitleAssets(assets); break;
         case END : break;
+        default: break;
+    }
+
+    gameVars.assets.addSprite(0,0);
+
+}
+
+
+export void initialize(GameVariables& gameVars){
+    gameVars.event.addEvent(quitGame, std::ref(gameMode));
+    gameVars.event.addBinding(0, CROSS, ESC);//ESC for testing
+
+    gameVars.event.addEvent(resizeWindow, std::ref(event));
+    gameVars.event.addBinding(1, RESIZE);
+
+    gameVars.event.addEvent(changeMode, std::ref(gameMode));
+    gameVars.event.addBinding(2 , BACKSPACE);
+
+    switch (gameVars.params.gameMode){
+        // case MAIN_TITLE : initGame(event, texts, gameVars, assets); break;
+        case GAME : initGame(gameVars); break;
+        case EDITOR : initEditor(gameVars); break;
+        // case WIN_SCREEN : initGame(event, texts, gameVars, assets); break;
+        case END : break;
+        default : break;
     }
 
 
 
 }
 
-
-export void initialize(mode &gameMode,
-                       Event &event,
-                       TextManager &texts,
-
-                       GameVariables &gameVars,
-                       Assets &assets
-                       
-                       ){
-    event.addEvent(quitGame, std::ref(gameMode));
-    event.addBinding(0, CROSS, ESC);//ESC for testing
-
-    event.addEvent(resizeWindow, std::ref(event));
-    event.addBinding(1, RESIZE);
-
-    event.addEvent(changeMode, std::ref(gameMode));
-    event.addBinding(2 , BACKSPACE);
+export void updateVars(GameVariables &gameVars){
 
     switch (gameMode){
-        case MAIN_TITLE : initGame(event, texts, gameVars, assets); break;
-        case EDITOR : initEditor(event, texts, gameVars, assets); break;
-        case GAME : initGame(event, texts, gameVars, assets); break;
-        case WIN_SCREEN : initGame(event, texts, gameVars, assets); break;
+        // case MAIN_TITLE : updateGame(event, texts,gameVars); break;
+        case GAME : updateGame(gameVars); break;
+        case EDITOR : updateEditor(gameVars); break;
+        // case WIN_SCREEN : updateGame(event, texts, gameVars); break;
         case END : break;
+        default : break;
     }
 
 }
 
-export void updateVars(mode &gameMode,
-                       Event &event,
-                       TextManager &texts,
-                       GameVariables &gameVars
-                       ){
-
-    switch (gameMode){
-        case MAIN_TITLE : updateGame(event, texts,gameVars); break;
-        case EDITOR : updateEditor(event, texts, gameVars); break;
-        case GAME : updateGame(event, texts, gameVars); break;
-        case WIN_SCREEN : updateGame(event, texts, gameVars); break;
-        case END : break;
-    }
-
-}
-
-export void display(mode &gameMode,
-                       RenderWindow &rWindow,
-                       Assets &assets,
-                       TextManager &texts,
-                       GameVariables &gameVars
-                       ){
+export void display(GameVariables &gameVars){
 
     rWindow.clear();
     switch (gameMode){
-        case MAIN_TITLE : dispGame(rWindow, assets, texts, gameVars); break;
-        case EDITOR : dispEditor(rWindow, assets, texts, gameVars); break;
-        case GAME : dispGame(rWindow, assets, texts, gameVars); break;
-        case WIN_SCREEN : dispGame(rWindow, assets, texts, gameVars); break;
+        // case MAIN_TITLE : dispGame(rWindow, assets, texts, gameVars); break;
+        case GAME : dispGame(gameVars); break;
+        case EDITOR : dispEditor(gameVars); break;
+        // case WIN_SCREEN : dispGame(rWindow, assets, texts, gameVars); break;
         case END : break;
+        default: break;
     }
     rWindow.display();
 }

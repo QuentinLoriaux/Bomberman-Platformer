@@ -39,12 +39,12 @@ export void loadGameAssets(Assets &assets){
 
 
 
-export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, Assets& assets){
+export void initGame(GameVariables& gameVars){
     std::cout <<"initGame\n";
-    auto board = &(gameVars.board);
+    auto assets = &(gameVars.assets);
+    auto event = &(gameVars.event);
+    std::shared_ptr<BoardGame> board = std::dynamic_pointer_cast<BoardGame>(gameVars.board);
     
-    gameVars.gameEnded = false;
-
     
    
 
@@ -52,7 +52,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
     assets.addSprite(1,0);
     
     //Board
-    for (unsigned int k = 0 ; k < gameVars.board.cases.size() ; k++){
+    for (unsigned int k = 0 ; k < board->cases.size() ; k++){
         assets.addSprite(2,1);
     }
 
@@ -69,7 +69,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 
     //players
     int k = 0; int cpt = 0; int nbActions = 7; int actionsOffset = event.eventList.size();
-    while (cpt < gameVars.nbPlayers){
+    while (cpt < gameVars.params.nbPlayers){
         if (board->cases[k]->playerSpawn){
             board->addPlayer(k);
             auto& player = *(board->players[cpt]);
@@ -91,7 +91,7 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
             event.addEvent(stopWalkRight, std::ref(player));
             event.addBinding(actionsOffset + 4 + nbActions*cpt, D_RELEASE);
 
-            event.addEvent(placeBomb, std::ref(player), std::ref(*board));
+            event.addEvent(placeBomb, std::ref(player), std::ref(board));
             event.addBinding(actionsOffset + 5 + nbActions*cpt, TAB);
 
             event.addEvent(debug, std::ref(player));
@@ -123,8 +123,8 @@ export void initGame(Event &event, TextManager& texts, GameVariables& gameVars, 
 
 
 
-export void updateGame(Event &event, TextManager texts, GameVariables &gameVars){
-    auto board = &(gameVars.board);
+export void updateGame(GameVariables &gameVars){
+    std::shared_ptr<BoardGame> board = std::dynamic_pointer_cast<BoardGame>(gameVars.board);
 
 
 
@@ -186,8 +186,11 @@ export void updateGame(Event &event, TextManager texts, GameVariables &gameVars)
 
 
 
-export void dispGame(RenderWindow& rWindow, Assets &assets, TextManager& texts, GameVariables &gameVars){
-    auto board = &(gameVars.board);
+export void dispGame(GameVariables &gameVars){
+    std::shared_ptr<BoardGame> board = std::dynamic_pointer_cast<BoardGame>(gameVars.board);
+    auto assets = &(gameVars.assets);
+    auto texts = &(gameVars.texts);
+    auto rWindow = *(gameVars.rWindow);
     unsigned int nbCases = board->cases.size();
     unsigned int nbEntites = board->entities.size();
     
