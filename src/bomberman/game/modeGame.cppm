@@ -41,8 +41,8 @@ export void loadGameAssets(Assets &assets){
 
 export void initGame(GameVariables& gameVars){
     std::cout <<"initGame\n";
-    auto assets = &(gameVars.assets);
-    auto event = &(gameVars.event);
+    Assets& assets = (gameVars.assets);
+    Event& event = (gameVars.event);
     std::shared_ptr<BoardGame> board = std::dynamic_pointer_cast<BoardGame>(gameVars.board);
     
     
@@ -69,7 +69,7 @@ export void initGame(GameVariables& gameVars){
 
     //players
     int k = 0; int cpt = 0; int nbActions = 7; int actionsOffset = event.eventList.size();
-    while (cpt < gameVars.params.nbPlayers){
+    while (cpt < gameVars.params->nbPlayers){
         if (board->cases[k]->playerSpawn){
             board->addPlayer(k);
             auto& player = *(board->players[cpt]);
@@ -91,7 +91,7 @@ export void initGame(GameVariables& gameVars){
             event.addEvent(stopWalkRight, std::ref(player));
             event.addBinding(actionsOffset + 4 + nbActions*cpt, D_RELEASE);
 
-            event.addEvent(placeBomb, std::ref(player), std::ref(board));
+            event.addEvent(placeBomb, std::ref(player), std::ref(gameVars.board));
             event.addBinding(actionsOffset + 5 + nbActions*cpt, TAB);
 
             event.addEvent(debug, std::ref(player));
@@ -188,9 +188,9 @@ export void updateGame(GameVariables &gameVars){
 
 export void dispGame(GameVariables &gameVars){
     std::shared_ptr<BoardGame> board = std::dynamic_pointer_cast<BoardGame>(gameVars.board);
-    auto assets = &(gameVars.assets);
-    auto texts = &(gameVars.texts);
-    auto rWindow = *(gameVars.rWindow);
+    Assets& assets = (gameVars.assets);
+    TextManager& texts = (gameVars.texts);
+    RenderWindow& rWindow = *(gameVars.rWindow);
     unsigned int nbCases = board->cases.size();
     unsigned int nbEntites = board->entities.size();
     
@@ -273,7 +273,7 @@ export void dispGame(GameVariables &gameVars){
             case 1 ://a player wins
                 if (livingPlayers == livingEntities){
                     int numWin = 0;
-                    for (unsigned int k = 0; k < gameVars.nbPlayers; k++){
+                    for (unsigned int k = 0; k < gameVars.params->nbPlayers; k++){
                         auto player = board->players[k]; 
                         if (player->isAlive()){
                             numWin = k+1;
@@ -304,7 +304,7 @@ export void dispGame(GameVariables &gameVars){
         rWindow.draw(texts.getText(1));
 
         if (now - timer > 5*second){
-            *(gameVars.gameMode) = END;
+            gameVars.params->gameMode = END;
         }
 
     }

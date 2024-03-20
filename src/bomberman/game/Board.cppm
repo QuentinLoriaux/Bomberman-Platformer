@@ -7,7 +7,6 @@ import assetsBindings;
 #include <memory>
 #include <vector>
 #include <iostream>
-#include <cstdlib>
 #include <chrono>
 
 export module Board;
@@ -177,20 +176,16 @@ export class BombFlare: public Bloc{
 //--------------------------------- BOARD ---------------------------------
 
 //idéalement, séparer Board/gameBoard/editorBoard
-class Board{
+export class Board{
     public:
         int width;
         int height;
         std::vector<std::shared_ptr<Bloc>> cases;
         float blocLength;
         
-        Board(const std::string& xmlFilePath){
-            loadBoard(xmlFilePath);
-            // updateBlocLength(rWindow);
-        }
-        // Board(RenderWindow& rWindow): Board("./game_files/boards/default.xml",rWindow){}
+        Board(const std::string& xmlFilePath){loadBoard(xmlFilePath);}
 
-        Board(){//default map so we don't need a file to start it
+        Board(){//default map so we don't need a file to have it in files
             width = 7; height = 5;
             for (int k = 0 ; k <8; k++){cases.push_back(std::make_shared<Air>());}
             cases.push_back(std::make_shared<monsterSpawn>());
@@ -208,6 +203,8 @@ class Board{
             for (int k = 0 ; k <7; k++){cases.push_back(std::make_shared<Wall>());}
         }
 
+        virtual ~Board(){}
+
 
         void loadBoard(const std::string& xmlFilePath){
             parsedXML xmlFile(xmlFilePath);
@@ -221,6 +218,10 @@ class Board{
                 else if (*it == "monsterSpawn"){cases.push_back(std::make_shared<monsterSpawn>());}
                 else if (*it == "BonusBloc"){cases.push_back(std::make_shared<BonusBloc>());}
             }
+        }
+
+        virtual void showBoardType(){
+            std::cout << "Base Board\n"; 
         }
 
         // ====== for debug ====== 
@@ -265,6 +266,8 @@ class Board{
             static std::vector<int> boardSprites = boardTexBinding();
             sp.setTexRect(cases[k]->displayId, boardSprites);}
 
+        
+
 };
 
 export class BoardGame : public Board{
@@ -274,7 +277,11 @@ export class BoardGame : public Board{
 
         BoardGame(): Board(){}
         BoardGame(const std::string& xmlFilePath): Board(xmlFilePath){}
+        ~BoardGame(){}
 
+        void showBoardType(){
+            std::cout << "BoardGame\n"; 
+        }
 
         // ====== For entities ======
 
@@ -351,6 +358,12 @@ export class BoardEditor : public Board{
 
         BoardEditor(): Board(){}
         BoardEditor(const std::string& xmlFilePath): Board(xmlFilePath){}
+        ~BoardEditor(){}
+
+        void showBoardType(){
+            std::cout << "BoardEditor\n"; 
+        }
+
 
         // ====== for Editor ======
 
@@ -404,7 +417,7 @@ export class BoardEditor : public Board{
 
 
 
-export void placeBomb(Player& player, std::unique_ptr<BoardGame>& board){
+export void placeBomb(Player& player, std::shared_ptr<Board>& board){
     if (player.activeBomb < player.maxBomb && player.isAlive()){
         player.activeBomb++;
         board->cases[player.blocIndex]= std::make_shared<BombBloc>(player);

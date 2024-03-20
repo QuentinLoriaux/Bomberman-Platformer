@@ -34,9 +34,9 @@ export void loadAssets(GameVariables& gameVars){
     gameVars.assets.selectMusic("notFound.ogg");
 
     gameVars.texts.addFont("arial.ttf");
-    gameVars.texts.addText("Not Found", 0, 50)
+    gameVars.texts.addText("Not Found", 0, 50);
     
-    switch (gameVars.params.gameMode){
+    switch (gameVars.params->gameMode){
         // case MAIN_TITLE : loadMainTitleAssets(assets); break;
         case GAME : loadGameAssets(gameVars.assets); break;
         case EDITOR : loadEditorAssets(gameVars.assets); break;
@@ -51,16 +51,16 @@ export void loadAssets(GameVariables& gameVars){
 
 
 export void initialize(GameVariables& gameVars){
-    gameVars.event.addEvent(quitGame, std::ref(gameMode));
+    gameVars.event.addEvent(quitGame, std::ref(gameVars.params->gameMode));
     gameVars.event.addBinding(0, CROSS, ESC);//ESC for testing
 
-    gameVars.event.addEvent(resizeWindow, std::ref(event));
+    gameVars.event.addEvent(resizeWindow, std::ref(gameVars.event));
     gameVars.event.addBinding(1, RESIZE);
 
-    gameVars.event.addEvent(changeMode, std::ref(gameMode));
+    gameVars.event.addEvent(changeMode, std::ref(gameVars.params->gameMode));
     gameVars.event.addBinding(2 , BACKSPACE);
 
-    switch (gameVars.params.gameMode){
+    switch (gameVars.params->gameMode){
         // case MAIN_TITLE : initGame(event, texts, gameVars, assets); break;
         case GAME : initGame(gameVars); break;
         case EDITOR : initEditor(gameVars); break;
@@ -75,7 +75,7 @@ export void initialize(GameVariables& gameVars){
 
 export void updateVars(GameVariables &gameVars){
 
-    switch (gameMode){
+    switch (gameVars.params->gameMode){
         // case MAIN_TITLE : updateGame(event, texts,gameVars); break;
         case GAME : updateGame(gameVars); break;
         case EDITOR : updateEditor(gameVars); break;
@@ -88,8 +88,9 @@ export void updateVars(GameVariables &gameVars){
 
 export void display(GameVariables &gameVars){
 
-    rWindow.clear();
-    switch (gameMode){
+    gameVars.rWindow->clear();
+    
+    switch (gameVars.params->gameMode){
         // case MAIN_TITLE : dispGame(rWindow, assets, texts, gameVars); break;
         case GAME : dispGame(gameVars); break;
         case EDITOR : dispEditor(gameVars); break;
@@ -97,5 +98,5 @@ export void display(GameVariables &gameVars){
         case END : break;
         default: break;
     }
-    rWindow.display();
+    gameVars.rWindow->display();
 }

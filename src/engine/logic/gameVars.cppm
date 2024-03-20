@@ -2,7 +2,6 @@ module;
 
 import viewAPI;
 import Event;
-
 import menu;
 import Board;
 
@@ -28,12 +27,12 @@ export typedef enum _Mode{
 export class GameParams{
     public :
         mode gameMode;
-        int nbPlayers:
-        std::string map[];
+        int nbPlayers;
+        std::string map;
 
-        GameParams(mode _gameMode, int _nbPlayers std::string _map): gameMode(_gameMode), nbPlayers(_nbPlayers) ,map(_map) {}
+        GameParams(mode _gameMode, int _nbPlayers, std::string _map): gameMode(_gameMode), nbPlayers(_nbPlayers), map(_map) {}
 
-}
+};
 
 export class GameVariables{
     public :
@@ -63,28 +62,25 @@ export class GameVariables{
 
 
 
-        GameVariables(GameParams& _params, RenderWindow& rWindow):
-        params(_params), rWindow(_rWindow), assets(Assets()), texts(TextManager()) event(Event(rWindow)),
-        soundPlay(0), gameEnded(false)
+        GameVariables(GameParams& _params, RenderWindow& _rWindow):
+        params(&_params), rWindow(&_rWindow), assets(Assets()), texts(TextManager()), event(Event(_rWindow)),
+        soundPlay(0), gameEnded(false),
         hoverSprite(-1), hoverList(-1), clickPressed(false), selectedBloc(0){
             std::string parDef = "default";
             switch(_params.gameMode){
                 case GAME:
-                    board = (_params.map.compare(parDef)==0) ? std::make_shared<GameBoard>()
-                            : std::make_shared<GameBoard>(_params.map);
+                    board = (_params.map.compare(parDef)==0) ? std::make_shared<BoardGame>()
+                            : std::make_shared<BoardGame>(_params.map);
                             
                     break;
                 case EDITOR:
-                    board = (_params.map.compare(parDef)==0) ? std::make_shared<GameEditor>()
-                            : std::make_shared<GameEditor>(_params.map);
+                    board = (_params.map.compare(parDef)==0) ? std::make_shared<BoardEditor>()
+                            : std::make_shared<BoardEditor>(_params.map);
                     break;
                 default: //should not happen
-                    board = (_params.map.compare(parDef)==0) ? std::make_shared<GameEditor>()
-                            : std::make_shared<GameEditor>(_params.map);
+                    board = (_params.map.compare(parDef)==0) ? std::make_shared<BoardEditor>()
+                            : std::make_shared<BoardEditor>(_params.map);
                     break;
-            }
-            if {
-
             }
         }
         // GameVariables(mode& _gameMode): gameMode(&_gameMode), nbPlayers(1), soundPlay(0), board(Board("./game_files/boards/map0.xml")){}
