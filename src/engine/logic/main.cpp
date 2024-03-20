@@ -54,7 +54,8 @@ int main()
 
 
     // Initialize parameters
-    GameParams params(GAME, 1, "./game_files/boards/map0.xml");
+    GameParams params(GAME, 2, "./game_files/boards/map0.xml");
+    // GameParams params(GAME, 1, "default");
 
     // App loop
     while (params.gameMode != END){

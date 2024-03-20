@@ -166,13 +166,50 @@ export void updateEditor(GameVariables &gameVars){
     //Check if there is a row/column to remove
     int cpt = 0;
     //left
-    for (int k = 0 ; k< board->height; k++){if (board->cases[k*board->width]->displayId == 0){k++;}}
+    for (int k = 0 ; k< board->height; k++){if (board->cases[k*board->width]->displayId == 0){cpt++;}}
     if (cpt==board->height){
-        for (int k = 0 ; k< board->height; k++){cpt++;}
+        for (int k = 0 ; k< board->height; k++){
+            board->cases.erase(board->cases.begin() + k*board->width -k);
+            gameVars.assets.pop_backSprite(2);    
+        }
+        board->width--;
     }
+    cpt = 0;
+    //up
+    for (int k = 0 ; k< board->width; k++){if (board->cases[k]->displayId == 0){cpt++;}}
+    if (cpt==board->width){
+        for (int k = 0 ; k< board->width; k++){
+            board->cases.erase(board->cases.begin());
+            gameVars.assets.pop_backSprite(2);
+        }
+        board->height--;
+    }
+    cpt = 0;
+    //right
+    for (int k = 0 ; k< board->height; k++){if (board->cases[(k+1)*board->width-1]->displayId == 0){cpt++;}}
+    if (cpt==board->height){
+        for (int k = 0 ; k< board->height; k++){
+            board->cases.erase(board->cases.begin()+(k+1)*board->width -1 -k);
+            gameVars.assets.pop_backSprite(2);
+        }
+        // board->cases.pop_back();
+        board->width--;
+        
+    }
+    cpt = 0;
+    //down
+    for (int k = 0 ; k< board->width; k++){if (board->cases[(board->height-1)*board->width+k]->displayId == 0){cpt++;}}
+    if (cpt==board->width){
+        for (int k = 0 ; k< board->width; k++){
+            board->cases.pop_back();
+            gameVars.assets.pop_backSprite(2);
+        }
+        board->height--;
+    }
+    
+    // std::cout<< cpt << "  " << board->height << " \n";
 
 }
-//hover sprite function needed, use getglobalbounds + contains
 
 
 

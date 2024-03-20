@@ -282,6 +282,11 @@ export class Assets{
             return spriteList.size()-1;
         }
 
+        void pop_backSprite(int numSubVec){
+            spriteList[numSubVec].pop_back();
+        }
+
+
         Sprite& getSp(int numSp, int numSubVec){
             int size = spriteList.size();
             

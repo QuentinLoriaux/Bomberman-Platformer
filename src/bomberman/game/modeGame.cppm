@@ -99,9 +99,9 @@ export void initGame(GameVariables& gameVars){
 
             assets.addSprite(4,2);
             cpt++;
-            std::cout <<"yes\n";
         }
         k++;
+        k = k%board->cases.size();
     }
 
     //turn playerSpawn/monsterSpawn into air
