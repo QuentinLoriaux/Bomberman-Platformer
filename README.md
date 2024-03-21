@@ -1,6 +1,9 @@
 # Bomberman-Platformer
 Mario but it's actually Bomberman
 
+## Notes
+No assets included
+
 ## Game
 Simple platform game inspired by Bomberman Pocket on GameBoy Color.
 - No collisions with ennemies,
@@ -18,3 +21,4 @@ Edit the map0.xml . Users need to save manually the file under another name to k
 ## Libs used
 - SFML
 - RapidXML
+
