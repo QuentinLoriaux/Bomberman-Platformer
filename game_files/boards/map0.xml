@@ -1,67 +1,87 @@
 <Board>
-	<height>6</height>
-	<width>12</width>
+	<height>9</height>
+	<width>10</width>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
+	<Bloc>Wall</Bloc>
+	<Bloc>Air</Bloc>
 	<Bloc>monsterSpawn</Bloc>
-	<Bloc>Air</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
 	<Bloc>playerSpawn</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Air</Bloc>
+	<Bloc>playerSpawn</Bloc>
+	<Bloc>monsterSpawn</Bloc>
 	<Bloc>Air</Bloc>
 	<Bloc>monsterSpawn</Bloc>
 	<Bloc>Air</Bloc>
 	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Air</Bloc>
-	<Bloc>Wall</Bloc>
+	<Bloc>Undefined</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
@@ -70,8 +90,6 @@
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
 	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
-	<Bloc>Wall</Bloc>
+	<Bloc>Undefined</Bloc>
 </Board>
 
